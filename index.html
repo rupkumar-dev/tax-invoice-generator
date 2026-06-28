@@ -1084,7 +1084,16 @@ function loadTemplate(id){
   const fields=['docType','invNo','invDate','invValid','supplierRef','payMode',
     'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
     'termsDelivery','discount','addCharges','chargesNote','invNotes'];
-  fields.forEach(f=>{ const el=document.getElementById(f); if(el&&tpl[f]!==undefined&&tpl[f]!==null) el.value=tpl[f]; });
+  fields.forEach(f=>{
+    const el=document.getElementById(f);
+    if(el&&tpl[f]!==undefined&&tpl[f]!==null) {
+      if(f==='invDate') {
+        el.value=getTodayDateString();
+      } else {
+        el.value=tpl[f];
+      }
+    }
+  });
   
   // Apply manual taxes override if defined
   const overCb = document.getElementById('overrideTaxes');
@@ -1641,6 +1650,13 @@ function clearInvoice(){
 }
 
 // ════ HELPERS ════
+function getTodayDateString(){
+  const d=new Date();
+  const yyyy=d.getFullYear();
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
 function gv(id){ const el=document.getElementById(id); return el?el.value||'':''; }
 function sp(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
 function sh(id,v){ const el=document.getElementById(id); if(el) el.innerHTML=v; }
@@ -1708,6 +1724,8 @@ function init(){
   items=[];
   renderItemsForm();
   renderTemplateCards();
+  const invDateEl=document.getElementById('invDate');
+  if(invDateEl) invDateEl.value=getTodayDateString();
   updatePreview();
   updateDesignSettings();
 }
