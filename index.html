@@ -188,9 +188,9 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
 
 /* INVOICE DOCUMENT */
 #invoiceDoc{
-  --inv-theme: #1a237e;
-  --inv-header-bg: #bae6fd;
-  --inv-header-text: #0c4a6e;
+  --inv-theme: #16a34a;
+  --inv-header-bg: #dcfce7;
+  --inv-header-text: #166534;
   --inv-font-size: 11px;
   --inv-font-family: 'Times New Roman', Times, serif;
   width:880px;background:#fff;color:#111;
@@ -198,7 +198,7 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
   font-size: var(--inv-font-size);
   box-shadow:0 24px 80px rgba(0,30,60,.6),0 0 0 1px rgba(14,165,233,.15);border-radius:4px
 }
-.d-topstrip{background:var(--inv-theme);color:#fff;text-align:center;padding:7px 12px;font-family:Arial,sans-serif;font-size:13px;font-weight:900;letter-spacing:2px}
+.d-topstrip{background:var(--inv-theme);color:#fff;text-align:center;padding:7px 12px;font-family:Arial,sans-serif;font-size:13px;font-weight:900;letter-spacing:2px;border:1.5px solid #999;border-bottom:none}
 .d-body{padding:14px 16px 0}
 
 /* Seller + Meta */
@@ -264,7 +264,7 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
 .d-sign-area{flex:1;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:4px}
 .d-prop-name{font-size:11.5px;font-weight:700;font-style:italic;color:var(--inv-theme)}
 .d-prop-desig{font-size:10px;color:#444}
-.d-auth-bar{background:var(--inv-theme);color:#fff;text-align:right;padding:4px 14px;font-family:Arial,sans-serif;font-size:10px;font-weight:700}
+.d-auth-bar{background:var(--inv-theme);color:#fff;font-family:Arial,sans-serif;font-size:10px;font-weight:700;display:grid;grid-template-columns:55% 45%;border:1.5px solid #999;border-top:none}
 
 /* Toast */
 .toast{position:fixed;bottom:24px;right:24px;z-index:1000;background:#0b1f35;border:1px solid #0ea5e9;border-radius:10px;padding:11px 18px;font-size:.8rem;font-weight:600;color:#38bdf8;display:flex;align-items:center;gap:8px;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 8px 24px rgba(14,165,233,.25)}
@@ -370,15 +370,9 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
                 <input id="invNo" type="text" placeholder="INV-2024-001" oninput="updatePreview()"/>
               </div>
             </div>
-            <div class="fg-row col2">
-              <div class="fg">
-                <label>Date</label>
-                <input id="invDate" type="date" oninput="updatePreview()"/>
-              </div>
-              <div class="fg">
-                <label>Valid Until</label>
-                <input id="invValid" type="date" oninput="updatePreview()"/>
-              </div>
+            <div class="fg">
+              <label>Date</label>
+              <input id="invDate" type="date" onclick="this.showPicker()" oninput="updatePreview()"/>
             </div>
             <div class="fg-row col2">
               <div class="fg">
@@ -387,11 +381,16 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
               </div>
               <div class="fg">
                 <label>Mode of Payment</label>
-                <select id="payMode" onchange="updatePreview()">
-                  <option value="" disabled selected>-- Select --</option>
-                  <option>NEFT/RTGS</option><option>Cash</option><option>Cheque</option>
-                  <option>UPI</option><option>Bank Transfer</option><option>Credit</option>
-                </select>
+                <input id="payMode" type="text" list="payModeOptions" placeholder="e.g. NEFT/RTGS or Cash" oninput="updatePreview()"/>
+                <datalist id="payModeOptions">
+                  <option value="None">
+                  <option value="NEFT/RTGS">
+                  <option value="Cash">
+                  <option value="Cheque">
+                  <option value="UPI">
+                  <option value="Bank Transfer">
+                  <option value="Credit">
+                </datalist>
               </div>
             </div>
             <div class="fg-row col2">
@@ -537,6 +536,10 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
               <div class="fg"><label>Proprietor Name</label><input id="propName" type="text" oninput="updatePreview()"/></div>
               <div class="fg"><label>Designation</label><input id="propDesig" type="text" oninput="updatePreview()"/></div>
             </div>
+            <div class="fg">
+              <label>For, (Company Name in Signature)</label>
+              <input id="forName" type="text" placeholder="e.g. M/S G & L ENTERPRISE" oninput="updatePreview()"/>
+            </div>
             <div class="fg"><label>Company Logo (optional)</label>
               <div class="upload-box" id="logoBox">
                 <input type="file" accept="image/*" onchange="uploadImage(this,'logoBox','logoPreview','companyLogo')"/>
@@ -569,6 +572,31 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
                     <img class="upload-preview" id="stampPreview"/>
                   </div>
                   <button class="btn btn-red btn-sm" style="margin-top:5px;width:100%" onclick="clearImage('stampPreview','stampImg')">✕ Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Signature & Stamp Scaling / Offset adjustments -->
+            <div style="margin-top:10px;padding:10px;background:rgba(255,255,255,0.02);border:1px dashed var(--border);border-radius:8px;display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:.66rem;font-weight:700;color:#38bdf8;text-transform:uppercase;letter-spacing:.04em">📐 Signature &amp; Stamp Alignment</div>
+              <div class="fg-row col2">
+                <div class="fg">
+                  <label style="font-size:.6rem">Signature Width (Max 850px)</label>
+                  <input type="range" id="signImgWidth" min="10" max="850" value="300" oninput="updateSignatureSettings()"/>
+                </div>
+                <div class="fg">
+                  <label style="font-size:.6rem">Signature Shift-Up (Max ±300px)</label>
+                  <input type="range" id="signImgOffset" min="-300" max="300" value="0" oninput="updateSignatureSettings()"/>
+                </div>
+              </div>
+              <div class="fg-row col2">
+                <div class="fg">
+                  <label style="font-size:.6rem">Stamp Width (Max 850px)</label>
+                  <input type="range" id="stampImgWidth" min="10" max="850" value="300" oninput="updateSignatureSettings()"/>
+                </div>
+                <div class="fg">
+                  <label style="font-size:.6rem">Stamp Shift-Up (Max ±300px)</label>
+                  <input type="range" id="stampImgOffset" min="-300" max="300" value="0" oninput="updateSignatureSettings()"/>
                 </div>
               </div>
             </div>
@@ -648,8 +676,8 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
 
     <!-- INVOICE DOC -->
     <div id="invoiceDoc">
-      <div class="d-topstrip" id="p_docType">TAX INVOICE</div>
       <div class="d-body">
+        <div class="d-topstrip" id="p_docType" style="margin-bottom:0px">TAX INVOICE</div>
 
         <!-- Seller + Meta -->
         <div class="d-row1">
@@ -658,11 +686,11 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
             <div class="cdet" id="p_sellerAddr"></div>
             <div class="cdet">E-mail: <span id="p_sellerEmail"></span></div>
             <div class="cdet">Ph: <span id="p_sellerPhone"></span></div>
-            <div class="cgst">GST NO : <span id="p_sellerGST"></span>&nbsp;&nbsp; PAN : <span id="p_sellerPAN"></span></div>
+            <div class="cgst" id="p_sellerTaxIds"></div>
           </div>
           <div class="d-meta">
             <div class="d-meta-r">
-              <div class="d-meta-c"><div class="ml">Invoice / Quote No.</div><div class="mv" id="p_invNo"></div></div>
+              <div class="d-meta-c"><div class="ml" id="p_invNoLabel">Invoice No.</div><div class="mv" id="p_invNo"></div></div>
               <div class="d-meta-c"><div class="ml">Date</div><div class="mv" id="p_invDate"></div></div>
             </div>
             <div class="d-meta-r">
@@ -672,9 +700,6 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
             <div class="d-meta-r">
               <div class="d-meta-c"><div class="ml">Buyer's Order No.</div><div class="mv" id="p_buyerOrderNo"></div></div>
               <div class="d-meta-c"><div class="ml">Other References</div><div class="mv" id="p_otherRef"></div></div>
-            </div>
-            <div class="d-meta-r">
-              <div class="d-meta-c" style="grid-column:span 2"><div class="ml">Valid Until</div><div class="mv" id="p_invValid"></div></div>
             </div>
           </div>
         </div>
@@ -753,10 +778,10 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
           </div>
           <!-- RIGHT: Company Sign -->
           <div class="d-sign-col">
-            <div class="d-for">For, <span id="p_forName"></span></div>
+            <div class="d-for" id="p_forNameBlock"></div>
             <div class="d-sign-area">
-              <img id="p_signImg" style="max-height:52px;max-width:130px;object-fit:contain;display:none" alt="Signature"/>
-              <img id="p_stampImg" style="max-height:52px;max-width:120px;object-fit:contain;display:none" alt="Stamp"/>
+              <img id="p_signImg" style="object-fit:contain;display:none" alt="Signature"/>
+              <img id="p_stampImg" style="object-fit:contain;display:none" alt="Stamp"/>
               <div id="p_signBlank" style="width:130px;height:42px;border-bottom:1px dashed #bbb;display:none"></div>
             </div>
             <div id="p_propBlock">
@@ -766,7 +791,10 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
             </div>
           </div>
         </div>
-        <div class="d-auth-bar">Authorised Signatory</div>
+        <div class="d-auth-bar">
+          <div style="border-right:1.5px solid #999;min-height:100%"></div>
+          <div style="text-align:right;padding:4px 14px">Authorised Signatory</div>
+        </div>
 
       </div>
     </div><!-- /invoiceDoc -->
@@ -794,11 +822,11 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
           <div class="fg">
             <label>Theme Color</label>
             <div style="display:flex;gap:6px;align-items:center">
-              <input type="color" id="invThemeColor" value="#1a237e" oninput="updateDesignSettings()" style="width:40px;height:30px;padding:0;border:none;border-radius:4px;cursor:pointer"/>
+              <input type="color" id="invThemeColor" value="#16a34a" oninput="updateDesignSettings()" style="width:40px;height:30px;padding:0;border:none;border-radius:4px;cursor:pointer"/>
               <select id="invThemePreset" onchange="document.getElementById('invThemeColor').value=this.value;updateDesignSettings()" style="flex:1;background:var(--input);border:1px solid var(--border);border-radius:6px;color:#fff;padding:6px;font-size:.76rem">
                 <option value="#1a237e">Ocean Blue</option>
                 <option value="#dc2626">Crimson Red</option>
-                <option value="#16a34a">Emerald Green</option>
+                <option value="#16a34a" selected>Emerald Green</option>
                 <option value="#d97706">Amber Orange</option>
                 <option value="#000000">Classic Black</option>
               </select>
@@ -851,7 +879,7 @@ const BUILTIN_TEMPLATES = [{
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
-  payMode:'NEFT/RTGS',
+  payMode:'',
   buyerOrderNo:'',
   otherRef:'',
   buyerName:'BISHWAJIT MUKHARJI',
@@ -897,7 +925,7 @@ const BUILTIN_TEMPLATES = [{
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
-  payMode:'NEFT/RTGS',
+  payMode:'',
   buyerOrderNo:'',
   otherRef:'',
   buyerName:'BISHWAJIT MUKHARJI',
@@ -943,7 +971,7 @@ const BUILTIN_TEMPLATES = [{
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
-  payMode:'NEFT/RTGS',
+  payMode:'',
   buyerOrderNo:'',
   otherRef:'',
   buyerName:'BISHWAJIT MUKHARJI',
@@ -989,7 +1017,7 @@ const BUILTIN_TEMPLATES = [{
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
-  payMode:'NEFT/RTGS',
+  payMode:'',
   buyerOrderNo:'',
   otherRef:'',
   buyerName:'BISHWAJIT MUKHARJI',
@@ -1354,21 +1382,39 @@ function toggleTaxOverride(checked) {
 
 // ════ UPDATE PREVIEW ════
 function updatePreview(){
-  // Doc type
-  sp('p_docType',gv('docType')||'TAX INVOICE');
+  // Doc type and dynamic number label
+  const docType = gv('docType') || 'TAX INVOICE';
+  sp('p_docType', docType);
+  
+  let labelText = 'Invoice No.';
+  if (docType === 'QUOTATION') labelText = 'Quotation No.';
+  else if (docType === 'PROFORMA INVOICE') labelText = 'Proforma Inv. No.';
+  else if (docType === 'DELIVERY CHALLAN') labelText = 'Challan No.';
+  else if (docType === 'ESTIMATE') labelText = 'Estimate No.';
+  sp('p_invNoLabel', labelText);
+
   // Seller
   sp('p_sellerName',gv('sellerName'));
   sh('p_sellerAddr',gv('sellerAddr').replace(/\n/g,'<br/>'));
   sp('p_sellerEmail',gv('sellerEmail'));
   sp('p_sellerPhone',gv('sellerPhone'));
-  sp('p_sellerGST',gv('sellerGST'));
-  sp('p_sellerPAN',gv('sellerPAN'));
+  
+  // Render GST / PAN dynamically (hide label if empty)
+  const gst = gv('sellerGST');
+  const pan = gv('sellerPAN');
+  let taxIdsHtml = '';
+  if (gst) taxIdsHtml += `GST NO : <span>${esc(gst)}</span>`;
+  if (pan) {
+    if (taxIdsHtml) taxIdsHtml += '&nbsp;&nbsp; ';
+    taxIdsHtml += `PAN : <span>${esc(pan)}</span>`;
+  }
+  sh('p_sellerTaxIds', taxIdsHtml);
   // Invoice meta
   sp('p_invNo',gv('invNo'));
   sp('p_invDate',formatDate(gv('invDate')));
-  sp('p_invValid',formatDate(gv('invValid')));
   sp('p_supplierRef',gv('supplierRef'));
-  sp('p_payMode',gv('payMode'));
+  const pm = gv('payMode');
+  sp('p_payMode', (pm === 'None' || !pm) ? '' : pm);
   sp('p_buyerOrderNo',gv('buyerOrderNo'));
   sp('p_otherRef',gv('otherRef'));
   // Buyer
@@ -1457,7 +1503,12 @@ function updatePreview(){
   sp('p_declText',gv('declText'));
 
   // RIGHT: For, Company + sign
-  sp('p_forName', gv('sellerName'));
+  const fn = gv('forName');
+  if (fn) {
+    sh('p_forNameBlock', `For, <span>${esc(fn)}</span>`);
+  } else {
+    sh('p_forNameBlock', '');
+  }
   const propName=gv('propName'), propDesig=gv('propDesig');
   sp('p_propName',propName); sp('p_propDesig',propDesig);
   document.getElementById('p_propBlock').style.display=(propName||propDesig)?'block':'none';
@@ -1466,23 +1517,58 @@ function updatePreview(){
   const pSign=document.getElementById('p_signImg');
   const pStmp=document.getElementById('p_stampImg');
   const pSBlank=document.getElementById('p_signBlank');
-  if(signatureImg){ pSign.src=signatureImg; pSign.style.display='block'; } else { pSign.style.display='none'; }
-  if(stampImg){ pStmp.src=stampImg; pStmp.style.display='block'; } else { pStmp.style.display='none'; }
-  pSBlank.style.display=(!signatureImg && !stampImg) ? 'block' : 'none';
+  
+  if(signatureImg){
+    pSign.src=signatureImg;
+    pSign.style.display='block';
+    
+    // Apply width and offset styling
+    const sWidth = gv('signImgWidth') || '300';
+    const sOffset = gv('signImgOffset') || '0';
+    pSign.style.width = sWidth + 'px';
+    pSign.style.marginTop = (-sOffset) + 'px';
+    pSign.style.marginBottom = sOffset + 'px';
+  } else {
+    pSign.style.display='none';
+  }
+  
+  if(stampImg){
+    pStmp.src=stampImg;
+    pStmp.style.display='block';
+    
+    // Apply width and offset styling
+    const stWidth = gv('stampImgWidth') || '300';
+    const stOffset = gv('stampImgOffset') || '0';
+    pStmp.style.width = stWidth + 'px';
+    pStmp.style.marginTop = (-stOffset) + 'px';
+    pStmp.style.marginBottom = stOffset + 'px';
+  } else {
+    pStmp.style.display='none';
+  }
+  
+  // Always hide empty placeholders in the final document to keep it clean (no dashed lines/shapes print out)
+  pSBlank.style.display = 'none';
 
   // LEFT: Customer seal
   const pCS=document.getElementById('p_custSealImg');
   const pCSB=document.getElementById('p_custSealBlank');
-  if(customerSealImg){ pCS.src=customerSealImg; pCS.style.display='block'; pCSB.style.display='none'; }
-  else { pCS.style.display='none'; pCSB.style.display='block'; }
+  if(customerSealImg){
+    pCS.src=customerSealImg;
+    pCS.style.display='block';
+    pCSB.style.display='none';
+  } else {
+    pCS.style.display='none';
+    pCSB.style.display='none';
+  }
 }
 
 // ════ PROFILE SAVE/LOAD ════
 function saveProfile(){
   const profile={};
-  ['sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
+  ['forName','sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
    'propName','propDesig',
-   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText'].forEach(id=>{
+   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText',
+   'signImgWidth', 'signImgOffset', 'stampImgWidth', 'stampImgOffset'].forEach(id=>{
     profile[id]=gv(id);
   });
   if(signatureImg)    profile.signatureImg=signatureImg;
@@ -1497,9 +1583,10 @@ function loadProfile(){
   const raw=localStorage.getItem('inv_profile');
   if(!raw) return;
   const p=JSON.parse(raw);
-  ['sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
+  ['forName','sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
    'propName','propDesig',
-   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText'].forEach(id=>{
+   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText',
+   'signImgWidth', 'signImgOffset', 'stampImgWidth', 'stampImgOffset'].forEach(id=>{
     const el=document.getElementById(id);
     if(el&&p[id]!==undefined) el.value=p[id];
   });
@@ -1507,6 +1594,10 @@ function loadProfile(){
   if(p.stampImg)      { stampImg=p.stampImg;             setImgPreview('stampPreview',stampImg); }
   if(p.companyLogo)   { companyLogo=p.companyLogo;       setImgPreview('logoPreview',companyLogo); }
   if(p.customerSealImg){ customerSealImg=p.customerSealImg; setImgPreview('custSealPreview',customerSealImg); }
+}
+
+function updateSignatureSettings() {
+  updatePreview();
 }
 
 // ════ IMAGE UPLOAD ════
