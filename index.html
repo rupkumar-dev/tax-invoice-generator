@@ -7,6 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 <!-- SheetJS library for Excel Export -->
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- html2pdf and html2canvas for PDF and Image exports with styles -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 :root{
   /* ── Ocean Blue Theme ── */
@@ -333,8 +336,11 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
     <div class="dropdown">
       <button class="btn btn-ghost btn-sm" onclick="toggleExportDropdown()">📤 Export/Import</button>
       <div class="dropdown-menu" id="exportMenu" style="display:none">
-        <button class="dropdown-item" onclick="exportToExcel()">📊 Export to Excel (.xlsx)</button>
-        <button class="dropdown-item" onclick="exportToCSV()">📄 Export to CSV</button>
+        <button class="dropdown-item" onclick="exportToPDFDirect()">📄 Export PDF with Design (.pdf)</button>
+        <button class="dropdown-item" onclick="exportToPNGDirect()">🖼️ Export Image with Design (.png)</button>
+        <div class="dropdown-divider"></div>
+        <button class="dropdown-item" onclick="exportToExcel()">📊 Export Data to Excel (.xlsx)</button>
+        <button class="dropdown-item" onclick="exportToCSV()">📊 Export Data to CSV</button>
         <button class="dropdown-item" onclick="exportToJSON()">⚙️ Export Backup (JSON)</button>
         <div class="dropdown-divider"></div>
         <label class="dropdown-item" style="cursor:pointer;margin:0">
@@ -1710,7 +1716,59 @@ function numberToWords(n){
 
 // PDF
 function printPDF(){
-  window.print();
+  exportToPDFDirect();
+}
+
+function exportToPDFDirect() {
+  const element = document.getElementById('invoiceDoc');
+  if(!element) return;
+  
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  
+  const opt = {
+    margin:       0,
+    filename:     `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, logging: false },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  
+  toast('⏳ Generating PDF with design...');
+  html2pdf().set(opt).from(element).save().then(() => {
+    toast('✅ PDF downloaded successfully!');
+  }).catch(err => {
+    console.error(err);
+    toast('❌ PDF generation failed!');
+  });
+}
+
+function exportToPNGDirect() {
+  const element = document.getElementById('invoiceDoc');
+  if(!element) return;
+  
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  
+  toast('⏳ Generating image with design...');
+  
+  html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    logging: false
+  }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.png`;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast('✅ PNG image downloaded successfully!');
+  }).catch(err => {
+    console.error(err);
+    toast('❌ Image generation failed!');
+  });
 }
 
 // ════ EXPORT / IMPORT ════
