@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InvoiceGen Pro — GST Tax Invoice & Quotation Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  /* ── Ocean Blue Theme ── */
+  --bg:#020d1a;--surface:#061525;--card:#0b1f35;--card2:#0f2843;
+  --accent:#0ea5e9;--accent-glow:rgba(14,165,233,.38);
+  --green:#06d6a0;--red:#f43f5e;--yellow:#fbbf24;--blue:#38bdf8;
+  --border:#0d2d4a;--border2:#123552;
+  --text:#e0f0ff;--muted:#5588aa;--muted2:#2d5070;
+  --input:#04111e;--radius:12px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:linear-gradient(135deg,rgba(2,13,26,.96) 0%,rgba(6,21,37,.96) 100%);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(14,165,233,.2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:58px;gap:12px;
+  box-shadow:0 2px 20px rgba(14,165,233,.08);
+}
+.topbar-logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:1.2rem;
+  background:linear-gradient(135deg,#38bdf8,#06d6a0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.topbar-tabs{display:flex;gap:2px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px}
+.tab{background:none;border:none;color:var(--muted);padding:6px 16px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab.active{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;box-shadow:0 0 16px var(--accent-glow)}
+.topbar-actions{display:flex;gap:7px;align-items:center}
+.btn{border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;font-size:.78rem;border-radius:9px;padding:8px 18px;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.btn-ghost{background:rgba(14,165,233,.08);color:var(--text);border:1px solid rgba(14,165,233,.2)}
+.btn-ghost:hover{background:rgba(14,165,233,.15);border-color:rgba(14,165,233,.4)}
+.btn-accent{background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;box-shadow:0 4px 14px var(--accent-glow)}
+.btn-accent:hover{transform:translateY(-1px);box-shadow:0 8px 22px var(--accent-glow)}
+.btn-green{background:linear-gradient(135deg,#06d6a0,#059669);color:#011a12}
+.btn-green:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(6,214,160,.4)}
+.btn-red{background:rgba(244,63,94,.1);color:var(--red);border:1px solid rgba(244,63,94,.25)}
+.btn-red:hover{background:rgba(244,63,94,.2)}
+.btn-sm{padding:5px 12px;font-size:.72rem;border-radius:7px}
+
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 58px);overflow:hidden}
+.sidebar{width:430px;flex-shrink:0;background:linear-gradient(180deg,var(--surface) 0%,#04101e 100%);border-right:none;overflow-y:auto;display:flex;flex-direction:column;position:relative}
+.sidebar-right{width:320px;flex-shrink:0;background:linear-gradient(180deg,var(--surface) 0%,#04101e 100%);border-left:none;overflow-y:auto;display:flex;flex-direction:column;position:relative;transition:margin-right .25s ease, opacity .25s ease}
+.sidebar-right.hidden-sidebar{margin-right:-320px;opacity:0;pointer-events:none;width:0 !important}
+.sidebar-inner{padding:18px;display:flex;flex-direction:column;gap:14px}
+
+/* Resize handle */
+.resize-handle{
+  width:6px;flex-shrink:0;cursor:col-resize;
+  background:transparent;
+  position:relative;z-index:10;
+  transition:background .2s;
+}
+.resize-handle::after{
+  content:'';position:absolute;top:0;left:2px;bottom:0;width:2px;
+  background:rgba(14,165,233,.18);border-radius:2px;
+  transition:all .25s;
+}
+.resize-handle-right{
+  width:6px;flex-shrink:0;cursor:col-resize;
+  background:transparent;
+  position:absolute;left:0;top:0;bottom:0;z-index:10;
+  transition:background .2s;
+}
+.resize-handle-right::after{
+  content:'';position:absolute;top:0;left:2px;bottom:0;width:2px;
+  background:rgba(14,165,233,.18);border-radius:2px;
+  transition:all .25s;
+}
+.resize-handle-right:hover::after,
+.resize-handle-right.dragging::after{
+  left:0;width:6px;
+  background:linear-gradient(180deg,#0ea5e9,#06d6a0);
+  box-shadow:0 0 12px rgba(14,165,233,.6),0 0 24px rgba(14,165,233,.3);
+}
+.resize-handle:hover::after,
+.resize-handle.dragging::after{
+  left:0;width:6px;
+  background:linear-gradient(180deg,#0ea5e9,#06d6a0);
+  box-shadow:0 0 12px rgba(14,165,233,.6),0 0 24px rgba(14,165,233,.3);
+}
+.resize-handle:hover .rh-grip,
+.resize-handle.dragging .rh-grip{opacity:1;transform:translateX(-50%) scale(1)}
+.rh-grip{
+  position:absolute;top:50%;left:50%;transform:translateX(-50%) scale(.7);
+  width:20px;height:42px;border-radius:10px;
+  background:linear-gradient(135deg,#0ea5e9,#06d6a0);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  opacity:0;transition:all .25s;pointer-events:none;
+  box-shadow:0 4px 16px rgba(14,165,233,.5);
+}
+.rh-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.85)}
+
+/* Section */
+.sec{background:var(--card);border:1px solid rgba(14,165,233,.12);border-radius:var(--radius);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.sec-head{padding:10px 15px;border-bottom:1px solid rgba(14,165,233,.12);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(90deg,rgba(14,165,233,.1),transparent);cursor:pointer;user-select:none}
+.sec-head-left{display:flex;align-items:center;gap:8px}
+.sec-icon{font-size:.95rem}
+.sec-title{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#38bdf8}
+.sec-toggle{font-size:.68rem;color:var(--muted);transition:transform .2s}
+.sec-toggle.open{transform:rotate(180deg)}
+.sec-body{padding:13px 15px;display:flex;flex-direction:column;gap:10px}
+.sec-body.hidden{display:none}
+
+/* Form elements */
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{background:var(--input);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:.8rem;padding:7px 10px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,111,255,.18)}
+.fg textarea{resize:vertical;min-height:50px;line-height:1.5}
+.fg select option{background:#14142e}
+.fg-row{display:grid;gap:9px}
+.fg-row.col2{grid-template-columns:1fr 1fr}
+.fg-row.col3{grid-template-columns:1fr 1fr 1fr}
+
+/* Upload */
+.upload-box{border:2px dashed var(--border2);border-radius:10px;padding:13px;text-align:center;cursor:pointer;transition:all .2s;background:var(--input);position:relative;overflow:hidden}
+.upload-box:hover{border-color:var(--accent);background:rgba(124,111,255,.06)}
+.upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-box .ub-icon{font-size:1.5rem;margin-bottom:3px}
+.upload-box .ub-text{font-size:.7rem;color:var(--muted);font-weight:500}
+.upload-preview{width:100%;max-height:70px;object-fit:contain;margin-top:7px;border-radius:5px;display:none}
+
+/* Items form table */
+.items-wrap{overflow-x:auto;border-radius:8px;border:1px solid rgba(14,165,233,.15)}
+.ftable{width:100%;border-collapse:collapse;font-size:.7rem}
+.ftable th{background:rgba(14,165,233,.12);color:#38bdf8;padding:6px 4px;text-align:left;font-size:.64rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;cursor:grab;transition:all .15s}
+.ftable th.dragging-col{opacity:0.4;background:rgba(14,165,233,.3)}
+.ftable th.col-drag-over{border-left:3px dashed #38bdf8 !important;background:rgba(14,165,233,.24) !important}
+.ftable td{padding:3px 3px;border-top:1px solid rgba(255,255,255,.04);vertical-align:middle;transition:all .15s}
+/* Row Drag Indicator */
+tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(14,165,233,.08) !important}
+.ftable input,.ftable select{background:var(--input);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:'Inter',sans-serif;font-size:.7rem;padding:4px 5px;outline:none;transition:border-color .15s;width:100%}
+.ftable input:focus,.ftable select:focus{border-color:var(--accent)}
+.ftable .amt-cell{text-align:right;color:var(--green);font-weight:700;padding-right:5px;white-space:nowrap;font-size:.69rem}
+.del-btn{background:rgba(255,95,126,.12);color:var(--red);border:none;border-radius:5px;padding:3px 7px;cursor:pointer;font-size:.68rem;transition:all .2s}
+.del-btn:hover{background:rgba(255,95,126,.25)}
+.items-actions{display:flex;gap:8px;margin-top:9px;align-items:center;flex-wrap:wrap}
+.add-row-btn{flex:1;padding:9px;border-radius:9px;background:rgba(34,211,165,.08);color:var(--green);border:1.5px dashed rgba(34,211,165,.3);font-family:'Inter',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;transition:all .2s}
+.add-row-btn:hover{background:rgba(34,211,165,.16);border-color:var(--green)}
+.bulk-add{display:flex;gap:6px;align-items:center}
+.bulk-add input{width:52px;background:var(--input);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:'Inter',sans-serif;font-size:.76rem;padding:7px 8px;outline:none;text-align:center}
+.bulk-add input:focus{border-color:var(--accent)}
+
+/* Template bar */
+.tpl-bar{background:linear-gradient(135deg,rgba(14,165,233,.1),rgba(6,214,160,.06));border:1.5px solid rgba(14,165,233,.3);border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;gap:9px;box-shadow:0 4px 20px rgba(14,165,233,.08)}
+.tpl-bar-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tpl-label{font-size:.7rem;font-weight:700;color:#38bdf8;letter-spacing:.06em;text-transform:uppercase}
+.tpl-cards{display:flex;flex-wrap:wrap;gap:7px}
+.tpl-card{background:var(--card2);border:1.5px solid rgba(14,165,233,.15);border-radius:9px;padding:8px 12px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:2px;min-width:120px;flex:1}
+.tpl-card:hover{border-color:#0ea5e9;transform:translateY(-2px);box-shadow:0 5px 18px var(--accent-glow)}
+.tpl-card.active-tpl{border-color:var(--green);background:rgba(6,214,160,.08)}
+.tpl-card .tc-name{font-size:.76rem;font-weight:700;color:var(--text)}
+.tpl-card .tc-amt{font-size:.68rem;color:#06d6a0;font-weight:600}
+.tpl-card .tc-type{font-size:.64rem;color:var(--muted)}
+.tpl-card .tc-del{align-self:flex-end;background:rgba(244,63,94,.1);color:var(--red);border:none;border-radius:5px;padding:2px 7px;font-size:.63rem;cursor:pointer;margin-top:2px}
+.tpl-card .tc-del:hover{background:rgba(255,95,126,.28)}
+.tpl-save-row{display:flex;gap:7px}
+.tpl-name-input{flex:1;background:var(--input);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:.76rem;padding:6px 10px;outline:none;transition:border-color .2s}
+.tpl-name-input:focus{border-color:var(--accent)}
+
+/* Upload zone styled */
+.upload-zone{border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.upload-zone.green-zone{background:rgba(6,214,160,.04);border:1.5px solid rgba(6,214,160,.2)}
+.upload-zone.purple-zone{background:rgba(14,165,233,.04);border:1.5px solid rgba(14,165,233,.2)}
+.zone-title{font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
+.zone-title.green{color:#06d6a0}
+.zone-title.purple{color:#38bdf8}
+
+/* Preview area */
+.preview-area{background:linear-gradient(135deg,#0a1929 0%,#0d2137 100%);overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:24px 24px 48px;gap:16px}
+.preview-topbar{width:100%;max-width:880px;background:rgba(11,31,53,.9);border:1px solid rgba(14,165,233,.2);border-radius:11px;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.preview-topbar-label{font-size:.76rem;color:#5588aa;font-weight:500;display:flex;align-items:center;gap:6px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#06d6a0;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* INVOICE DOCUMENT */
+#invoiceDoc{
+  --inv-theme: #1a237e;
+  --inv-header-bg: #bae6fd;
+  --inv-header-text: #0c4a6e;
+  --inv-font-size: 11px;
+  --inv-font-family: 'Times New Roman', Times, serif;
+  width:880px;background:#fff;color:#111;
+  font-family: var(--inv-font-family);
+  font-size: var(--inv-font-size);
+  box-shadow:0 24px 80px rgba(0,30,60,.6),0 0 0 1px rgba(14,165,233,.15);border-radius:4px
+}
+.d-topstrip{background:var(--inv-theme);color:#fff;text-align:center;padding:7px 12px;font-family:Arial,sans-serif;font-size:13px;font-weight:900;letter-spacing:2px}
+.d-body{padding:14px 16px 0}
+
+/* Seller + Meta */
+.d-row1{display:grid;grid-template-columns:55% 45%;border:1.5px solid #999}
+.d-seller{padding:10px 14px;border-right:1.5px solid #999}
+.d-seller .cname{font-size:15px;font-weight:900;font-family:Arial,sans-serif;text-decoration:underline}
+.d-seller .cdet{font-size:10.5px;margin-top:2px;font-family:Arial,sans-serif}
+.d-seller .cgst{font-weight:700;margin-top:4px;font-size:11px;font-family:Arial,sans-serif}
+.d-meta{display:flex;flex-direction:column}
+.d-meta-r{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #999;flex:1}
+.d-meta-r:last-child{border-bottom:none}
+.d-meta-c{padding:5px 9px;border-right:1px solid #999;font-family:Arial,sans-serif}
+.d-meta-c:last-child{border-right:none}
+.d-meta-c .ml{font-size:9px;font-weight:700;color:#444}
+.d-meta-c .mv{font-size:10.5px;min-height:13px}
+
+/* Buyer */
+.d-row2{display:grid;grid-template-columns:55% 45%;border:1.5px solid #999;border-top:none}
+.d-buyer-c{padding:8px 14px;font-family:Arial,sans-serif}
+.d-buyer-c:first-child{border-right:1.5px solid #999}
+.d-blabel{font-size:9px;color:#555;margin-bottom:2px}
+.d-bname{font-size:13px;font-weight:900}
+.d-baddr{font-size:10.5px;margin-top:2px;line-height:1.55}
+
+/* Items table */
+.d-items{width:100%;border-collapse:collapse;margin-top:10px;border:1.5px solid #999}
+.d-items th{background:var(--inv-header-bg);padding:6px 5px;border:1px solid #999;font-family:Arial,sans-serif;font-size:10px;font-weight:900;text-align:center;color:var(--inv-header-text)}
+.d-items td{padding:5px;border:1px solid #ccc;font-family:Arial,sans-serif;font-size:10px}
+.d-items td.c{text-align:center}
+.d-items td.r{text-align:right;padding-right:7px}
+.d-items tr:nth-child(even) td{background:#f8f8f8}
+
+/* Totals */
+.d-bottom{display:grid;grid-template-columns:55% 45%;border:1.5px solid #999;border-top:none}
+.d-words{padding:10px 14px;border-right:1.5px solid #999;display:flex;flex-direction:column;justify-content:center}
+.d-wlabel{font-size:9px;color:#555;font-family:Arial,sans-serif}
+.d-wval{font-size:11.5px;font-weight:900;font-family:Arial,sans-serif;margin-top:3px;line-height:1.4}
+.d-totals{}
+.d-trow{display:flex;justify-content:space-between;padding:4px 10px;font-family:Arial,sans-serif;font-size:10.5px;border-bottom:1px solid #e0e0e0}
+.d-trow .tl{font-weight:600}
+.d-trow .tv{font-weight:700;min-width:80px;text-align:right}
+.d-trow.grand{background:var(--inv-theme);color:#fff;font-weight:900;font-size:12px;border-bottom:none}
+
+/* Notes */
+.d-notes{border:1.5px solid #999;border-top:none;padding:7px 14px;font-family:Arial,sans-serif;font-size:10px}
+
+/* Footer: Bank + Decl */
+.d-row3{display:grid;grid-template-columns:55% 45%;border:1.5px solid #999;border-top:none}
+.d-bank{padding:10px 14px;border-right:1.5px solid #999;font-family:Arial,sans-serif}
+.d-bank-title{font-weight:900;font-size:11px;text-align:center;text-decoration:underline;margin-bottom:5px}
+.d-bank-row{font-size:10.5px;margin-bottom:2.5px}
+.d-decl{padding:10px 14px;font-family:Arial,sans-serif}
+.d-decl-title{font-weight:900;font-size:11px;margin-bottom:4px}
+.d-decl-text{font-size:10px;line-height:1.55;color:#333}
+
+/* Sign row */
+.d-row4{display:grid;grid-template-columns:55% 45%;border:1.5px solid #999;border-top:none;min-height:110px}
+.d-seal{padding:10px 14px;border-right:1.5px solid #999;font-family:Arial,sans-serif;display:flex;flex-direction:column;justify-content:space-between}
+.d-seal-top{font-size:10px;color:#555}
+.d-seal-img-area{flex:1;display:flex;align-items:center;justify-content:center;padding:4px 0}
+.d-sign-col{padding:10px 14px;font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:flex-end}
+.d-for{font-weight:900;font-size:11px;color:var(--inv-theme)}
+.d-sign-area{flex:1;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:4px}
+.d-prop-name{font-size:11.5px;font-weight:700;font-style:italic;color:var(--inv-theme)}
+.d-prop-desig{font-size:10px;color:#444}
+.d-auth-bar{background:var(--inv-theme);color:#fff;text-align:right;padding:4px 14px;font-family:Arial,sans-serif;font-size:10px;font-weight:700}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;z-index:1000;background:#0b1f35;border:1px solid #0ea5e9;border-radius:10px;padding:11px 18px;font-size:.8rem;font-weight:600;color:#38bdf8;display:flex;align-items:center;gap:8px;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 8px 24px rgba(14,165,233,.25)}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Print */
+@media print{
+  body {
+    background:#fff !important;
+    color:#111 !important;
+    margin:0 !important;
+    padding:0 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .topbar, .sidebar, .preview-topbar, .resize-handle {
+    display:none !important;
+  }
+  .layout {
+    display:block !important;
+  }
+  .preview-area {
+    padding:0 !important;
+    margin:0 !important;
+    background:#fff !important;
+    overflow:visible !important;
+    display:block !important;
+  }
+  #invoiceDoc {
+    width:210mm !important;
+    max-width:100% !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    margin:0 auto !important;
+    border:none !important;
+    page-break-inside:avoid !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-logo">⚡ InvoiceGen Pro</div>
+  <div class="topbar-tabs">
+    <button class="tab active" id="tabForm" onclick="switchTab('form')">📋 Invoice Form</button>
+    <button class="tab" id="tabCompany" onclick="switchTab('company')">🏢 Company Settings</button>
+    <button class="tab" id="tabBank" onclick="switchTab('bank')">🏦 Bank &amp; Declaration</button>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost btn-sm" onclick="clearInvoice()">🗑️ Clear</button>
+    <button class="btn btn-ghost btn-sm" onclick="saveProfile()">💾 Save Profile</button>
+    <button class="btn btn-ghost btn-sm" onclick="toggleRightSidebar()">🎨 Design Settings</button>
+    <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Print</button>
+    <button class="btn btn-green btn-sm" onclick="printPDF()">⬇️ PDF</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <!-- ═══ PANEL: FORM ═══ -->
+      <div id="panelForm">
+
+        <!-- Template Picker -->
+        <div class="tpl-bar">
+          <div class="tpl-bar-top">
+            <span class="tpl-label">📋 Quick Templates</span>
+            <span style="font-size:.66rem;color:var(--muted)">Click to auto-fill all fields</span>
+          </div>
+          <div class="tpl-cards" id="tplCards"></div>
+          <div class="tpl-save-row">
+            <input class="tpl-name-input" id="tplSaveName" placeholder="Template name e.g. Solar Invoice April…"/>
+            <button class="btn btn-accent btn-sm" onclick="saveAsTemplate()">💾 Save Template</button>
+          </div>
+        </div>
+
+        <!-- Invoice Meta -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">📄</span><span class="sec-title">Invoice / Quotation Info</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg-row col2">
+              <div class="fg">
+                <label>Document Type</label>
+                <select id="docType" onchange="updatePreview()">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option value="TAX INVOICE">TAX INVOICE</option>
+                  <option value="QUOTATION">QUOTATION</option>
+                  <option value="PROFORMA INVOICE">PROFORMA INVOICE</option>
+                  <option value="DELIVERY CHALLAN">DELIVERY CHALLAN</option>
+                  <option value="ESTIMATE">ESTIMATE</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Invoice / Quote No.</label>
+                <input id="invNo" type="text" placeholder="INV-2024-001" oninput="updatePreview()"/>
+              </div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg">
+                <label>Date</label>
+                <input id="invDate" type="date" oninput="updatePreview()"/>
+              </div>
+              <div class="fg">
+                <label>Valid Until</label>
+                <input id="invValid" type="date" oninput="updatePreview()"/>
+              </div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg">
+                <label>Supplier Ref. No.</label>
+                <input id="supplierRef" type="text" oninput="updatePreview()"/>
+              </div>
+              <div class="fg">
+                <label>Mode of Payment</label>
+                <select id="payMode" onchange="updatePreview()">
+                  <option value="" disabled selected>-- Select --</option>
+                  <option>NEFT/RTGS</option><option>Cash</option><option>Cheque</option>
+                  <option>UPI</option><option>Bank Transfer</option><option>Credit</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Buyer's Order No.</label><input id="buyerOrderNo" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>Other Reference</label><input id="otherRef" type="text" oninput="updatePreview()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buyer -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">👤</span><span class="sec-title">Buyer / Customer</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg"><label>Customer Name</label><input id="buyerName" type="text" placeholder="Customer Full Name" oninput="updatePreview()"/></div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Phone</label><input id="buyerPhone" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>GSTIN (optional)</label><input id="buyerGST" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg"><label>Billing Address</label><textarea id="buyerAddr" rows="3" placeholder="Street, City, State, PIN" oninput="updatePreview()"></textarea></div>
+            <div class="fg"><label>Delivery / Terms</label><input id="termsDelivery" type="text" placeholder="Delivery address or terms" oninput="updatePreview()"/></div>
+
+            <!-- Customer Seal upload — goes on LEFT of invoice -->
+            <div class="upload-zone green-zone">
+              <div class="zone-title green">🔏 Customer Seal &amp; Signature (Left Side of Invoice)</div>
+              <div class="upload-box" id="custSealBox">
+                <input type="file" accept="image/*" onchange="uploadImage(this,'custSealBox','custSealPreview','customerSealImg')"/>
+                <div class="ub-icon">🖋️</div>
+                <div class="ub-text">Click to upload Customer Seal / Signature</div>
+                <img class="upload-preview" id="custSealPreview"/>
+              </div>
+              <button class="btn btn-red btn-sm" onclick="clearImage('custSealPreview','customerSealImg')">✕ Remove Customer Seal</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">📦</span><span class="sec-title">Items / Products</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body" style="padding:10px 12px">
+            <div class="items-wrap">
+              <table class="ftable">
+                <thead>
+                  <tr>
+                    <th style="width:15px"></th>
+                    <th style="width:22px">#</th>
+                    <th style="min-width:110px">Description</th>
+                    <th style="min-width:58px">HSN/SAC</th>
+                    <th style="min-width:42px">GST%</th>
+                    <th style="min-width:34px">Qty</th>
+                    <th style="min-width:58px">Rate ₹</th>
+                    <th style="min-width:40px">Per</th>
+                    <th style="min-width:40px">Disc%</th>
+                    <th style="min-width:60px">Amount</th>
+                    <th style="width:50px"></th>
+                  </tr>
+                </thead>
+                <tbody id="itemsFormBody"></tbody>
+              </table>
+            </div>
+            <div class="items-actions">
+              <button class="add-row-btn" onclick="addItem(1)">＋ Add Row</button>
+              <div class="bulk-add">
+                <input type="number" id="bulkCount" value="5" min="1" max="50" title="Number of rows to add"/>
+                <button class="btn btn-accent btn-sm" onclick="addItem(+document.getElementById('bulkCount').value||1)">＋ Add Multiple Rows</button>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+              <div class="fg-row col2">
+                <div class="fg"><label>Discount Amount (₹)</label><input id="discount" type="number" value="0" min="0" oninput="updatePreview()"/></div>
+                <div class="fg"><label>Additional Charges (₹)</label><input id="addCharges" type="number" value="0" min="0" oninput="updatePreview()"/></div>
+              </div>
+              <div class="fg" style="margin-top:8px"><label>Charges Note</label><input id="chargesNote" type="text" placeholder="e.g. Installation & Freight" oninput="updatePreview()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax & Total Adjustments -->
+        <div class="sec" style="margin-top:10px">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">⚙️</span><span class="sec-title">Tax &amp; Total Adjustments</span></div>
+            <span class="sec-toggle">▼</span>
+          </div>
+          <div class="sec-body hidden" style="padding:10px 12px">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;margin-bottom:8px;font-size:.72rem;color:#38bdf8">
+              <input type="checkbox" id="overrideTaxes" onchange="toggleTaxOverride(this.checked)"/>
+              <strong>Use Manual Overrides (Match Images)</strong>
+            </label>
+            <div id="manualTaxFields" style="display:none;flex-direction:column;gap:6px">
+              <div class="fg-row col2">
+                <div class="fg"><label>Subtotal (Before Tax)</label><input type="number" id="mSubtotal" step="0.01" oninput="updatePreview()"/></div>
+                <div class="fg"><label>Grand Total</label><input type="number" id="mGrand" step="0.01" oninput="updatePreview()"/></div>
+              </div>
+              <div class="fg-row col2">
+                <div class="fg"><label>CGST @5% Slab (₹)</label><input type="number" id="mCgst5" step="0.01" oninput="updatePreview()"/></div>
+                <div class="fg"><label>SGST @5% Slab (₹)</label><input type="number" id="mSgst5" step="0.01" oninput="updatePreview()"/></div>
+              </div>
+              <div class="fg-row col2">
+                <div class="fg"><label>CGST @9% Slab (₹)</label><input type="number" id="mCgst9" step="0.01" oninput="updatePreview()"/></div>
+                <div class="fg"><label>SGST @9% Slab (₹)</label><input type="number" id="mSgst9" step="0.01" oninput="updatePreview()"/></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">📝</span><span class="sec-title">Notes &amp; Terms</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg"><label>Notes / Remarks</label><textarea id="invNotes" rows="3" placeholder="Special notes or instructions…" oninput="updatePreview()"></textarea></div>
+          </div>
+        </div>
+
+      </div><!-- /panelForm -->
+
+      <!-- ═══ PANEL: COMPANY ═══ -->
+      <div id="panelCompany" style="display:none">
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">🏢</span><span class="sec-title">Seller / Company Details</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg"><label>Company / Business Name</label><input id="sellerName" type="text" oninput="updatePreview()"/></div>
+            <div class="fg"><label>Address</label><textarea id="sellerAddr" rows="2" oninput="updatePreview()"></textarea></div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Email</label><input id="sellerEmail" type="email" oninput="updatePreview()"/></div>
+              <div class="fg"><label>Phone / Mobile</label><input id="sellerPhone" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg"><label>GSTIN No.</label><input id="sellerGST" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>PAN No.</label><input id="sellerPAN" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Proprietor Name</label><input id="propName" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>Designation</label><input id="propDesig" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg"><label>Company Logo (optional)</label>
+              <div class="upload-box" id="logoBox">
+                <input type="file" accept="image/*" onchange="uploadImage(this,'logoBox','logoPreview','companyLogo')"/>
+                <div class="ub-icon">🖼️</div>
+                <div class="ub-text">Click to upload logo (PNG/JPG)</div>
+                <img class="upload-preview" id="logoPreview"/>
+              </div>
+            </div>
+
+            <!-- Company Signature + Stamp upload -->
+            <div class="upload-zone purple-zone">
+              <div class="zone-title purple">✍️ Company Signature &amp; Stamp (Right Side of Invoice)</div>
+              <div class="fg-row col2">
+                <div class="fg">
+                  <label>Signature Image</label>
+                  <div class="upload-box" id="signBox">
+                    <input type="file" accept="image/*" onchange="uploadImage(this,'signBox','signPreview','signatureImg')"/>
+                    <div class="ub-icon">✍️</div>
+                    <div class="ub-text">Upload Signature</div>
+                    <img class="upload-preview" id="signPreview"/>
+                  </div>
+                  <button class="btn btn-red btn-sm" style="margin-top:5px;width:100%" onclick="clearImage('signPreview','signatureImg')">✕ Remove</button>
+                </div>
+                <div class="fg">
+                  <label>Stamp / Seal Image</label>
+                  <div class="upload-box" id="stampBox">
+                    <input type="file" accept="image/*" onchange="uploadImage(this,'stampBox','stampPreview','stampImg')"/>
+                    <div class="ub-icon">🔵</div>
+                    <div class="ub-text">Upload Stamp/Seal</div>
+                    <img class="upload-preview" id="stampPreview"/>
+                  </div>
+                  <button class="btn btn-red btn-sm" style="margin-top:5px;width:100%" onclick="clearImage('stampPreview','stampImg')">✕ Remove</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div><!-- /panelCompany -->
+
+      <!-- ═══ PANEL: BANK ═══ -->
+      <div id="panelBank" style="display:none">
+        <!-- Bank Details -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">🏦</span><span class="sec-title">Bank Details</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg"><label>Bank Name</label><input id="bankName" type="text" oninput="updatePreview()"/></div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Branch</label><input id="bankBranch" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>A/C Holder Name</label><input id="bankHolder" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg"><label>Account Number</label><input id="bankAcc" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label>IFSC Code</label><input id="bankIFSC" type="text" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col2">
+              <div class="fg">
+                <label>Account Type</label>
+                <select id="bankType" onchange="updatePreview()">
+                  <option>Current Account</option><option>Savings Account</option>
+                </select>
+              </div>
+              <div class="fg"><label>Bank GSTIN (if any)</label><input id="bankGST" type="text" oninput="updatePreview()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Declaration -->
+        <div class="sec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">📜</span><span class="sec-title">Declaration</span></div>
+            <span class="sec-toggle open">▼</span>
+          </div>
+          <div class="sec-body">
+            <div class="fg">
+              <label>Declaration Text</label>
+              <textarea id="declText" rows="4" oninput="updatePreview()">We declare that this invoice show the actual price of the goods and that all particulars are true and correct.</textarea>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panelBank -->
+
+    </div>
+  </aside>
+
+  <!-- RESIZE HANDLE -->
+  <div class="resize-handle" id="resizeHandle" title="Drag to resize">
+    <div class="rh-grip">
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+    </div>
+  </div>
+
+  <!-- PREVIEW -->
+  <main class="preview-area">
+    <div class="preview-topbar">
+      <div class="preview-topbar-label"><span class="live-dot"></span>Live Preview — Auto-updates instantly</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Print</button>
+        <button class="btn btn-green btn-sm" onclick="printPDF()">⬇️ PDF</button>
+      </div>
+    </div>
+
+    <!-- INVOICE DOC -->
+    <div id="invoiceDoc">
+      <div class="d-topstrip" id="p_docType">TAX INVOICE</div>
+      <div class="d-body">
+
+        <!-- Seller + Meta -->
+        <div class="d-row1">
+          <div class="d-seller">
+            <div class="cname" id="p_sellerName"></div>
+            <div class="cdet" id="p_sellerAddr"></div>
+            <div class="cdet">E-mail: <span id="p_sellerEmail"></span></div>
+            <div class="cdet">Ph: <span id="p_sellerPhone"></span></div>
+            <div class="cgst">GST NO : <span id="p_sellerGST"></span>&nbsp;&nbsp; PAN : <span id="p_sellerPAN"></span></div>
+          </div>
+          <div class="d-meta">
+            <div class="d-meta-r">
+              <div class="d-meta-c"><div class="ml">Invoice / Quote No.</div><div class="mv" id="p_invNo"></div></div>
+              <div class="d-meta-c"><div class="ml">Date</div><div class="mv" id="p_invDate"></div></div>
+            </div>
+            <div class="d-meta-r">
+              <div class="d-meta-c"><div class="ml">Supplier's Ref. No.</div><div class="mv" id="p_supplierRef"></div></div>
+              <div class="d-meta-c"><div class="ml">Mode/Term of Payment</div><div class="mv" id="p_payMode"></div></div>
+            </div>
+            <div class="d-meta-r">
+              <div class="d-meta-c"><div class="ml">Buyer's Order No.</div><div class="mv" id="p_buyerOrderNo"></div></div>
+              <div class="d-meta-c"><div class="ml">Other References</div><div class="mv" id="p_otherRef"></div></div>
+            </div>
+            <div class="d-meta-r">
+              <div class="d-meta-c" style="grid-column:span 2"><div class="ml">Valid Until</div><div class="mv" id="p_invValid"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buyer -->
+        <div class="d-row2">
+          <div class="d-buyer-c">
+            <div class="d-blabel">Buyer / Customer</div>
+            <div class="d-bname" id="p_buyerName"></div>
+            <div class="d-baddr" id="p_buyerAddr"></div>
+            <div class="d-baddr" id="p_buyerPhone" style="margin-top:2px;font-size:10px"></div>
+            <div id="p_buyerGST" style="font-size:10px;font-family:Arial,sans-serif;margin-top:1px"></div>
+          </div>
+          <div class="d-buyer-c">
+            <div class="d-blabel">Terms Of Delivery</div>
+            <div class="d-baddr" id="p_termsDelivery"></div>
+          </div>
+        </div>
+
+        <!-- Items table -->
+        <table class="d-items">
+          <thead>
+            <tr>
+              <th>Sl.</th>
+              <th style="text-align:left;padding-left:6px">Description of Goods / Services</th>
+              <th>HSN/SAC</th>
+              <th>GST Rate%</th>
+              <th>Qty</th>
+              <th>Rate (₹)</th>
+              <th>Per</th>
+              <th>Disc%</th>
+              <th>Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="p_itemsBody"></tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="d-bottom">
+          <div class="d-words">
+            <div class="d-wlabel">Amount Chargeable (in words)</div>
+            <div class="d-wval" id="p_amtWords"></div>
+          </div>
+          <div class="d-totals" id="p_totalsBlock"></div>
+        </div>
+
+        <!-- Notes -->
+        <div id="p_notesRow" class="d-notes" style="display:none"><strong>Notes:</strong> <span id="p_notes"></span></div>
+
+        <!-- Bank + Declaration -->
+        <div class="d-row3">
+          <div class="d-bank">
+            <div class="d-bank-title">Bank Details</div>
+            <div class="d-bank-row">Bank Name :- <strong id="p_bankName"></strong></div>
+            <div class="d-bank-row">A/C.Holder Name :- <strong id="p_bankHolder"></strong></div>
+            <div class="d-bank-row">Branch Name :- <strong id="p_bankBranch"></strong></div>
+            <div class="d-bank-row">A/C No.:- <strong id="p_bankAcc"></strong></div>
+            <div class="d-bank-row">IFSC Code :- <strong id="p_bankIFSC"></strong></div>
+            <div class="d-bank-row">GST NO : <strong id="p_bankGST"></strong></div>
+          </div>
+          <div class="d-decl">
+            <div class="d-decl-title">Declaration:</div>
+            <div class="d-decl-text" id="p_declText"></div>
+          </div>
+        </div>
+
+        <!-- Sign Row -->
+        <div class="d-row4">
+          <!-- LEFT: Customer Seal -->
+          <div class="d-seal">
+            <div class="d-seal-top">Customer's Seal &amp; Signature</div>
+            <div class="d-seal-img-area">
+              <img id="p_custSealImg" style="max-height:65px;max-width:160px;object-fit:contain;display:none" alt="Customer Seal"/>
+              <div id="p_custSealBlank" style="width:150px;height:52px;border:1.5px dashed #ccc;border-radius:3px"></div>
+            </div>
+          </div>
+          <!-- RIGHT: Company Sign -->
+          <div class="d-sign-col">
+            <div class="d-for">For, <span id="p_forName"></span></div>
+            <div class="d-sign-area">
+              <img id="p_signImg" style="max-height:52px;max-width:130px;object-fit:contain;display:none" alt="Signature"/>
+              <img id="p_stampImg" style="max-height:52px;max-width:120px;object-fit:contain;display:none" alt="Stamp"/>
+              <div id="p_signBlank" style="width:130px;height:42px;border-bottom:1px dashed #bbb;display:none"></div>
+            </div>
+            <div id="p_propBlock">
+              <div class="d-prop-name" id="p_propName"></div>
+              <div class="d-prop-desig" id="p_propDesig"></div>
+              <div style="font-size:9px;color:#777;margin-top:2px">Authorised Signatory</div>
+            </div>
+          </div>
+        </div>
+        <div class="d-auth-bar">Authorised Signatory</div>
+
+      </div>
+    </div><!-- /invoiceDoc -->
+  </main>
+
+  <!-- RESIZE HANDLE RIGHT -->
+  <div class="resize-handle-right" id="resizeHandleRight" title="Drag to resize">
+    <div class="rh-grip">
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+      <div class="rh-dot"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR (Design & Styling) -->
+  <aside class="sidebar-right hidden-sidebar">
+    <div class="sidebar-inner">
+      <div class="sec">
+        <div class="sec-head">
+          <div class="sec-head-left"><span class="sec-icon">🎨</span><span class="sec-title">Design &amp; Styling</span></div>
+        </div>
+        <div class="sec-body" style="padding:15px;display:flex;flex-direction:column;gap:12px">
+          <div class="fg">
+            <label>Theme Color</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input type="color" id="invThemeColor" value="#1a237e" oninput="updateDesignSettings()" style="width:40px;height:30px;padding:0;border:none;border-radius:4px;cursor:pointer"/>
+              <select id="invThemePreset" onchange="document.getElementById('invThemeColor').value=this.value;updateDesignSettings()" style="flex:1;background:var(--input);border:1px solid var(--border);border-radius:6px;color:#fff;padding:6px;font-size:.76rem">
+                <option value="#1a237e">Ocean Blue</option>
+                <option value="#dc2626">Crimson Red</option>
+                <option value="#16a34a">Emerald Green</option>
+                <option value="#d97706">Amber Orange</option>
+                <option value="#000000">Classic Black</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Font Size</label>
+            <select id="invFontSize" onchange="updateDesignSettings()" style="background:var(--input);border:1px solid var(--border);border-radius:6px;color:#fff;padding:6px;font-size:.76rem">
+              <option value="10">Small (10px)</option>
+              <option value="11" selected>Normal (11px)</option>
+              <option value="12">Medium (12px)</option>
+              <option value="13">Large (13px)</option>
+              <option value="14">Extra Large (14px)</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Font Family</label>
+            <select id="invFontFamily" onchange="updateDesignSettings()" style="background:var(--input);border:1px solid var(--border);border-radius:6px;color:#fff;padding:6px;font-size:.76rem">
+              <option value="'Times New Roman', Times, serif" selected>Times New Roman</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Courier New', Courier, monospace">Courier New</option>
+              <option value="system-ui, sans-serif">System UI</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="toast" id="toast">✅ <span id="toastMsg"></span></div>
+
+<script>
+// ════ STATE ════
+let items = [];
+let signatureImg   = null;
+let stampImg       = null;
+let companyLogo    = null;
+let customerSealImg= null;
+
+// ════ BUILT-IN TEMPLATES ════
+const BUILTIN_TEMPLATES = [{
+  id:'tpl_solar_189000_v5',
+  name:'Tax Invoice – ₹1,89,000',
+  amount:189000,
+  docType:'TAX INVOICE',
+  invNo:'INV-2024-001',
+  invDate:'2024-01-15',
+  invValid:'',
+  supplierRef:'',
+  payMode:'NEFT/RTGS',
+  buyerOrderNo:'',
+  otherRef:'',
+  buyerName:'BISHWAJIT MUKHARJI',
+  buyerPhone:'',
+  buyerGST:'',
+  buyerAddr:'1 No Sunajuli Bhergaon\nDist -Udalguri Pin-784526\nState: Assam',
+  termsDelivery:'1 No Sunajuli Bhergaon, Dist-Udalguri',
+  discount:0,
+  addCharges:0,
+  chargesNote:'',
+  invNotes:'',
+  manualTaxes: {
+    subtotal: 176697.70,
+    grand: 189000.00,
+    cgst5: 3475.00,
+    sgst5: 3475.00,
+    cgst9: 2676.15,
+    sgst9: 2676.15
+  },
+  items:[
+    {desc:'Solar Inverter On Grid',hsn:'85044090',gst:5,qty:1,rate:25000,amount:25000},
+    {desc:'Solar Panel',hsn:'85414300',gst:5,qty:6,rate:19000,amount:114000},
+    {desc:'ACDB/DCDB Single phase',hsn:'85369090',gst:18,qty:2,rate:2300,amount:4600},
+    {desc:'Lighting Arrester Copper',hsn:'85369090',gst:18,qty:1,rate:1525,amount:1525},
+    {desc:'MC4 Connector 1 In 1 OUT',hsn:'85369090',gst:18,qty:4,rate:215.85,amount:860},
+    {desc:'Aluminium Rail, Mid clamp, end clamp',hsn:'73089090',gst:18,qty:1,rate:3813.6,amount:3813.60},
+    {desc:'Ring Lugs',hsn:'85369090',gst:18,qty:3,rate:50.83,amount:1524.90},
+    {desc:'Tie Cable',hsn:'39174000',gst:18,qty:2,rate:217.92,amount:435.84},
+    {desc:'Solar DC Cable 4 sq mm',hsn:'85444999',gst:18,qty:1,rate:3920,amount:3920},
+    {desc:'AC Cable 4sq mm FR',hsn:'85444999',gst:18,qty:1,rate:4160,amount:4160},
+    {desc:'Energy Matter Single phase LCD',hsn:'90283010',gst:18,qty:1,rate:762.62,amount:762.62},
+    {desc:'Earthing Electrode G.I',hsn:'85359090',gst:18,qty:3,rate:1473.5,amount:4420.50},
+    {desc:'BFC 15 Kg Silica base',hsn:'38249090',gst:18,qty:3,rate:254.23,amount:762.69},
+    {desc:'AC cable 2.5 sq mm FR',hsn:'85444999',gst:18,qty:1,rate:2950,amount:2950},
+    {desc:'Solar Installation Charge & Carrying Charge',hsn:'',gst:0,qty:'',rate:'',amount:7962.55},
+  ]
+}, {
+  id:'tpl_solar_198000_v5',
+  name:'Tax Invoice – ₹1,98,000',
+  amount:198000,
+  docType:'TAX INVOICE',
+  invNo:'INV-2024-002',
+  invDate:'2024-01-15',
+  invValid:'',
+  supplierRef:'',
+  payMode:'NEFT/RTGS',
+  buyerOrderNo:'',
+  otherRef:'',
+  buyerName:'BISHWAJIT MUKHARJI',
+  buyerPhone:'',
+  buyerGST:'',
+  buyerAddr:'1 No Sunajuli Bhergaon\nDist -Udalguri Pin-784526\nState: Assam',
+  termsDelivery:'1 No Sunajuli Bhergaon, Dist-Udalguri',
+  discount:0,
+  addCharges:0,
+  chargesNote:'',
+  invNotes:'',
+  manualTaxes: {
+    subtotal: 185697.70,
+    grand: 198000.00,
+    cgst5: 3475.00,
+    sgst5: 3475.00,
+    cgst9: 2676.15,
+    sgst9: 2676.15
+  },
+  items:[
+    {desc:'Solar Inverter On Grid',hsn:'85044090',gst:5,qty:1,rate:25000,amount:25000},
+    {desc:'Solar Panel',hsn:'85414300',gst:5,qty:6,rate:19000,amount:114000},
+    {desc:'ACDB/DCDB Single phase',hsn:'85369090',gst:18,qty:2,rate:2300,amount:4600},
+    {desc:'Lighting Arrester Copper',hsn:'85369090',gst:18,qty:1,rate:1525,amount:1525},
+    {desc:'MC4 Connector 1 In 1 OUT',hsn:'85369090',gst:18,qty:4,rate:215.85,amount:860},
+    {desc:'Aluminium Rail, Mid clamp, end clamp',hsn: '73089090',gst:18,qty:1,rate:3813.6,amount:3813.60},
+    {desc:'Ring Lugs',hsn:'85369090',gst:18,qty:3,rate:50.83,amount:1524.90},
+    {desc:'Tie Cable',hsn:'39174000',gst:18,qty:2,rate:217.92,amount:435.84},
+    {desc:'Solar DC Cable 4 sq mm',hsn:'85444999',gst:18,qty:1,rate:3920,amount:3920},
+    {desc:'AC Cable 4sq mm FR',hsn:'85444999',gst:18,qty:1,rate:4160,amount:4160},
+    {desc:'Energy Matter Single phase LCD',hsn:'90283010',gst:18,qty:1,rate:762.62,amount:762.62},
+    {desc:'Earthing Electrode G.I',hsn:'85359090',gst:18,qty:3,rate:1473.5,amount:4420.50},
+    {desc:'BFC 15 Kg Silica base',hsn:'38249090',gst:18,qty:3,rate:254.23,amount:762.69},
+    {desc:'AC cable 2.5 sq mm FR',hsn:'85444999',gst:18,qty:1,rate:2950,amount:2950},
+    {desc:'Solar Installation Charge & Carrying Charge',hsn:'',gst:0,qty:'',rate:'',amount:16962.55},
+  ]
+}, {
+  id:'tpl_solar_210000_v5',
+  name:'Tax Invoice – ₹2,10,000',
+  amount:210000,
+  docType:'TAX INVOICE',
+  invNo:'INV-2024-003',
+  invDate:'2024-01-15',
+  invValid:'',
+  supplierRef:'',
+  payMode:'NEFT/RTGS',
+  buyerOrderNo:'',
+  otherRef:'',
+  buyerName:'BISHWAJIT MUKHARJI',
+  buyerPhone:'',
+  buyerGST:'',
+  buyerAddr:'1 No Sunajuli Bhergaon\nDist -Udalguri Pin-784526\nState: Assam',
+  termsDelivery:'1 No Sunajuli Bhergaon, Dist-Udalguri',
+  discount:0,
+  addCharges:0,
+  chargesNote:'',
+  invNotes:'',
+  manualTaxes: {
+    subtotal: 196932.24,
+    grand: 210000.00,
+    cgst5: 3760.00,
+    sgst5: 3760.00,
+    cgst9: 2773.88,
+    sgst9: 2773.88
+  },
+  items:[
+    {desc:'Solar Inverter On Grid',hsn:'85044090',gst:5,qty:1,rate:26200,amount:26200},
+    {desc:'Solar Panel',hsn:'85414300',gst:5,qty:6,rate:20800,amount:124800},
+    {desc:'ACDB/DCDB Single phase',hsn:'85369090',gst:18,qty:2,rate:2300,amount:4600},
+    {desc:'Lighting Arrester Copper',hsn:'85369090',gst:18,qty:1,rate:1525,amount:1525},
+    {desc:'MC4 Connector 1 In 1 OUT',hsn:'85369090',gst:18,qty:4,rate:215.85,amount:860},
+    {desc:'Aluminium Rail, Mid clamp, end clamp',hsn:'73089090',gst:18,qty:1,rate:3813.6,amount:3813.60},
+    {desc:'Ring Lugs',hsn:'85369090',gst:18,qty:3,rate:50.83,amount:1524.90},
+    {desc:'Tie Cable',hsn:'39174000',gst:18,qty:2,rate:217.92,amount:435.84},
+    {desc:'Solar DC Cable 4 sq mm',hsn:'85444999',gst:18,qty:1,rate:3920,amount:3920},
+    {desc:'AC Cable 4sq mm FR',hsn:'85444999',gst:18,qty:1,rate:4160,amount:4160},
+    {desc:'Energy Matter Single phase LCD',hsn:'90283010',gst:18,qty:1,rate:762.62,amount:762.62},
+    {desc:'Earthing Electrode G.I',hsn:'85359090',gst:18,qty:3,rate:1473.5,amount:4420.50},
+    {desc:'BFC 15 Kg Silica base',hsn:'38249090',gst:18,qty:3,rate:254.23,amount:762.69},
+    {desc:'AC cable 2.5 sq mm FR',hsn:'85444999',gst:18,qty:1,rate:2950,amount:2950},
+    {desc:'Solar Installation Charge & Carrying Charge',hsn:'',gst:0,qty:'',rate:'',amount:16197.09},
+  ]
+}, {
+  id:'tpl_solar_220000_v5',
+  name:'Tax Invoice – ₹2,20,000',
+  amount:220000,
+  docType:'TAX INVOICE',
+  invNo:'INV-2024-004',
+  invDate:'2024-01-15',
+  invValid:'',
+  supplierRef:'',
+  payMode:'NEFT/RTGS',
+  buyerOrderNo:'',
+  otherRef:'',
+  buyerName:'BISHWAJIT MUKHARJI',
+  buyerPhone:'',
+  buyerGST:'',
+  buyerAddr:'1 No Sunajuli Bhergaon\nDist -Udalguri Pin-784526\nState: Assam',
+  termsDelivery:'1 No Sunajuli Bhergaon, Dist-Udalguri',
+  discount:0,
+  addCharges:0,
+  chargesNote:'',
+  invNotes:'',
+  manualTaxes: {
+    subtotal: 206617.06,
+    grand: 220000.00,
+    cgst5: 4015.00,
+    sgst5: 4015.00,
+    cgst9: 2676.47,
+    sgst9: 2676.47
+  },
+  items:[
+    {desc:'Solar Inverter On Grid',hsn:'85044090',gst:5,qty:1,rate:31000,amount:31000},
+    {desc:'Solar Panel',hsn:'85414300',gst:5,qty:6,rate:21600,amount:129600},
+    {desc:'ACDB/DCDB Single phase',hsn:'85369090',gst:18,qty:2,rate:2300,amount:4600},
+    {desc:'Lighting Arrester Copper',hsn:'85369090',gst:18,qty:1,rate:1525,amount:1525},
+    {desc:'MC4 Connector 1 In 1 OUT',hsn:'85369090',gst:18,qty:4,rate:215.85,amount:860},
+    {desc:'Aluminium Rail, Mid clamp, end clamp',hsn:'73089090',gst:18,qty:1,rate:3813.6,amount:3813.60},
+    {desc:'Ring Lugs',hsn:'85369090',gst:18,qty:3,rate:50.83,amount:1524.90},
+    {desc:'Tie Cable',hsn:'39174000',gst:18,qty:2,rate:217.92,amount:435.84},
+    {desc:'Solar DC Cable 4 sq mm',hsn:'85444999',gst:18,qty:1,rate:3920,amount:3920},
+    {desc:'AC Cable 4sq mm FR',hsn:'85444999',gst:18,qty:1,rate:4160,amount:4160},
+    {desc:'Energy Matter Single phase LCD',hsn:'90283010',gst:18,qty:1,rate:762.62,amount:762.62},
+    {desc:'Earthing Electrode G.I',hsn:'85359090',gst:18,qty:3,rate:1473.5,amount:4420.50},
+    {desc:'BFC 15 Kg Silica base',hsn:'38249090',gst:18,qty:3,rate:254.23,amount:762.69},
+    {desc:'AC cable 2.5 sq mm FR',hsn:'85444999',gst:18,qty:1,rate:2950,amount:2950},
+    {desc:'Solar Installation Charge & Carrying Charge',hsn:'',gst:0,qty:'',rate:'',amount:16281.91},
+  ]
+}];
+
+// ════ TEMPLATE FUNCTIONS ════
+function getAllTemplates(){
+  const custom = JSON.parse(localStorage.getItem('inv_custom_tpls')||'[]');
+  return [...BUILTIN_TEMPLATES,...custom];
+}
+
+function renderTemplateCards(){
+  const c = document.getElementById('tplCards'); if(!c) return;
+  const all = getAllTemplates();
+  c.innerHTML='';
+  all.forEach(tpl=>{
+    const isBuiltin = BUILTIN_TEMPLATES.some(b=>b.id===tpl.id);
+    const card=document.createElement('div');
+    card.className='tpl-card'; card.id='tplcard_'+tpl.id;
+    card.innerHTML=`<div class="tc-name">${esc(tpl.name)}</div><div class="tc-amt">₹${fmt(tpl.amount||0)}</div><div class="tc-type">${esc(tpl.docType||'')}</div>${!isBuiltin?`<button class="tc-del" onclick="deleteTpl('${tpl.id}',event)">✕ Delete</button>`:''}`;
+    card.onclick=(e)=>{ if(e.target.classList.contains('tc-del')) return; loadTemplate(tpl.id); };
+    c.appendChild(card);
+  });
+}
+
+function loadTemplate(id){
+  const tpl=getAllTemplates().find(t=>t.id===id); if(!tpl) return;
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('active-tpl'));
+  const ac=document.getElementById('tplcard_'+id); if(ac) ac.classList.add('active-tpl');
+
+  const fields=['docType','invNo','invDate','invValid','supplierRef','payMode',
+    'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
+    'termsDelivery','discount','addCharges','chargesNote','invNotes'];
+  fields.forEach(f=>{ const el=document.getElementById(f); if(el&&tpl[f]!==undefined&&tpl[f]!==null) el.value=tpl[f]; });
+  
+  // Apply manual taxes override if defined
+  const overCb = document.getElementById('overrideTaxes');
+  const overFields = document.getElementById('manualTaxFields');
+  if(tpl.manualTaxes && overCb && overFields) {
+    overCb.checked = true;
+    overFields.style.display = 'flex';
+    document.getElementById('mSubtotal').value = tpl.manualTaxes.subtotal;
+    document.getElementById('mGrand').value = tpl.manualTaxes.grand;
+    document.getElementById('mCgst5').value = tpl.manualTaxes.cgst5;
+    document.getElementById('mSgst5').value = tpl.manualTaxes.sgst5;
+    document.getElementById('mCgst9').value = tpl.manualTaxes.cgst9;
+    document.getElementById('mSgst9').value = tpl.manualTaxes.sgst9;
+  } else if(overCb && overFields) {
+    overCb.checked = false;
+    overFields.style.display = 'none';
+  }
+
+  items=tpl.items.map(i=>({...i}));
+  renderItemsForm();
+  switchTab('form');
+  toast('✅ Template "'+tpl.name+'" loaded!');
+}
+
+function saveAsTemplate(){
+  const name=document.getElementById('tplSaveName').value.trim();
+  if(!name){ toast('⚠️ Template ka naam likho!'); return; }
+  const {grand}=calcTotals();
+  const custom=JSON.parse(localStorage.getItem('inv_custom_tpls')||'[]');
+  const tpl={id:'tpl_'+Date.now(),name,amount:grand,
+    docType:gv('docType'),invNo:gv('invNo'),invDate:gv('invDate'),invValid:gv('invValid'),
+    supplierRef:gv('supplierRef'),payMode:gv('payMode'),buyerOrderNo:gv('buyerOrderNo'),
+    otherRef:gv('otherRef'),buyerName:gv('buyerName'),buyerPhone:gv('buyerPhone'),
+    buyerGST:gv('buyerGST'),buyerAddr:gv('buyerAddr'),termsDelivery:gv('termsDelivery'),
+    discount:+gv('discount')||0,addCharges:+gv('addCharges')||0,
+    chargesNote:gv('chargesNote'),invNotes:gv('invNotes'),
+    items:items.map(i=>({...i}))};
+  custom.push(tpl);
+  localStorage.setItem('inv_custom_tpls',JSON.stringify(custom));
+  document.getElementById('tplSaveName').value='';
+  renderTemplateCards();
+  toast('💾 Template "'+name+'" saved!');
+}
+
+function deleteTpl(id,e){
+  e&&e.stopPropagation();
+  if(!confirm('Delete this template?')) return;
+  let custom=JSON.parse(localStorage.getItem('inv_custom_tpls')||'[]');
+  custom=custom.filter(t=>t.id!==id);
+  localStorage.setItem('inv_custom_tpls',JSON.stringify(custom));
+  renderTemplateCards(); toast('🗑️ Deleted');
+}
+
+// ════ DRAG & DROP COLUMNS & ROWS ════
+let dragIdx = null;
+let dragColIdx = null;
+
+let columns = [
+  { id: 'desc', label: 'Description', type: 'text', fixed: true },
+  { id: 'hsn', label: 'HSN/SAC', type: 'text' },
+  { id: 'gst', label: 'GST%', type: 'select' },
+  { id: 'qty', label: 'Qty', type: 'number' },
+  { id: 'rate', label: 'Rate ₹', type: 'number' },
+  { id: 'per', label: 'Per', type: 'text' },
+  { id: 'disc', label: 'Disc%', type: 'text' },
+  { id: 'amount', label: 'Amount', type: 'number', fixed: true }
+];
+
+// Row Drag Handlers
+function rowDragStart(e, idx) {
+  dragIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', idx);
+  setTimeout(() => {
+    const trs = document.querySelectorAll('#itemsFormBody tr');
+    if(trs[idx]) trs[idx].style.opacity = '0.3';
+  }, 0);
+}
+function rowDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('row-drag-over');
+}
+function rowDragLeave(e) {
+  e.currentTarget.classList.remove('row-drag-over');
+}
+function rowDragDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('row-drag-over');
+  if (dragIdx === null || dragIdx === targetIdx) return;
+  const draggedItem = items[dragIdx];
+  items.splice(dragIdx, 1);
+  items.splice(targetIdx, 0, draggedItem);
+  renderItemsForm();
+}
+function rowDragEnd() {
+  dragIdx = null;
+  renderItemsForm();
+}
+
+// Column Drag Handlers
+function colDragStart(e, idx) {
+  dragColIdx = idx;
+  e.dataTransfer.effectAllowed = 'move';
+  e.target.classList.add('dragging-col');
+}
+function colDragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('col-drag-over');
+}
+function colDragLeave(e) {
+  e.currentTarget.classList.remove('col-drag-over');
+}
+function colDragDrop(e, targetIdx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('col-drag-over');
+  if (dragColIdx === null || dragColIdx === targetIdx) return;
+  const temp = columns[dragColIdx];
+  columns.splice(dragColIdx, 1);
+  columns.splice(targetIdx, 0, temp);
+  renderItemsForm();
+}
+function colDragEnd() {
+  dragColIdx = null;
+  document.querySelectorAll('.ftable th').forEach(th => th.classList.remove('dragging-col', 'col-drag-over'));
+}
+
+// ════ ITEMS ════
+function renderItemsForm(){
+  const thead = document.querySelector('.ftable thead tr');
+  const tbody = document.getElementById('itemsFormBody');
+  if(!thead || !tbody) return;
+
+  // Render headers dynamically based on column order
+  let headHtml = '<th style="width:15px; cursor:default"></th><th style="width:22px; cursor:default">#</th>';
+  columns.forEach((col, idx) => {
+    headHtml += `
+      <th draggable="true" 
+          ondragstart="colDragStart(event, ${idx})" 
+          ondragover="colDragOver(event)" 
+          ondragleave="colDragLeave(event)" 
+          ondrop="colDragDrop(event, ${idx})" 
+          ondragend="colDragEnd()">${esc(col.label)}</th>`;
+  });
+  headHtml += '<th style="width:50px; cursor:default"></th>';
+  thead.innerHTML = headHtml;
+
+  // Render body rows
+  tbody.innerHTML = '';
+  items.forEach((item, idx) => {
+    const tr = document.createElement('tr');
+    tr.addEventListener('dragover', rowDragOver);
+    tr.addEventListener('dragleave', rowDragLeave);
+    tr.addEventListener('drop', (e) => rowDragDrop(e, idx));
+
+    let cellsHtml = `
+      <td style="text-align:center;">
+        <span class="drag-handle" style="cursor:grab;font-size:1.1rem;color:var(--muted);user-select:none;display:inline-block;padding:2px 4px" 
+              draggable="true" 
+              ondragstart="rowDragStart(event, ${idx})" 
+              ondragend="rowDragEnd()">⠿</span>
+      </td>
+      <td style="text-align:center;color:var(--muted);font-size:.64rem">${idx+1}</td>
+    `;
+
+    // Map inputs to columns in dynamic order
+    columns.forEach(col => {
+      const val = item[col.id] !== undefined && item[col.id] !== null ? item[col.id] : '';
+      if(col.id === 'desc') {
+        cellsHtml += `<td><input type="text" value="${esc(val)}" placeholder="Item name" oninput="items[${idx}].desc=this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'hsn') {
+        cellsHtml += `<td><input type="text" value="${esc(val)}" placeholder="HSN" oninput="items[${idx}].hsn=this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'gst') {
+        cellsHtml += `<td>
+          <select onchange="items[${idx}].gst=+this.value;updatePreview()">
+            ${[0,5,12,18,28].map(g=>`<option value="${g}"${+val===g?' selected':''} >${g}%</option>`).join('')}
+          </select>
+        </td>`;
+      } else if(col.id === 'qty') {
+        cellsHtml += `<td><input type="number" min="0" value="${val}" placeholder="Qty" oninput="items[${idx}].qty=this.value===''?undefined:+this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'rate') {
+        cellsHtml += `<td><input type="number" min="0" step="0.01" value="${val}" placeholder="Rate" oninput="items[${idx}].rate=this.value===''?undefined:+this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'per') {
+        cellsHtml += `<td><input type="text" value="${esc(val)}" placeholder="Nos" oninput="items[${idx}].per=this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'disc') {
+        cellsHtml += `<td><input type="text" value="${esc(val)}" placeholder="Disc%" oninput="items[${idx}].disc=this.value;updatePreview()"/></td>`;
+      } else if(col.id === 'amount') {
+        const autoCalc = ((+item.qty || 0) * (+item.rate || 0)).toFixed(2);
+        cellsHtml += `<td><input type="number" min="0" step="0.01" value="${val}" placeholder="${autoCalc}" oninput="items[${idx}].amount=this.value===''?undefined:+this.value;updatePreview()" style="font-weight:700;color:var(--green)"/></td>`;
+      }
+    });
+
+    cellsHtml += `
+      <td>
+        <div style="display:flex;gap:3px;align-items:center">
+          <button class="btn btn-accent btn-sm" style="padding:2px 5px;font-size:.65rem;border-radius:4px" onclick="insertItem(${idx})" title="Insert row below">＋</button>
+          <button class="del-btn" style="padding:2px 5px;font-size:.65rem;border-radius:4px" onclick="delItem(${idx})">✕</button>
+        </div>
+      </td>
+    `;
+    tr.innerHTML = cellsHtml;
+    tbody.appendChild(tr);
+  });
+  updatePreview();
+}
+
+function addItem(n){
+  n = Math.max(1, Math.min(+n||1, 50));
+  for(let i=0;i<n;i++) items.push({desc:'',hsn:'',gst:18,qty:'',rate:'',per:'',disc:'',amount:undefined});
+  renderItemsForm();
+  toast(`➕ ${n} row${n>1?'s':''} added`);
+}
+
+function insertItem(idx){
+  items.splice(idx + 1, 0, {desc:'',hsn:'',gst:18,qty:'',rate:'',per:'',disc:'',amount:undefined});
+  renderItemsForm();
+  toast('➕ Row inserted!');
+}
+
+function delItem(i){ items.splice(i,1); renderItemsForm(); }
+
+// ════ CALC ════
+function calcTotals(){
+  const isOverride = document.getElementById('overrideTaxes')?.checked;
+  
+  if (isOverride) {
+    const mSub = +gv('mSubtotal') || 0;
+    const mGrd = +gv('mGrand') || 0;
+    const mC5 = +gv('mCgst5') || 0;
+    const mS5 = +gv('mSgst5') || 0;
+    const mC9 = +gv('mCgst9') || 0;
+    const mS9 = +gv('mSgst9') || 0;
+    
+    const overrideByGST = {};
+    if (mC5 > 0 || mS5 > 0) {
+      overrideByGST[5] = { cgst: mC5, sgst: mS5 };
+    }
+    if (mC9 > 0 || mS9 > 0) {
+      overrideByGST[18] = { cgst: mC9, sgst: mS9 };
+    }
+    
+    return {
+      byGST: overrideByGST,
+      subtotal: mSub,
+      discount: 0,
+      addChrg: 0,
+      taxableAfterDisc: mSub,
+      totalTax: mC5 + mS5 + mC9 + mS9,
+      grand: mGrd
+    };
+  }
+
+  const byGST={};
+  items.forEach(item=>{
+    const amt = item.amount !== undefined ? item.amount : ((+item.qty || 0) * (+item.rate || 0));
+    const g=item.gst;
+    if(!byGST[g]) byGST[g]={taxable:0};
+    byGST[g].taxable+=amt;
+  });
+  let subtotal=0; Object.values(byGST).forEach(v=>subtotal+=v.taxable);
+  const discount=+(gv('discount')||0);
+  const addChrg=+(gv('addCharges')||0);
+  const taxableAfterDisc=Math.max(0,subtotal-discount);
+  let totalTax=0;
+  Object.entries(byGST).forEach(([g,v])=>{
+    const ratio=subtotal>0?v.taxable/subtotal:0;
+    const taxBase=taxableAfterDisc*ratio;
+    // Round individual taxes to 2 decimal places
+    v.cgst=Math.round(( (taxBase*(+g)/100)/2 ) * 100) / 100;
+    v.sgst=v.cgst;
+    totalTax+=v.cgst+v.sgst;
+  });
+  // Round grand total to 2 decimal places
+  const grand=Math.round((taxableAfterDisc+totalTax+addChrg) * 100) / 100;
+  return {byGST,subtotal,discount,addChrg,taxableAfterDisc,totalTax,grand};
+}
+
+function toggleTaxOverride(checked) {
+  const container = document.getElementById('manualTaxFields');
+  if(!container) return;
+  container.style.display = checked ? 'flex' : 'none';
+  if(checked) {
+    // Pre-fill with current calculated values
+    const totals = calcTotals();
+    document.getElementById('mSubtotal').value = totals.subtotal.toFixed(2);
+    document.getElementById('mGrand').value = totals.grand.toFixed(2);
+    
+    // Fallbacks
+    document.getElementById('mCgst5').value = (totals.byGST[5]?.cgst || 0).toFixed(2);
+    document.getElementById('mSgst5').value = (totals.byGST[5]?.sgst || 0).toFixed(2);
+    document.getElementById('mCgst9').value = (totals.byGST[18]?.cgst || 0).toFixed(2);
+    document.getElementById('mSgst9').value = (totals.byGST[18]?.sgst || 0).toFixed(2);
+  }
+  updatePreview();
+}
+
+// ════ UPDATE PREVIEW ════
+function updatePreview(){
+  // Doc type
+  sp('p_docType',gv('docType')||'TAX INVOICE');
+  // Seller
+  sp('p_sellerName',gv('sellerName'));
+  sh('p_sellerAddr',gv('sellerAddr').replace(/\n/g,'<br/>'));
+  sp('p_sellerEmail',gv('sellerEmail'));
+  sp('p_sellerPhone',gv('sellerPhone'));
+  sp('p_sellerGST',gv('sellerGST'));
+  sp('p_sellerPAN',gv('sellerPAN'));
+  // Invoice meta
+  sp('p_invNo',gv('invNo'));
+  sp('p_invDate',formatDate(gv('invDate')));
+  sp('p_invValid',formatDate(gv('invValid')));
+  sp('p_supplierRef',gv('supplierRef'));
+  sp('p_payMode',gv('payMode'));
+  sp('p_buyerOrderNo',gv('buyerOrderNo'));
+  sp('p_otherRef',gv('otherRef'));
+  // Buyer
+  sp('p_buyerName',gv('buyerName'));
+  sh('p_buyerAddr',gv('buyerAddr').replace(/\n/g,'<br/>'));
+  const ph=gv('buyerPhone'); sp('p_buyerPhone',ph?'Ph: '+ph:'');
+  const bg=gv('buyerGST');   sp('p_buyerGST',bg?'GSTIN: '+bg:'');
+  sh('p_termsDelivery',gv('termsDelivery').replace(/\n/g,'<br/>'));
+
+  // Dynamic preview items table header
+  const pHead = document.getElementById('p_itemsHead');
+  if(pHead){
+    let headHtml = '<tr><th style="width:30px">Sl.</th>';
+    columns.forEach(col => {
+      headHtml += `<th style="${col.id==='desc'?'text-align:left;padding-left:6px':''}">${col.label}</th>`;
+    });
+    headHtml += '</tr>';
+    pHead.innerHTML = headHtml;
+  }
+
+  // Dynamic preview items table body
+  const itbody=document.getElementById('p_itemsBody');
+  if(itbody){
+    itbody.innerHTML='';
+    items.forEach((item,idx)=>{
+      const amt = item.amount !== undefined ? item.amount : ((+item.qty || 0) * (+item.rate || 0));
+      const tr=document.createElement('tr');
+      let cellsHtml = `<td class="c">${idx+1}</td>`;
+      
+      columns.forEach(col => {
+        const val = item[col.id];
+        if(col.id === 'desc') {
+          cellsHtml += `<td style="text-align:left;padding-left:6px">${esc(val)}</td>`;
+        } else if(col.id === 'hsn') {
+          cellsHtml += `<td class="c">${esc(val)}</td>`;
+        } else if(col.id === 'gst') {
+          cellsHtml += `<td class="c">${val!==undefined&&val!==''?val+'%':''}</td>`;
+        } else if(col.id === 'qty') {
+          cellsHtml += `<td class="c">${val!==undefined&&val!==''?val:''}</td>`;
+        } else if(col.id === 'rate') {
+          cellsHtml += `<td class="r">${val!==undefined&&val!==''?fmt(val):''}</td>`;
+        } else if(col.id === 'per') {
+          const showQty = item.qty !== undefined && item.qty !== '' ? item.qty : '';
+          cellsHtml += `<td class="c">${val!==undefined&&val!==''?esc(val):(showQty?'Nos':'')}</td>`;
+        } else if(col.id === 'disc') {
+          cellsHtml += `<td class="c">${val!==undefined&&val!==''?esc(val):''}</td>`;
+        } else if(col.id === 'amount') {
+          cellsHtml += `<td class="r">${fmt(amt)}</td>`;
+        }
+      });
+      tr.innerHTML = cellsHtml;
+      itbody.appendChild(tr);
+    });
+  }
+
+  // Totals
+  const {byGST,subtotal,discount,addChrg,grand}=calcTotals();
+  const chargesNote=gv('chargesNote')||'Additional Charges';
+  let html='';
+  html+=`<div class="d-trow"><span class="tl">Total Amount Before Tax</span><span class="tv">₹${fmt(subtotal)}</span></div>`;
+  if(discount>0) html+=`<div class="d-trow"><span class="tl">Discount (−)</span><span class="tv">₹${fmt(discount)}</span></div>`;
+  Object.entries(byGST).sort(([a],[b])=>+a-+b).forEach(([g,v])=>{
+    if(+g===0) return;
+    // Standard half tax rate is g/2. But if the slab is 5%, the invoice image displays "CGST @5%"
+    const h = (+g === 5) ? 5 : (+g / 2);
+    html+=`<div class="d-trow"><span class="tl">CGST @${h}%</span><span class="tv">₹${fmt(v.cgst)}</span></div>`;
+    html+=`<div class="d-trow"><span class="tl">SGST @${h}%</span><span class="tv">₹${fmt(v.sgst)}</span></div>`;
+  });
+  if(addChrg>0) html+=`<div class="d-trow"><span class="tl">${esc(chargesNote)}</span><span class="tv">₹${fmt(addChrg)}</span></div>`;
+  html+=`<div class="d-trow grand"><span class="tl">Grand Total</span><span class="tv">₹${fmt(grand)}</span></div>`;
+  document.getElementById('p_totalsBlock').innerHTML=html;
+  sp('p_amtWords',numberToWords(grand));
+
+  // Notes
+  const notes=gv('invNotes');
+  const nr=document.getElementById('p_notesRow');
+  if(notes){ nr.style.display='block'; sp('p_notes',notes); } else { nr.style.display='none'; }
+
+  // Bank
+  sp('p_bankName',gv('bankName'));
+  sp('p_bankHolder',gv('bankHolder'));
+  sp('p_bankBranch',gv('bankBranch'));
+  sp('p_bankAcc',gv('bankAcc'));
+  sp('p_bankIFSC',gv('bankIFSC'));
+  sp('p_bankGST',gv('bankGST'));
+  sp('p_declText',gv('declText'));
+
+  // RIGHT: For, Company + sign
+  sp('p_forName', gv('sellerName'));
+  const propName=gv('propName'), propDesig=gv('propDesig');
+  sp('p_propName',propName); sp('p_propDesig',propDesig);
+  document.getElementById('p_propBlock').style.display=(propName||propDesig)?'block':'none';
+
+  // Signature image
+  const pSign=document.getElementById('p_signImg');
+  const pStmp=document.getElementById('p_stampImg');
+  const pSBlank=document.getElementById('p_signBlank');
+  if(signatureImg){ pSign.src=signatureImg; pSign.style.display='block'; } else { pSign.style.display='none'; }
+  if(stampImg){ pStmp.src=stampImg; pStmp.style.display='block'; } else { pStmp.style.display='none'; }
+  pSBlank.style.display=(!signatureImg && !stampImg) ? 'block' : 'none';
+
+  // LEFT: Customer seal
+  const pCS=document.getElementById('p_custSealImg');
+  const pCSB=document.getElementById('p_custSealBlank');
+  if(customerSealImg){ pCS.src=customerSealImg; pCS.style.display='block'; pCSB.style.display='none'; }
+  else { pCS.style.display='none'; pCSB.style.display='block'; }
+}
+
+// ════ PROFILE SAVE/LOAD ════
+function saveProfile(){
+  const profile={};
+  ['sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
+   'propName','propDesig',
+   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText'].forEach(id=>{
+    profile[id]=gv(id);
+  });
+  if(signatureImg)    profile.signatureImg=signatureImg;
+  if(stampImg)        profile.stampImg=stampImg;
+  if(companyLogo)     profile.companyLogo=companyLogo;
+  if(customerSealImg) profile.customerSealImg=customerSealImg;
+  localStorage.setItem('inv_profile',JSON.stringify(profile));
+  toast('💾 Company profile saved!');
+}
+
+function loadProfile(){
+  const raw=localStorage.getItem('inv_profile');
+  if(!raw) return;
+  const p=JSON.parse(raw);
+  ['sellerName','sellerAddr','sellerEmail','sellerPhone','sellerGST','sellerPAN',
+   'propName','propDesig',
+   'bankName','bankBranch','bankHolder','bankAcc','bankIFSC','bankType','bankGST','declText'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&p[id]!==undefined) el.value=p[id];
+  });
+  if(p.signatureImg)  { signatureImg=p.signatureImg;     setImgPreview('signPreview',signatureImg); }
+  if(p.stampImg)      { stampImg=p.stampImg;             setImgPreview('stampPreview',stampImg); }
+  if(p.companyLogo)   { companyLogo=p.companyLogo;       setImgPreview('logoPreview',companyLogo); }
+  if(p.customerSealImg){ customerSealImg=p.customerSealImg; setImgPreview('custSealPreview',customerSealImg); }
+}
+
+// ════ IMAGE UPLOAD ════
+function uploadImage(input,boxId,previewId,storeKey){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const b64=e.target.result;
+    if(storeKey==='signatureImg')   signatureImg=b64;
+    if(storeKey==='stampImg')       stampImg=b64;
+    if(storeKey==='companyLogo')    companyLogo=b64;
+    if(storeKey==='customerSealImg')customerSealImg=b64;
+    setImgPreview(previewId,b64);
+    updatePreview();
+    toast('✅ Image uploaded!');
+  };
+  reader.readAsDataURL(file);
+}
+function setImgPreview(id,src){ const el=document.getElementById(id); if(el){el.src=src;el.style.display='block';} }
+function clearImage(previewId,storeKey){
+  if(storeKey==='signatureImg')   signatureImg=null;
+  if(storeKey==='stampImg')       stampImg=null;
+  if(storeKey==='companyLogo')    companyLogo=null;
+  if(storeKey==='customerSealImg')customerSealImg=null;
+  const el=document.getElementById(previewId);
+  if(el){ el.src=''; el.style.display='none'; }
+  updatePreview(); toast('Image removed');
+}
+
+// ════ CLEAR INVOICE ════
+function clearInvoice(){
+  if(!confirm('Clear invoice fields? (Company profile kept)')) return;
+  ['buyerName','buyerPhone','buyerGST','buyerAddr','termsDelivery',
+   'invNo','supplierRef','buyerOrderNo','otherRef','invNotes','chargesNote'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('discount').value='0';
+  document.getElementById('addCharges').value='0';
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('active-tpl'));
+  items=[]; renderItemsForm(); toast('🆕 Invoice cleared!');
+}
+
+// ════ HELPERS ════
+function gv(id){ const el=document.getElementById(id); return el?el.value||'':''; }
+function sp(id,v){ const el=document.getElementById(id); if(el) el.textContent=v; }
+function sh(id,v){ const el=document.getElementById(id); if(el) el.innerHTML=v; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(n){ return (+n||0).toFixed(2); }
+function formatDate(s){ if(!s) return ''; try{ return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }catch(e){ return s; } }
+function switchTab(t){
+  ['Form','Company','Bank'].forEach(x=>{ document.getElementById('panel'+x).style.display='none'; document.getElementById('tab'+x).classList.remove('active'); });
+  document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)).style.display='';
+  document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.add('active');
+}
+function toggleSec(head){ const b=head.nextElementSibling,t=head.querySelector('.sec-toggle'); if(!b) return; b.classList.toggle('hidden'); t.classList.toggle('open',!b.classList.contains('hidden')); }
+function toast(msg,d=2800){ const t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),d); }
+
+// Number to words
+function numberToWords(n){
+  n=Math.round(n); if(!n) return 'ZERO ONLY';
+  const o=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];
+  const t=['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];
+  function h(n){ if(!n)return''; if(n<20)return o[n]+' '; if(n<100)return t[Math.floor(n/10)]+(n%10?' '+o[n%10]:'')+' '; if(n<1000)return o[Math.floor(n/100)]+' HUNDRED '+h(n%100); if(n<100000)return h(Math.floor(n/1000))+'THOUSAND '+h(n%1000); if(n<10000000)return h(Math.floor(n/100000))+'LAKH '+h(n%100000); return h(Math.floor(n/10000000))+'CRORE '+h(n%10000000); }
+  return 'INR '+h(n).trim()+' ONLY';
+}
+
+// PDF
+function printPDF(){
+  window.print();
+}
+
+// ════ DESIGN SETTINGS ════
+function updateDesignSettings() {
+  const doc = document.getElementById('invoiceDoc');
+  if(!doc) return;
+  
+  const theme = document.getElementById('invThemeColor').value;
+  const fontSize = document.getElementById('invFontSize').value + 'px';
+  const fontFamily = document.getElementById('invFontFamily').value;
+  
+  // Set theme variables
+  doc.style.setProperty('--inv-theme', theme);
+  
+  // Generate light header background and header text based on theme color
+  let headerBg = '#bae6fd';
+  let headerText = '#0c4a6e';
+  
+  if (theme === '#1a237e') { headerBg = '#bae6fd'; headerText = '#0c4a6e'; }
+  else if (theme === '#dc2626') { headerBg = '#fee2e2'; headerText = '#991b1b'; }
+  else if (theme === '#16a34a') { headerBg = '#dcfce7'; headerText = '#166534'; }
+  else if (theme === '#d97706') { headerBg = '#fef3c7'; headerText = '#92400e'; }
+  else if (theme === '#000000') { headerBg = '#e5e5e5'; headerText = '#000000'; }
+  else {
+    // Custom hex color fallback
+    headerBg = theme + '1f'; // 12% opacity
+    headerText = theme;
+  }
+  
+  doc.style.setProperty('--inv-header-bg', headerBg);
+  doc.style.setProperty('--inv-header-text', headerText);
+  doc.style.setProperty('--inv-font-size', fontSize);
+  doc.style.setProperty('--inv-font-family', fontFamily);
+}
+
+// ════ INIT ════
+function init(){
+  loadProfile();
+  items=[];
+  renderItemsForm();
+  renderTemplateCards();
+  updatePreview();
+  updateDesignSettings();
+}
+init();
+// ════ TOGGLE RIGHT SIDEBAR ════
+function toggleRightSidebar(){
+  const rSidebar = document.querySelector('.sidebar-right');
+  const handle = document.getElementById('resizeHandleRight');
+  if(!rSidebar) return;
+  rSidebar.classList.toggle('hidden-sidebar');
+  if(rSidebar.classList.contains('hidden-sidebar')){
+    if(handle) handle.style.display = 'none';
+  } else {
+    if(handle) handle.style.display = 'block';
+  }
+}
+
+// ════ SIDEBAR RESIZE ════
+(function(){
+  const handle  = document.getElementById('resizeHandle');
+  const sidebar = document.querySelector('.sidebar');
+  let dragging = false, startX = 0, startW = 0;
+
+  // Restore saved width
+  const saved = localStorage.getItem('sidebarWidth');
+  if(saved) sidebar.style.width = saved + 'px';
+
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX   = e.clientX;
+    startW   = sidebar.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor    = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const delta = e.clientX - startX;
+    // Removed MAX_W limit to allow full page resize! Min width set to 150px to prevent complete collapse.
+    const newW  = Math.max(150, startW + delta);
+    sidebar.style.width = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor    = '';
+    document.body.style.userSelect = '';
+    localStorage.setItem('sidebarWidth', sidebar.offsetWidth);
+  });
+})();
+
+// ════ RIGHT SIDEBAR RESIZE ════
+(function(){
+  const handle  = document.getElementById('resizeHandleRight');
+  const rSidebar = document.querySelector('.sidebar-right');
+  if(!handle || !rSidebar) return;
+  let dragging = false, startX = 0, startW = 0;
+
+  // Set initial handle state
+  handle.style.display = 'none';
+
+  // Restore saved width
+  const saved = localStorage.getItem('rightSidebarWidth');
+  if(saved) rSidebar.style.width = saved + 'px';
+
+  handle.addEventListener('mousedown', e => {
+    dragging = true;
+    startX   = e.clientX;
+    startW   = rSidebar.offsetWidth;
+    handle.classList.add('dragging');
+    document.body.style.cursor    = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const delta = e.clientX - startX;
+    // Subtraction is correct here because drag-left (negative delta) increases the right sidebar's width.
+    const newW  = Math.max(150, startW - delta);
+    rSidebar.style.width = newW + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    document.body.style.cursor    = '';
+    document.body.style.userSelect = '';
+    localStorage.setItem('rightSidebarWidth', rSidebar.offsetWidth);
+  });
+})();
+</script>
+</body>
+</html>
