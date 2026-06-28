@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>InvoiceGen Pro — GST Tax Invoice & Quotation Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
-<!-- SheetJS library for Excel Export -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<!-- Excel Export with styles (xlsx-js-style) -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <!-- html2pdf and html2canvas for PDF and Image exports with styles -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1786,88 +1786,362 @@ document.addEventListener('click', e => {
   }
 });
 
+function cell(val, type = 's', style = {}) {
+  return { v: val, t: type, s: style };
+}
+
 function exportToExcel() {
   const docType = gv('docType') || 'INVOICE';
   const invNo = gv('invNo') || 'DRAFT';
+  const themeColor = (gv('invThemeColor') || '#16a34a').replace('#', '').toUpperCase();
   
-  // 1. Metadata Sheet Data
-  const metadata = [
-    ["INVOICE GENERATED BACKUP - SUMMARY"],
-    [],
-    ["Document Type", docType],
-    ["Invoice / Quote No.", invNo],
-    ["Date", formatDate(gv('invDate'))],
-    ["Supplier Ref. No.", gv('supplierRef')],
-    ["Mode of Payment", gv('payMode')],
-    ["Buyer's Order No.", gv('buyerOrderNo')],
-    ["Other Reference", gv('otherRef')],
-    [],
-    ["SELLER / COMPANY DETAILS"],
-    ["Seller Name", gv('sellerName')],
-    ["Seller Address", gv('sellerAddr')],
-    ["Seller Email", gv('sellerEmail')],
-    ["Seller Phone", gv('sellerPhone')],
-    ["Seller GSTIN", gv('sellerGST')],
-    ["Seller PAN", gv('sellerPAN')],
-    [],
-    ["BUYER / CUSTOMER DETAILS"],
-    ["Customer Name", gv('buyerName')],
-    ["Customer Phone", gv('buyerPhone')],
-    ["Customer GSTIN", gv('buyerGST')],
-    ["Billing Address", gv('buyerAddr')],
-    ["Delivery / Terms", gv('termsDelivery')]
-  ];
+  // Excel Cell Styles
+  const titleStyle = {
+    fill: { fgColor: { rgb: themeColor } },
+    font: { name: "Arial", size: 14, bold: true, color: { rgb: "FFFFFF" } },
+    alignment: { horizontal: "center", vertical: "center" }
+  };
 
-  // 2. Items Sheet Data
-  const itemsHeader = ["Sl No.", "Description", "HSN/SAC", "GST %", "Qty", "Rate (₹)", "Per", "Disc %", "Amount (₹)"];
-  const itemsData = [itemsHeader];
+  const sectionHeaderStyle = {
+    fill: { fgColor: { rgb: "F3F4F6" } },
+    font: { name: "Arial", size: 10, bold: true, color: { rgb: "111827" } },
+    border: {
+      bottom: { style: "medium", color: { rgb: "9CA3AF" } }
+    }
+  };
+
+  const metaLabelStyle = {
+    font: { name: "Arial", size: 9, bold: true, color: { rgb: "4B5563" } },
+    fill: { fgColor: { rgb: "F9FAFB" } }
+  };
+
+  const metaValueStyle = {
+    font: { name: "Arial", size: 9, color: { rgb: "111827" } }
+  };
+
+  const tableHeaderStyle = {
+    fill: { fgColor: { rgb: themeColor } },
+    font: { name: "Arial", size: 9, bold: true, color: { rgb: "FFFFFF" } },
+    alignment: { horizontal: "center", vertical: "center" },
+    border: {
+      top: { style: "thin", color: { rgb: "000000" } },
+      bottom: { style: "thin", color: { rgb: "000000" } }
+    }
+  };
+
+  const borderThin = {
+    top: { style: "thin", color: { rgb: "E5E7EB" } },
+    bottom: { style: "thin", color: { rgb: "E5E7EB" } },
+    left: { style: "thin", color: { rgb: "E5E7EB" } },
+    right: { style: "thin", color: { rgb: "E5E7EB" } }
+  };
+
+  const cellLeft = { font: { name: "Arial", size: 9 }, alignment: { horizontal: "left" }, border: borderThin };
+  const cellCenter = { font: { name: "Arial", size: 9 }, alignment: { horizontal: "center" }, border: borderThin };
+  const cellRight = { font: { name: "Arial", size: 9 }, alignment: { horizontal: "right" }, border: borderThin };
+
+  const totalLabelStyle = {
+    font: { name: "Arial", size: 9, bold: true },
+    alignment: { horizontal: "right" }
+  };
+
+  const totalValueStyle = {
+    font: { name: "Arial", size: 9, bold: true },
+    alignment: { horizontal: "right" },
+    border: {
+      top: { style: "thin", color: { rgb: "000000" } },
+      bottom: { style: "double", color: { rgb: "000000" } }
+    }
+  };
+
+  const grandTotalStyle = {
+    fill: { fgColor: { rgb: themeColor } },
+    font: { name: "Arial", size: 10, bold: true, color: { rgb: "FFFFFF" } },
+    alignment: { horizontal: "right" }
+  };
+
+  const rows = [];
   
+  // Row 1: Document Type Header
+  rows.push([
+    cell(docType, 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle),
+    cell('', 's', titleStyle)
+  ]);
+  
+  rows.push([]); // Row 2 empty
+  
+  // Row 3: Company Header & Invoice Info Header
+  rows.push([
+    cell("SELLER DETAILS", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell("DOCUMENT METADATA", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle)
+  ]);
+  
+  // Row 4: Company Name & Invoice No
+  rows.push([
+    cell("Name:", 's', metaLabelStyle),
+    cell(gv('sellerName'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Invoice / Quote No.:", 's', metaLabelStyle),
+    cell(gv('invNo'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+  
+  // Row 5: Company Address & Invoice Date
+  rows.push([
+    cell("Address:", 's', metaLabelStyle),
+    cell(gv('sellerAddr'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Date:", 's', metaLabelStyle),
+    cell(formatDate(gv('invDate')), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+  
+  // Row 6: Company Email/Phone & Payment Mode
+  rows.push([
+    cell("Contact:", 's', metaLabelStyle),
+    cell((gv('sellerPhone') ? gv('sellerPhone') + ' ' : '') + gv('sellerEmail'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Mode of Payment:", 's', metaLabelStyle),
+    cell(gv('payMode'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+
+  // Row 7: Company GST/PAN & Order No
+  rows.push([
+    cell("GSTIN / PAN:", 's', metaLabelStyle),
+    cell((gv('sellerGST') ? 'GST: ' + gv('sellerGST') + ' ' : '') + (gv('sellerPAN') ? 'PAN: ' + gv('sellerPAN') : ''), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Buyer's Order No.:", 's', metaLabelStyle),
+    cell(gv('buyerOrderNo'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+
+  // Row 8: Supplier Ref & Other Ref
+  rows.push([
+    cell("Supplier Ref:", 's', metaLabelStyle),
+    cell(gv('supplierRef'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Other Reference:", 's', metaLabelStyle),
+    cell(gv('otherRef'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+
+  rows.push([]); // Row 9 empty
+
+  // Row 10: Buyer Header & Delivery Header
+  rows.push([
+    cell("BUYER / CUSTOMER DETAILS", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell("DELIVERY TERMS", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle)
+  ]);
+
+  // Row 11: Buyer Name & Delivery
+  rows.push([
+    cell("Customer Name:", 's', metaLabelStyle),
+    cell(gv('buyerName'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Terms of Delivery:", 's', metaLabelStyle),
+    cell(gv('termsDelivery'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+
+  // Row 12: Buyer Phone & GST
+  rows.push([
+    cell("Phone:", 's', metaLabelStyle),
+    cell(gv('buyerPhone'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell("Customer GSTIN:", 's', metaLabelStyle),
+    cell(gv('buyerGST'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's')
+  ]);
+
+  // Row 13: Buyer Address
+  rows.push([
+    cell("Billing Address:", 's', metaLabelStyle),
+    cell(gv('buyerAddr'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's')
+  ]);
+
+  rows.push([]); // Row 14 empty
+  rows.push([]); // Row 15 empty
+
+  // Row 16: Items Header
+  rows.push([
+    cell("Sl No.", 's', tableHeaderStyle),
+    cell("Description", 's', tableHeaderStyle),
+    cell("HSN/SAC", 's', tableHeaderStyle),
+    cell("GST %", 's', tableHeaderStyle),
+    cell("Qty", 's', tableHeaderStyle),
+    cell("Rate (₹)", 's', tableHeaderStyle),
+    cell("Per", 's', tableHeaderStyle),
+    cell("Disc %", 's', tableHeaderStyle),
+    cell("Amount (₹)", 's', tableHeaderStyle)
+  ]);
+
+  // Row 17+: Items Data
   items.forEach((item, idx) => {
     const amt = item.amount !== undefined ? item.amount : ((+item.qty || 0) * (+item.rate || 0));
-    itemsData.push([
-      idx + 1,
-      item.desc,
-      item.hsn,
-      item.gst !== undefined && item.gst !== '' ? `${item.gst}%` : '',
-      item.qty,
-      item.rate,
-      item.per,
-      item.disc,
-      amt
+    rows.push([
+      cell(idx + 1, 'n', cellCenter),
+      cell(item.desc || '', 's', cellLeft),
+      cell(item.hsn || '', 's', cellCenter),
+      cell(item.gst !== undefined && item.gst !== '' ? item.gst + '%' : '', 's', cellCenter),
+      cell(item.qty !== '' ? +item.qty : '', 'n', cellCenter),
+      cell(item.rate !== '' ? +item.rate : '', 'n', cellRight),
+      cell(item.per || 'Nos', 's', cellCenter),
+      cell(item.disc !== '' ? +item.disc : '', 'n', cellCenter),
+      cell(amt, 'n', cellRight)
     ]);
   });
 
-  // Add Totals summary at bottom of Items sheet
+  // Totals
   const totals = calcTotals();
-  itemsData.push([]);
-  itemsData.push(["", "", "", "", "", "", "", "Total Before Tax:", totals.subtotal]);
+  rows.push([]);
+  
+  const addTotalRow = (label, value, isGrand = false) => {
+    const labelS = isGrand ? grandTotalStyle : totalLabelStyle;
+    const valueS = isGrand ? grandTotalStyle : totalValueStyle;
+    rows.push([
+      cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'),
+      cell(label, 's', labelS),
+      cell(value, 'n', valueS)
+    ]);
+  };
+
+  addTotalRow("Total Before Tax:", totals.subtotal);
   if (totals.discount > 0) {
-    itemsData.push(["", "", "", "", "", "", "", "Discount (-):", totals.discount]);
+    addTotalRow("Discount (-):", totals.discount);
   }
   
   Object.entries(totals.byGST).sort(([a],[b])=>+a-+b).forEach(([g, v]) => {
     if (+g === 0) return;
     const h = (+g === 5) ? 5 : (+g / 2);
-    itemsData.push(["", "", "", "", "", "", "", `CGST @${h}%:`, v.cgst]);
-    itemsData.push(["", "", "", "", "", "", "", `SGST @${h}%:`, v.sgst]);
+    addTotalRow(`CGST @${h}%:`, v.cgst);
+    addTotalRow(`SGST @${h}%:`, v.sgst);
   });
   
   if (totals.addChrg > 0) {
     const chargesNote = gv('chargesNote') || 'Additional Charges';
-    itemsData.push(["", "", "", "", "", "", "", chargesNote + ":", totals.addChrg]);
+    addTotalRow(chargesNote + ":", totals.addChrg);
   }
-  itemsData.push(["", "", "", "", "", "", "", "Grand Total:", totals.grand]);
-  itemsData.push(["", "", "", "", "", "", "", "Amount in Words:", numberToWords(totals.grand)]);
+  
+  addTotalRow("Grand Total:", totals.grand, true);
+  
+  // Row for words
+  rows.push([
+    cell("Amount in Words:", 's', metaLabelStyle),
+    cell(numberToWords(totals.grand), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's')
+  ]);
 
-  // 3. Create Workbook and Sheets
+  rows.push([]);
+  
+  // Bank Details row
+  rows.push([
+    cell("BANK DETAILS", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's'),
+    cell("DECLARATION", 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle),
+    cell('', 's', sectionHeaderStyle)
+  ]);
+  
+  rows.push([
+    cell("Bank Name:", 's', metaLabelStyle),
+    cell(gv('bankName'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell(gv('declText'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's')
+  ]);
+  rows.push([
+    cell("Account No:", 's', metaLabelStyle),
+    cell(gv('bankAcc'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell('', 's'), cell('', 's'), cell('', 's'), cell('', 's')
+  ]);
+  rows.push([
+    cell("IFSC Code:", 's', metaLabelStyle),
+    cell(gv('bankIFSC'), 's', metaValueStyle),
+    cell('', 's'), cell('', 's'), cell('', 's'),
+    cell(`For, ${gv('forName') || gv('sellerName')}`, 's', { font: { bold: true, name: "Arial", size: 9 } }),
+    cell('', 's'), cell('', 's'), cell('', 's')
+  ]);
+
+  // Create Workbook and Sheet
   const wb = XLSX.utils.book_new();
-  const wsMeta = XLSX.utils.aoa_to_sheet(metadata);
-  const wsItems = XLSX.utils.aoa_to_sheet(itemsData);
+  const ws = XLSX.utils.aoa_to_sheet(rows);
   
-  XLSX.utils.book_append_sheet(wb, wsMeta, "Summary");
-  XLSX.utils.book_append_sheet(wb, wsItems, "Items & Totals");
+  // Merges configuration
+  ws['!merges'] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 8 } },
+    { s: { r: 2, c: 0 }, e: { r: 2, c: 3 } },
+    { s: { r: 2, c: 5 }, e: { r: 2, c: 8 } },
+    { s: { r: 3, c: 1 }, e: { r: 3, c: 4 } },
+    { s: { r: 4, c: 1 }, e: { r: 4, c: 4 } },
+    { s: { r: 5, c: 1 }, e: { r: 5, c: 4 } },
+    { s: { r: 6, c: 1 }, e: { r: 6, c: 4 } },
+    { s: { r: 7, c: 1 }, e: { r: 7, c: 4 } },
+    { s: { r: 3, c: 6 }, e: { r: 3, c: 8 } },
+    { s: { r: 4, c: 6 }, e: { r: 4, c: 8 } },
+    { s: { r: 5, c: 6 }, e: { r: 5, c: 8 } },
+    { s: { r: 6, c: 6 }, e: { r: 6, c: 8 } },
+    { s: { r: 7, c: 6 }, e: { r: 7, c: 8 } },
+    { s: { r: 9, c: 0 }, e: { r: 9, c: 3 } },
+    { s: { r: 9, c: 5 }, e: { r: 9, c: 8 } },
+    { s: { r: 10, c: 1 }, e: { r: 10, c: 4 } },
+    { s: { r: 11, c: 1 }, e: { r: 11, c: 4 } },
+    { s: { r: 12, c: 1 }, e: { r: 12, c: 4 } },
+    { s: { r: 10, c: 6 }, e: { r: 10, c: 8 } },
+    { s: { r: 11, c: 6 }, e: { r: 11, c: 8 } },
+    { s: { r: rows.length - 6, c: 1 }, e: { r: rows.length - 6, c: 8 } },
+    { s: { r: rows.length - 4, c: 0 }, e: { r: rows.length - 4, c: 3 } },
+    { s: { r: rows.length - 4, c: 5 }, e: { r: rows.length - 4, c: 8 } },
+    { s: { r: rows.length - 3, c: 1 }, e: { r: rows.length - 3, c: 3 } },
+    { s: { r: rows.length - 3, c: 5 }, e: { r: rows.length - 3, c: 8 } },
+    { s: { r: rows.length - 2, c: 1 }, e: { r: rows.length - 2, c: 3 } },
+    { s: { r: rows.length - 1, c: 1 }, e: { r: rows.length - 1, c: 3 } },
+    { s: { r: rows.length - 1, c: 5 }, e: { r: rows.length - 1, c: 8 } }
+  ];
+
+  // Column widths
+  ws['!cols'] = [
+    { wch: 15 },
+    { wch: 35 },
+    { wch: 12 },
+    { wch: 10 },
+    { wch: 4 },
+    { wch: 18 },
+    { wch: 15 },
+    { wch: 22 },
+    { wch: 16 }
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, "Invoice");
   
-  // 4. Download Workbook
   const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.xlsx`;
   XLSX.writeFile(wb, filename);
   toast('📊 Excel file downloaded!');
