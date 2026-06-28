@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>InvoiceGen Pro — GST Tax Invoice & Quotation Generator</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<!-- SheetJS library for Excel Export -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   /* ── Ocean Blue Theme ── */
@@ -270,6 +272,14 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
 .toast{position:fixed;bottom:24px;right:24px;z-index:1000;background:#0b1f35;border:1px solid #0ea5e9;border-radius:10px;padding:11px 18px;font-size:.8rem;font-weight:600;color:#38bdf8;display:flex;align-items:center;gap:8px;transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:0 8px 24px rgba(14,165,233,.25)}
 .toast.show{transform:translateY(0);opacity:1}
 
+/* Dropdown style */
+.dropdown{position:relative;display:inline-block}
+.dropdown-menu{position:absolute;right:0;top:100%;z-index:1000;min-width:190px;background:#0b1f35;border:1.5px solid rgba(14,165,233,.25);border-radius:10px;padding:6px 0;margin-top:6px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:fadeInMenu .2s}
+@keyframes fadeInMenu{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.dropdown-item{display:block;width:100%;padding:8px 16px;font-size:.76rem;text-align:left;color:#e0f0ff;background:transparent;border:none;cursor:pointer;transition:all .15s}
+.dropdown-item:hover{background:rgba(14,165,233,.12);color:#38bdf8}
+.dropdown-divider{height:1px;background:rgba(255,255,255,.08);margin:6px 0}
+
 /* Print */
 @media print{
   body {
@@ -318,6 +328,22 @@ tr.row-drag-over td{border-top:3.5px dashed #0ea5e9 !important;background:rgba(1
   <div class="topbar-actions">
     <button class="btn btn-ghost btn-sm" onclick="clearInvoice()">🗑️ Clear</button>
     <button class="btn btn-ghost btn-sm" onclick="saveProfile()">💾 Save Profile</button>
+    
+    <!-- Export dropdown -->
+    <div class="dropdown">
+      <button class="btn btn-ghost btn-sm" onclick="toggleExportDropdown()">📤 Export/Import</button>
+      <div class="dropdown-menu" id="exportMenu" style="display:none">
+        <button class="dropdown-item" onclick="exportToExcel()">📊 Export to Excel (.xlsx)</button>
+        <button class="dropdown-item" onclick="exportToCSV()">📄 Export to CSV</button>
+        <button class="dropdown-item" onclick="exportToJSON()">⚙️ Export Backup (JSON)</button>
+        <div class="dropdown-divider"></div>
+        <label class="dropdown-item" style="cursor:pointer;margin:0">
+          📥 Import Backup (JSON)
+          <input type="file" accept=".json" onchange="importFromJSON(this)" style="display:none"/>
+        </label>
+      </div>
+    </div>
+
     <button class="btn btn-ghost btn-sm" onclick="toggleRightSidebar()">🎨 Design Settings</button>
     <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Print</button>
     <button class="btn btn-green btn-sm" onclick="printPDF()">⬇️ PDF</button>
@@ -1685,6 +1711,240 @@ function numberToWords(n){
 // PDF
 function printPDF(){
   window.print();
+}
+
+// ════ EXPORT / IMPORT ════
+function toggleExportDropdown(){
+  const el = document.getElementById('exportMenu');
+  if(!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+document.addEventListener('click', e => {
+  const dropdown = document.querySelector('.dropdown');
+  const menu = document.getElementById('exportMenu');
+  if (dropdown && menu && !dropdown.contains(e.target)) {
+    menu.style.display = 'none';
+  }
+});
+
+function exportToExcel() {
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  
+  // 1. Metadata Sheet Data
+  const metadata = [
+    ["INVOICE GENERATED BACKUP - SUMMARY"],
+    [],
+    ["Document Type", docType],
+    ["Invoice / Quote No.", invNo],
+    ["Date", formatDate(gv('invDate'))],
+    ["Supplier Ref. No.", gv('supplierRef')],
+    ["Mode of Payment", gv('payMode')],
+    ["Buyer's Order No.", gv('buyerOrderNo')],
+    ["Other Reference", gv('otherRef')],
+    [],
+    ["SELLER / COMPANY DETAILS"],
+    ["Seller Name", gv('sellerName')],
+    ["Seller Address", gv('sellerAddr')],
+    ["Seller Email", gv('sellerEmail')],
+    ["Seller Phone", gv('sellerPhone')],
+    ["Seller GSTIN", gv('sellerGST')],
+    ["Seller PAN", gv('sellerPAN')],
+    [],
+    ["BUYER / CUSTOMER DETAILS"],
+    ["Customer Name", gv('buyerName')],
+    ["Customer Phone", gv('buyerPhone')],
+    ["Customer GSTIN", gv('buyerGST')],
+    ["Billing Address", gv('buyerAddr')],
+    ["Delivery / Terms", gv('termsDelivery')]
+  ];
+
+  // 2. Items Sheet Data
+  const itemsHeader = ["Sl No.", "Description", "HSN/SAC", "GST %", "Qty", "Rate (₹)", "Per", "Disc %", "Amount (₹)"];
+  const itemsData = [itemsHeader];
+  
+  items.forEach((item, idx) => {
+    const amt = item.amount !== undefined ? item.amount : ((+item.qty || 0) * (+item.rate || 0));
+    itemsData.push([
+      idx + 1,
+      item.desc,
+      item.hsn,
+      item.gst !== undefined && item.gst !== '' ? `${item.gst}%` : '',
+      item.qty,
+      item.rate,
+      item.per,
+      item.disc,
+      amt
+    ]);
+  });
+
+  // Add Totals summary at bottom of Items sheet
+  const totals = calcTotals();
+  itemsData.push([]);
+  itemsData.push(["", "", "", "", "", "", "", "Total Before Tax:", totals.subtotal]);
+  if (totals.discount > 0) {
+    itemsData.push(["", "", "", "", "", "", "", "Discount (-):", totals.discount]);
+  }
+  
+  Object.entries(totals.byGST).sort(([a],[b])=>+a-+b).forEach(([g, v]) => {
+    if (+g === 0) return;
+    const h = (+g === 5) ? 5 : (+g / 2);
+    itemsData.push(["", "", "", "", "", "", "", `CGST @${h}%:`, v.cgst]);
+    itemsData.push(["", "", "", "", "", "", "", `SGST @${h}%:`, v.sgst]);
+  });
+  
+  if (totals.addChrg > 0) {
+    const chargesNote = gv('chargesNote') || 'Additional Charges';
+    itemsData.push(["", "", "", "", "", "", "", chargesNote + ":", totals.addChrg]);
+  }
+  itemsData.push(["", "", "", "", "", "", "", "Grand Total:", totals.grand]);
+  itemsData.push(["", "", "", "", "", "", "", "Amount in Words:", numberToWords(totals.grand)]);
+
+  // 3. Create Workbook and Sheets
+  const wb = XLSX.utils.book_new();
+  const wsMeta = XLSX.utils.aoa_to_sheet(metadata);
+  const wsItems = XLSX.utils.aoa_to_sheet(itemsData);
+  
+  XLSX.utils.book_append_sheet(wb, wsMeta, "Summary");
+  XLSX.utils.book_append_sheet(wb, wsItems, "Items & Totals");
+  
+  // 4. Download Workbook
+  const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.xlsx`;
+  XLSX.writeFile(wb, filename);
+  toast('📊 Excel file downloaded!');
+}
+
+function exportToCSV() {
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  
+  const headers = ["Sl No.", "Description", "HSN/SAC", "GST%", "Qty", "Rate", "Per", "Disc%", "Amount"];
+  const rows = [headers];
+  
+  items.forEach((item, idx) => {
+    const amt = item.amount !== undefined ? item.amount : ((+item.qty || 0) * (+item.rate || 0));
+    rows.push([
+      idx + 1,
+      `"${(item.desc || '').replace(/"/g, '""')}"`,
+      item.hsn,
+      item.gst,
+      item.qty,
+      item.rate,
+      item.per,
+      item.disc,
+      amt
+    ]);
+  });
+  
+  const csvContent = "data:text/csv;charset=utf-8," 
+    + rows.map(r => r.join(",")).join("\n");
+  
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.csv`;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  toast('📄 CSV file downloaded!');
+}
+
+function exportToJSON() {
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  
+  const data = {
+    docType: gv('docType'),
+    invNo: gv('invNo'),
+    invDate: gv('invDate'),
+    invValid: gv('invValid'),
+    supplierRef: gv('supplierRef'),
+    payMode: gv('payMode'),
+    buyerOrderNo: gv('buyerOrderNo'),
+    otherRef: gv('otherRef'),
+    buyerName: gv('buyerName'),
+    buyerPhone: gv('buyerPhone'),
+    buyerGST: gv('buyerGST'),
+    buyerAddr: gv('buyerAddr'),
+    termsDelivery: gv('termsDelivery'),
+    discount: +gv('discount') || 0,
+    addCharges: +gv('addCharges') || 0,
+    chargesNote: gv('chargesNote'),
+    invNotes: gv('invNotes'),
+    // Override settings
+    overrideTaxes: document.getElementById('overrideTaxes')?.checked,
+    mSubtotal: gv('mSubtotal'),
+    mGrand: gv('mGrand'),
+    mCgst5: gv('mCgst5'),
+    mSgst5: gv('mSgst5'),
+    mCgst9: gv('mCgst9'),
+    mSgst9: gv('mSgst9'),
+    // Items
+    items: items.map(i => ({...i}))
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}_backup.json`;
+  link.setAttribute("download", filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  toast('⚙️ Backup JSON downloaded!');
+}
+
+function importFromJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      const fields = [
+        'docType', 'invNo', 'invDate', 'invValid', 'supplierRef', 'payMode',
+        'buyerOrderNo', 'otherRef', 'buyerName', 'buyerPhone', 'buyerGST', 'buyerAddr',
+        'termsDelivery', 'discount', 'addCharges', 'chargesNote', 'invNotes'
+      ];
+      
+      fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el && data[f] !== undefined && data[f] !== null) {
+          el.value = data[f];
+        }
+      });
+      
+      const overCb = document.getElementById('overrideTaxes');
+      const overFields = document.getElementById('manualTaxFields');
+      if (overCb && overFields) {
+        overCb.checked = !!data.overrideTaxes;
+        overFields.style.display = data.overrideTaxes ? 'flex' : 'none';
+        
+        ['mSubtotal', 'mGrand', 'mCgst5', 'mSgst5', 'mCgst9', 'mSgst9'].forEach(f => {
+          const el = document.getElementById(f);
+          if (el && data[f] !== undefined && data[f] !== null) el.value = data[f];
+        });
+      }
+      
+      if (Array.isArray(data.items)) {
+        items = data.items.map(i => ({...i}));
+        renderItemsForm();
+      }
+      
+      updatePreview();
+      toast('📥 Invoice backup loaded successfully!');
+    } catch(err) {
+      toast('❌ Invalid JSON backup file!');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
 }
 
 // ════ DESIGN SETTINGS ════
