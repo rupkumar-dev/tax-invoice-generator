@@ -875,7 +875,7 @@ const BUILTIN_TEMPLATES = [{
   name:'Tax Invoice – ₹1,89,000',
   amount:189000,
   docType:'TAX INVOICE',
-  invNo:'INV-2024-001',
+  invNo:'',
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
@@ -921,7 +921,7 @@ const BUILTIN_TEMPLATES = [{
   name:'Tax Invoice – ₹1,98,000',
   amount:198000,
   docType:'TAX INVOICE',
-  invNo:'INV-2024-002',
+  invNo:'',
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
@@ -967,7 +967,7 @@ const BUILTIN_TEMPLATES = [{
   name:'Tax Invoice – ₹2,10,000',
   amount:210000,
   docType:'TAX INVOICE',
-  invNo:'INV-2024-003',
+  invNo:'',
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
@@ -1013,7 +1013,7 @@ const BUILTIN_TEMPLATES = [{
   name:'Tax Invoice – ₹2,20,000',
   amount:220000,
   docType:'TAX INVOICE',
-  invNo:'INV-2024-004',
+  invNo:'',
   invDate:'2024-01-15',
   invValid:'',
   supplierRef:'',
@@ -1089,6 +1089,8 @@ function loadTemplate(id){
     if(el&&tpl[f]!==undefined&&tpl[f]!==null) {
       if(f==='invDate') {
         el.value=getTodayDateString();
+      } else if(f==='invNo') {
+        el.value='';
       } else {
         el.value=tpl[f];
       }
