@@ -1,0 +1,13 @@
+{
+  "name": "tax-invoice-generator-server",
+  "version": "1.0.0",
+  "description": "Desktop server for Tax Invoice Generator",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2"
+  }
+}
