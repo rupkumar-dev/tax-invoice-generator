@@ -1159,6 +1159,34 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
   color: #0369a1 !important;
 }
 
+/* Solar Package Grid Cards */
+.solar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+.solar-pkg-card {
+  background: var(--sec-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.solar-pkg-card:hover {
+  border-color: #16a34a;
+  background: rgba(22, 163, 74, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(22, 163, 74, 0.1);
+}
+
 /* Page breaks for PDF rendering */
 .d-items tr, .d-bottom, .d-row3, .d-row4, .d-auth-bar {
   page-break-inside: avoid !important;
@@ -1168,10 +1196,11 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
 /* ════ PRINT ════ */
 @media print {
   body { background: #fff !important; color: #111 !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  .topbar, .sidebar, .nav-sidebar, .sidebar-right, .preview-topbar, .resize-handle, .resize-handle-right, .window-titlebar { display: none !important; }
+  .topbar, .sidebar, .nav-sidebar, .sidebar-right, .preview-topbar, #solarReportTopbar, .resize-handle, .resize-handle-right, .window-titlebar { display: none !important; }
   .layout { display: block !important; }
   .preview-area { padding: 0 !important; margin: 0 !important; background: #fff !important; overflow: visible !important; display: block !important; }
   #invoiceDoc { width: 210mm !important; max-width: 100% !important; box-shadow: none !important; border-radius: 0 !important; margin: 0 auto !important; border: none !important; }
+  #solarReportDoc { display: block !important; width: 210mm !important; max-width: 100% !important; box-shadow: none !important; border-radius: 0 !important; margin: 0 auto !important; border: none !important; padding: 20px !important; }
 }
 </style>
 </head>
@@ -1396,6 +1425,9 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
           </button>
           <button class="nav-item" id="navForm" onclick="switchNavTab('form')">
             <span class="nav-icon">📄</span> Invoices / Sale
+          </button>
+          <button class="nav-item" id="navSolarReport" onclick="switchNavTab('solar-report')">
+            <span class="nav-icon">☀️</span> Solar Report
           </button>
         </div>
         <div class="nav-section-label">Database</div>
@@ -2037,6 +2069,148 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
       </div>
 
     </div>
+
+    <!-- PROJECT COMPLETION REPORT PANEL -->
+    <div class="sidebar-panel" id="panelSolarReport" style="display:none; flex-direction:column; gap:16px;">
+      
+      <!-- Basic Project Details -->
+      <div class="sec">
+        <div class="sec-head">📝 Basic Project Details</div>
+        <div class="sec-body">
+          <div class="fg-row">
+            <div class="fg-col">
+              <label for="repAppNo" class="f-label">Application Number</label>
+              <input type="text" id="repAppNo" class="f-input" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row">
+            <div class="fg-col">
+              <label for="repConsumerName" class="f-label">Consumer Name</label>
+              <input type="text" id="repConsumerName" class="f-input" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row">
+            <div class="fg-col">
+              <label for="repConsumerAddr" class="f-label">Address</label>
+              <textarea id="repConsumerAddr" class="f-input" rows="2" oninput="updateSolarReportPreview()"></textarea>
+            </div>
+          </div>
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repConsumerMobile" class="f-label">Mobile Number</label>
+              <input type="text" id="repConsumerMobile" class="f-input" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repConsumerNo" class="f-label">Consumer Number</label>
+              <input type="text" id="repConsumerNo" class="f-input" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solar System Details -->
+      <div class="sec">
+        <div class="sec-head">☀️ Soler System Details</div>
+        <div class="sec-body">
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repSysCapacity" class="f-label">System Capacity installed</label>
+              <input type="text" id="repSysCapacity" class="f-input" value="3kW" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repSysType" class="f-label">Type of System</label>
+              <input type="text" id="repSysType" class="f-input" value="On grid" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repModulesQty" class="f-label">Modules Qty Installed</label>
+              <input type="number" id="repModulesQty" class="f-input" value="6" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repModuleWattage" class="f-label">Module Wattage</label>
+              <input type="text" id="repModuleWattage" class="f-input" value="3kW" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repInverterCapacity" class="f-label">Inverter Capacity</label>
+              <input type="text" id="repInverterCapacity" class="f-input" value="3kW" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repInstallationDate" class="f-label">Installation Date</label>
+              <input type="text" id="repInstallationDate" class="f-input" placeholder="DD/MM/YYYY" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row">
+            <div class="fg-col">
+              <label for="repNetMeter" class="f-label">Net Meter Installed (Yes/No)</label>
+              <input type="text" id="repNetMeter" class="f-input" value="No" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repCommissionDate" class="f-label">Date of Commissioning</label>
+              <input type="text" id="repCommissionDate" class="f-input" value="Not Commissioned" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repSyncDate" class="f-label">Net Meter Sync Date</label>
+              <input type="text" id="repSyncDate" class="f-input" value="No" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Site Photographs & GPS Settings -->
+      <div class="sec">
+        <div class="sec-head">📷 Site Photographs &amp; GPS Camera Stamp</div>
+        <div class="sec-body">
+          <div class="fg-row col2" style="gap:10px; margin-bottom:12px;">
+            <div class="fg-col" style="background:var(--border2); padding:10px; border-radius:6px; border:1px solid var(--border);">
+              <label class="f-label">Photograph 1</label>
+              <input type="file" accept="image/*" style="font-size:0.7rem; width:100%; margin-bottom:6px;" onchange="uploadSolarReportPhoto(this, 1)" />
+              <button class="btn btn-ghost btn-sm" style="color:var(--red); padding:2px 6px; font-size:0.65rem;" onclick="removeSolarReportPhoto(1)">✕ Remove</button>
+            </div>
+            <div class="fg-col" style="background:var(--border2); padding:10px; border-radius:6px; border:1px solid var(--border);">
+              <label class="f-label">Photograph 2</label>
+              <input type="file" accept="image/*" style="font-size:0.7rem; width:100%; margin-bottom:6px;" onchange="uploadSolarReportPhoto(this, 2)" />
+              <button class="btn btn-ghost btn-sm" style="color:var(--red); padding:2px 6px; font-size:0.65rem;" onclick="removeSolarReportPhoto(2)">✕ Remove</button>
+            </div>
+          </div>
+          
+
+        </div>
+      </div>
+
+      <!-- Installer Signatures & Declarations -->
+      <div class="sec">
+        <div class="sec-head">✍️ Installer &amp; Signatures</div>
+        <div class="sec-body">
+          <input type="hidden" id="repInstallerCompany" value="" />
+          <input type="hidden" id="repProprietorName" value="" />
+          <input type="hidden" id="repProprietorDesig" value="" />
+          
+          <div class="fg-row col2">
+            <div class="fg-col">
+              <label for="repConsumerDate" class="f-label">Consumer Sign Date</label>
+              <input type="text" id="repConsumerDate" class="f-input" placeholder="DD/MM/YYYY" oninput="updateSolarReportPreview()" />
+            </div>
+            <div class="fg-col">
+              <label for="repInstallerDate" class="f-label">Installer Sign Date</label>
+              <input type="text" id="repInstallerDate" class="f-input" placeholder="DD/MM/YYYY" oninput="updateSolarReportPreview()" />
+            </div>
+          </div>
+          
+          <div class="fg-row" style="background:var(--border2); padding:10px; border-radius:6px; border:1px solid var(--border); margin-top:8px;">
+            <label class="f-label">Company Signature &amp; Stamp (Override)</label>
+            <input type="file" accept="image/*" style="font-size:0.7rem; width:100%; margin-bottom:6px;" onchange="uploadSolarReportSignature(this)" />
+            <button class="btn btn-ghost btn-sm" style="color:var(--red); padding:2px 6px; font-size:0.65rem;" onclick="removeSolarReportSignature()">✕ Clear Override</button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="min-height:50px;"></div>
+    </div>
   </aside>
 
   <!-- RESIZE HANDLE -->
@@ -2089,6 +2263,70 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <div style="color:var(--muted); font-size:0.75rem; text-transform:uppercase; font-weight:700;">Active Business Profile</div>
             <div style="font-size:0.95rem; font-weight:700; color:var(--text); margin-top:4px;" id="dashCompanyName">My Business</div>
             <div style="font-size:0.75rem; color:var(--muted);" id="dashCompanyGST">GSTIN: Not Set</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOLAR SYSTEM (SOLER) card -->
+      <div class="sec" style="padding: 20px; display:flex; flex-direction:column; gap:16px; border-left: 4px solid #16a34a;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px;">
+          <div>
+            <h2 style="font-family:'Outfit', sans-serif; font-weight:700; color:var(--text); font-size:1.25rem; margin:0; display:flex; align-items:center; gap:8px;">☀️ Soler System Management</h2>
+            <p style="color:var(--muted); font-size:0.78rem; margin:4px 0 0 0;">Generate solar project packages, tax invoices, and complete bank subsidy completion reports.</p>
+          </div>
+          <button class="btn btn-accent" onclick="clearSolarReportForm(); switchNavTab('solar-report');">＋ Create Completion Report</button>
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1.5fr; gap:20px; margin-top:4px;">
+          <!-- 30% Bank File: Invoices -->
+          <div style="border-right: 1.5px solid var(--border2); padding-right:20px; display:flex; flex-direction:column; gap:10px;">
+            <h3 style="color:#16a34a; font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 4px 0;">30% Bank File: Invoice Presets</h3>
+            <p style="font-size:0.75rem; color:var(--muted); margin:0;">Click a package system below to load its pre-calculated template directly in the Invoice Editor:</p>
+            
+            <div class="solar-grid" style="margin-top:8px;">
+              <div class="solar-pkg-card" onclick="loadTemplate('tpl_solar_189000_v5'); switchNavTab('form');">
+                <span style="font-size:1.2rem; margin-bottom:4px;">⚡</span>
+                <span style="font-weight:700; font-size:0.76rem;">₹1,89,000</span>
+                <span style="font-size:0.62rem; color:var(--muted)">3kW Single Ph</span>
+              </div>
+              <div class="solar-pkg-card" onclick="loadTemplate('tpl_solar_198000_v5'); switchNavTab('form');">
+                <span style="font-size:1.2rem; margin-bottom:4px;">⚡</span>
+                <span style="font-weight:700; font-size:0.76rem;">₹1,98,000</span>
+                <span style="font-size:0.62rem; color:var(--muted)">3kW Single Ph</span>
+              </div>
+              <div class="solar-pkg-card" onclick="loadTemplate('tpl_solar_210000_v5'); switchNavTab('form');">
+                <span style="font-size:1.2rem; margin-bottom:4px;">⚡</span>
+                <span style="font-weight:700; font-size:0.76rem;">₹2,10,000</span>
+                <span style="font-size:0.62rem; color:var(--muted)">3kW Single Ph</span>
+              </div>
+              <div class="solar-pkg-card" onclick="loadTemplate('tpl_solar_220000_v5'); switchNavTab('form');">
+                <span style="font-size:1.2rem; margin-bottom:4px;">⚡</span>
+                <span style="font-weight:700; font-size:0.76rem;">₹2,20,000</span>
+                <span style="font-size:0.62rem; color:var(--muted)">3kW Single Ph</span>
+              </div>
+            </div>
+            
+            <button class="btn btn-ghost btn-sm" style="margin-top:8px; justify-content:center;" onclick="loadTemplate('tpl_quot_solar_3kw'); switchNavTab('form');">☀️ Open 3kW Solar Quotation Preset</button>
+          </div>
+          
+          <!-- 30% Bank File: Completion Reports list -->
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <h3 style="color:#16a34a; font-size:0.8rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; margin:0;">Saved Project Completion Reports</h3>
+            <div class="table-responsive" style="overflow-y:auto; max-height:190px;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.78rem;">
+                <thead>
+                  <tr style="border-bottom: 2px solid var(--border); color:var(--muted); font-weight:700;">
+                    <th style="padding:6px 4px;">Consumer Name</th>
+                    <th style="padding:6px 4px;">Application No.</th>
+                    <th style="padding:6px 4px;">Saved Date</th>
+                    <th style="padding:6px 4px; text-align:center; width:120px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="dashSolarReportsBody" style="color:var(--text);">
+                  <!-- Populated dynamically via renderSolarReportsDashboardList() -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -2350,6 +2588,198 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
 
       </div>
     </div><!-- /invoiceDoc -->
+
+    <!-- SOLAR REPORT PREVIEW TOPBAR -->
+    <div id="solarReportTopbar" style="display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:8px 16px; background:var(--sec-bg); border-bottom:1.5px solid var(--border); border-top-left-radius:8px; border-top-right-radius:8px;">
+      <div class="preview-topbar-label" style="font-weight:700; color:var(--text); font-family:'Outfit',sans-serif; display:flex; align-items:center; gap:6px;"><span class="live-dot" style="background:#16a34a"></span>Completion Report Live Preview</div>
+      
+      <div style="display:flex; gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="switchNavTab('dashboard')">🏠 Dashboard</button>
+        <button class="btn btn-blue btn-sm" onclick="saveSolarReport()">💾 Save Report</button>
+        <button class="btn btn-accent btn-sm" onclick="printSolarReport()">🖨️ Print Report</button>
+        <button class="btn btn-green btn-sm" onclick="exportSolarReportToPDF()">⬇️ Download PDF</button>
+      </div>
+    </div>
+
+    <!-- SOLAR REPORT DOC -->
+    <div id="solarReportDoc" style="display:none; width:880px; background:#fff; color:#111; font-family:Arial, sans-serif; box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06); border-radius:4px; padding: 40px 50px; margin: 0 auto; box-sizing: border-box;">
+      
+      <!-- Report Header -->
+      <div class="report-header" style="text-align: center; font-family: Arial, sans-serif; position: relative;">
+        <div style="font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px;" id="p_repCompanyName">M/S G &amp; L ENTERPRISE</div>
+        <div style="font-size: 10px; font-weight: bold; margin-bottom: 2px;">GSTIN: <span id="p_repCompanyGST">18AQZPB8698L3ZI</span></div>
+        <div style="font-size: 10px; margin-bottom: 2px;" id="p_repCompanyAddress">Vill &amp; P.O.- Nagrijuli, Dist. Tamulpur, B.T.C. Assam. PIN-781368</div>
+        <div style="font-size: 10px; margin-bottom: 2px;">E-mail ID-<span id="p_repCompanyEmail">basakbiswa87@gmail.com</span></div>
+        <div style="font-size: 10px; margin-bottom: 10px;">Ph: <span id="p_repCompanyPhone">9864239941 / 7896737040</span></div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: bold; margin-top: 15px; padding-bottom: 3px; font-family: Arial, sans-serif;">
+          <div>Ph: <span id="p_repBottomPhone">9864239941 / 7896737040</span></div>
+          <div>E-mail ID-<span id="p_repBottomEmail">basakbiswa87@gmail.com</span></div>
+        </div>
+        <div style="border-top: 3px solid #000; margin-bottom: 12px;"></div>
+      </div>
+
+      <!-- Report Title -->
+      <div style="text-align: center; margin: 15px 0 25px 0;">
+        <span style="font-size: 18px; font-weight: 800; text-decoration: underline; font-family: Arial, sans-serif;">Project Completion Report</span>
+      </div>
+
+      <!-- Project details columns -->
+      <div style="display: grid; grid-template-columns: 1.1fr 1.2fr; gap: 40px; font-family: Arial, sans-serif; font-size: 11px; line-height: 1.6;">
+        <!-- Basic Project Details -->
+        <div>
+          <div style="font-weight: 800; font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px;">Basic Project Details</div>
+          <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <tr>
+              <td style="vertical-align: top; width: 18px;">1.</td>
+              <td style="vertical-align: top; width: 120px;">Application Number:</td>
+              <td style="font-weight: 800;" id="p_repAppNo">NP-ASAPD26-10673260</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">2.</td>
+              <td style="vertical-align: top;">Consumer Name:</td>
+              <td style="font-weight: 800;" id="p_repConsumerName">JAIKHLONG NARZARY</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">3.</td>
+              <td style="vertical-align: top;">Address:</td>
+              <td id="p_repConsumerAddr" style="white-space: pre-wrap;">Magurmari 781364</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">4.</td>
+              <td style="vertical-align: top;">Mobile Number:</td>
+              <td id="p_repConsumerMobile">6000057042</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">5.</td>
+              <td style="vertical-align: top;">Consumer Number:</td>
+              <td id="p_repConsumerNo">077000018332</td>
+            </tr>
+          </table>
+        </div>
+        
+        <!-- Soler System Details -->
+        <div>
+          <div style="font-weight: 800; font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px;">Soler System Details</div>
+          <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <tr>
+              <td style="vertical-align: top; width: 18px;">1.</td>
+              <td style="vertical-align: top; width: 170px;">System Capacity installed:</td>
+              <td style="font-weight: bold;" id="p_repSysCapacity">3kW,</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">2.</td>
+              <td style="vertical-align: top;">Type of System:</td>
+              <td style="font-weight: bold;" id="p_repSysType">On grid</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">3.</td>
+              <td style="vertical-align: top;">Number of Modules Installed:</td>
+              <td style="font-weight: bold;" id="p_repModulesQty">6</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">4.</td>
+              <td style="vertical-align: top;">Module Wattage:</td>
+              <td style="font-weight: bold;" id="p_repModuleWattage">3kW,</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">5.</td>
+              <td style="vertical-align: top;">Inverter Capacity:</td>
+              <td style="font-weight: bold;" id="p_repInverterCapacity">3kW</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">6.</td>
+              <td style="vertical-align: top;">Installation Date:</td>
+              <td style="font-weight: bold;" id="p_repInstallationDate">26/05/2026</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">7.</td>
+              <td style="vertical-align: top;">Net Meter Installed (Yes/No):</td>
+              <td id="p_repNetMeter">No</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">8.</td>
+              <td style="vertical-align: top;">Date of Commissioning:</td>
+              <td id="p_repCommissionDate">Not Commissioned</td>
+            </tr>
+            <tr>
+              <td style="vertical-align: top;">9.</td>
+              <td style="vertical-align: top;">Net Meter Synchronization Date:</td>
+              <td id="p_repSyncDate">No</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Site Photographs Section -->
+      <div style="margin-top: 30px; font-family: Arial, sans-serif;">
+        <div style="font-weight: 800; font-size: 12px; margin-bottom: 12px; border-bottom: 1px solid #ddd; padding-bottom: 4px;">Site Photographs</div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- Photo 1 -->
+          <div id="p_repPhotoDiv1" style="border: 1px solid #ccc; background: #f8fafc; min-height: 150px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+            <span id="p_repPhotoPlaceholder1" style="color: #94a3b8; font-size: 0.76rem; font-weight: bold; padding: 40px 0;">[ Site Photograph 1 ]</span>
+            <img id="p_repPhoto1" src="" style="width: 100%; height: auto; display: none; object-fit: contain;" />
+
+          </div>
+          
+          <!-- Photo 2 -->
+          <div id="p_repPhotoDiv2" style="border: 1px solid #ccc; background: #f8fafc; min-height: 150px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+            <span id="p_repPhotoPlaceholder2" style="color: #94a3b8; font-size: 0.76rem; font-weight: bold; padding: 40px 0;">[ Site Photograph 2 ]</span>
+            <img id="p_repPhoto2" src="" style="width: 100%; height: auto; display: none; object-fit: contain;" />
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Declarations Section -->
+      <div style="margin-top: 30px; font-family: Arial, sans-serif; font-size: 11px; line-height: 1.6;">
+        <!-- Consumer Declaration -->
+        <div style="margin-bottom: 30px;">
+          <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 2px;">Consumer Declaration</div>
+          <div style="text-align: justify; margin-bottom: 12px;" id="p_repConsumerDecl">
+            I hereby declare that the rooftop solar system has been installed at my premises to my satisfaction, in accordance with PM Surya Ghar guidelines, and is ready for DISCOM inspection and commissioning.
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; align-items: flex-end;">
+            <div>
+              <div style="font-weight: bold; min-height: 40px; display: flex; align-items: flex-end;" id="p_repConsumerSignLine"></div>
+              <div style="border-top: 1px dotted #888; width: 160px; margin-top: 4px; padding-top: 2px;">Signature of Consumer</div>
+            </div>
+            <div>
+              <div>Date: <span id="p_repConsumerDate" style="font-weight: bold;"></span></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Installer Declaration -->
+        <div style="margin-top: 35px;">
+          <div style="font-weight: bold; font-size: 11.5px; margin-bottom: 4px; border-bottom: 1px solid #eee; padding-bottom: 2px;">Installer Declaration</div>
+          <div style="text-align: justify; margin-bottom: 12px;" id="p_repInstallerDecl">
+            I hereby certify that the rooftop solar system has been installed at the consumer's premises in compliance with PM Surya Ghar guidelines and approved standards, and it is ready for DISCOM inspection and commissioning.
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; align-items: flex-end;">
+            <div>
+              <div>Date: <span id="p_repInstallerDate" style="font-weight: bold;">26/05/2026</span></div>
+            </div>
+            
+            <!-- Installer Signature block -->
+            <div style="text-align: right; min-width: 200px; display: flex; flex-direction: column; align-items: flex-end;">
+              <div style="font-weight: bold; font-size: 10px; margin-bottom: 4px;">Signature of Installer</div>
+              <div id="p_repInstallerCompany" style="display: none;">M/S G &amp; L Enterprise</div>
+              
+              <!-- Stamp / Signature output image container -->
+              <div style="position: relative; display: flex; flex-direction: column; align-items: flex-end;">
+                <img id="p_repInstallerSign" src="" style="width: 100px; max-height: 120px; object-fit: contain; display: none;" />
+              </div>
+              
+              <div id="p_repProprietorName" style="display: none;">B. Basak</div>
+              <div id="p_repProprietorDesig" style="display: none;">Proprietor</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
   <!-- RESIZE HANDLE RIGHT -->
@@ -2560,6 +2990,17 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
   </div>
 
 <script>
+// Global error tracking to server logs
+window.onerror = function(message, source, lineno, colno, error) {
+  const errText = `${message} at ${source}:${lineno}:${colno}`;
+  console.error(errText);
+  fetch('http://localhost:3000/api/log-error', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ error: errText, stack: error ? error.stack : '' })
+  }).catch(() => {});
+};
+
 // ════ LOCALSTORAGE AUTH SYNC OVERRIDE ════
 const originalLocalStorageSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
@@ -2802,6 +3243,12 @@ let signatureImg   = null;
 let stampImg       = null;
 let companyLogo    = null;
 let customerSealImg= null;
+
+// Solar state variables (defined globally to prevent temporal dead zone)
+let solarPhoto1 = null;
+let solarPhoto2 = null;
+let solarCustomSignature = null;
+let currentSolarReportId = null;
 
 // ════ BUILT-IN TEMPLATES ════
 const BUILTIN_TEMPLATES = [{
@@ -4456,6 +4903,10 @@ function updatePreview(tempData){
     pCS.style.display='none';
     pCSB.style.display='none';
   }
+  
+  if (typeof updateSolarReportPreview === 'function') {
+    updateSolarReportPreview();
+  }
 }
 
 // ════ SOLAR QUOTATION RENDERER ════
@@ -5147,7 +5598,7 @@ function renderDashboardTemplates(){
 
 function switchNavTab(tab) {
   // Update left nav items active classes
-  const navItems = ['Dash', 'Form', 'Clients', 'Items', 'Company', 'Bank', 'Settings'];
+  const navItems = ['Dash', 'Form', 'Clients', 'Items', 'Company', 'Bank', 'Settings', 'SolarReport'];
   navItems.forEach(item => {
     const el = document.getElementById('nav' + item);
     if (el) el.classList.remove('active');
@@ -5155,6 +5606,7 @@ function switchNavTab(tab) {
   
   let activeId = 'nav' + tab.charAt(0).toUpperCase() + tab.slice(1);
   if (tab === 'dashboard') activeId = 'navDash';
+  if (tab === 'solar-report') activeId = 'navSolarReport';
   const activeNavItem = document.getElementById(activeId);
   if (activeNavItem) activeNavItem.classList.add('active');
   
@@ -5184,6 +5636,10 @@ function switchNavTab(tab) {
     if (invoiceDoc) invoiceDoc.style.display = 'none';
     if (previewTopbar) previewTopbar.style.display = 'none';
     if (dashContainer) dashContainer.style.display = 'flex';
+    const solarDoc = document.getElementById('solarReportDoc');
+    const solarTopbar = document.getElementById('solarReportTopbar');
+    if (solarDoc) solarDoc.style.display = 'none';
+    if (solarTopbar) solarTopbar.style.display = 'none';
     
     if (pageTitle) pageTitle.textContent = 'Dashboard';
     renderDashboardTemplates();
@@ -5194,8 +5650,20 @@ function switchNavTab(tab) {
     
     // Hide dashboard, show invoice doc and live preview bar
     if (dashContainer) dashContainer.style.display = 'none';
-    if (invoiceDoc) invoiceDoc.style.display = 'block';
-    if (previewTopbar) previewTopbar.style.display = 'flex';
+    const solarDoc = document.getElementById('solarReportDoc');
+    const solarTopbar = document.getElementById('solarReportTopbar');
+    if (tab === 'solar-report') {
+      if (invoiceDoc) invoiceDoc.style.display = 'none';
+      if (previewTopbar) previewTopbar.style.display = 'none';
+      if (solarDoc) solarDoc.style.display = 'block';
+      if (solarTopbar) solarTopbar.style.display = 'flex';
+      if (pageTitle) pageTitle.textContent = 'Solar Report Editor';
+    } else {
+      if (solarDoc) solarDoc.style.display = 'none';
+      if (solarTopbar) solarTopbar.style.display = 'none';
+      if (invoiceDoc) invoiceDoc.style.display = 'block';
+      if (previewTopbar) previewTopbar.style.display = 'flex';
+    }
     
     // Switch left sidebar panel
     const panels = {
@@ -5204,7 +5672,8 @@ function switchNavTab(tab) {
       'bank': 'Bank',
       'clients': 'Clients',
       'items': 'Items',
-      'settings': 'Settings'
+      'settings': 'Settings',
+      'solar-report': 'SolarReport'
     };
     Object.entries(panels).forEach(([key, val]) => {
       const el = document.getElementById('panel' + val);
@@ -7835,6 +8304,7 @@ function init(){
   renderColumnManager();
   renderTemplateCards();
   renderDashboardTemplates();
+  renderSolarReportsDashboardList();
   const invDateEl=document.getElementById('invDate');
   if(invDateEl) invDateEl.value=getTodayDateString();
   updatePreview();
@@ -7872,6 +8342,442 @@ function toggleRightSidebar(){
   } else {
     if(handle) handle.style.display = 'block';
   }
+}
+
+// ════ SOLAR PROJECT COMPLETION REPORT LOGIC ════
+
+function uploadSolarReportPhoto(input, index) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const b64 = e.target.result;
+    if (index === 1) {
+      solarPhoto1 = b64;
+      const img = document.getElementById('p_repPhoto1');
+      const placeholder = document.getElementById('p_repPhotoPlaceholder1');
+      if (img) { img.src = b64; img.style.display = 'block'; }
+      if (placeholder) placeholder.style.display = 'none';
+    } else {
+      solarPhoto2 = b64;
+      const img = document.getElementById('p_repPhoto2');
+      const placeholder = document.getElementById('p_repPhotoPlaceholder2');
+      if (img) { img.src = b64; img.style.display = 'block'; }
+      if (placeholder) placeholder.style.display = 'none';
+    }
+    updateSolarReportPreview();
+    toast('✅ Photo ' + index + ' uploaded!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeSolarReportPhoto(index) {
+  if (index === 1) {
+    solarPhoto1 = null;
+    const img = document.getElementById('p_repPhoto1');
+    const placeholder = document.getElementById('p_repPhotoPlaceholder1');
+    if (img) { img.src = ''; img.style.display = 'none'; }
+    if (placeholder) placeholder.style.display = 'block';
+  } else {
+    solarPhoto2 = null;
+    const img = document.getElementById('p_repPhoto2');
+    const placeholder = document.getElementById('p_repPhotoPlaceholder2');
+    if (img) { img.src = ''; img.style.display = 'none'; }
+    if (placeholder) placeholder.style.display = 'block';
+  }
+  updateSolarReportPreview();
+  toast('✕ Photo ' + index + ' removed!');
+}
+
+function uploadSolarReportSignature(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    solarCustomSignature = e.target.result;
+    updateSolarReportPreview();
+    toast('✅ Custom signature uploaded!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeSolarReportSignature() {
+  solarCustomSignature = null;
+  updateSolarReportPreview();
+  toast('✕ Custom signature cleared!');
+}
+
+function updateSolarReportPreview() {
+  // Basic Details (no mock fallback placeholders, defaults to blank if empty)
+  const appNo = document.getElementById('repAppNo').value || '';
+  const consumerName = document.getElementById('repConsumerName').value || '';
+  const consumerAddr = document.getElementById('repConsumerAddr').value || '';
+  const consumerMobile = document.getElementById('repConsumerMobile').value || '';
+  const consumerNo = document.getElementById('repConsumerNo').value || '';
+
+  document.getElementById('p_repAppNo').textContent = appNo;
+  document.getElementById('p_repConsumerName').textContent = consumerName;
+  document.getElementById('p_repConsumerAddr').textContent = consumerAddr;
+  document.getElementById('p_repConsumerMobile').textContent = consumerMobile;
+  document.getElementById('p_repConsumerNo').textContent = consumerNo;
+
+  // Solar Details
+  const sysCapacity = document.getElementById('repSysCapacity').value || '';
+  const sysType = document.getElementById('repSysType').value || '';
+  const modulesQty = document.getElementById('repModulesQty').value || '';
+  const moduleWattage = document.getElementById('repModuleWattage').value || '';
+  const inverterCapacity = document.getElementById('repInverterCapacity').value || '';
+  const installationDate = document.getElementById('repInstallationDate').value || '';
+  const netMeter = document.getElementById('repNetMeter').value || '';
+  const commissionDate = document.getElementById('repCommissionDate').value || '';
+  const syncDate = document.getElementById('repSyncDate').value || '';
+
+  document.getElementById('p_repSysCapacity').textContent = sysCapacity ? (sysCapacity + (sysCapacity.endsWith(',') ? '' : ',')) : '';
+  document.getElementById('p_repSysType').textContent = sysType;
+  document.getElementById('p_repModulesQty').textContent = modulesQty;
+  document.getElementById('p_repModuleWattage').textContent = moduleWattage ? (moduleWattage + (moduleWattage.endsWith(',') ? '' : ',')) : '';
+  document.getElementById('p_repInverterCapacity').textContent = inverterCapacity;
+  document.getElementById('p_repInstallationDate').textContent = installationDate;
+  document.getElementById('p_repNetMeter').textContent = netMeter;
+  document.getElementById('p_repCommissionDate').textContent = commissionDate;
+  document.getElementById('p_repSyncDate').textContent = syncDate;
+
+  // Signatures & Dates
+  const installerCompany = document.getElementById('repInstallerCompany').value || '';
+  const propName = document.getElementById('repProprietorName').value || '';
+  const propDesig = document.getElementById('repProprietorDesig').value || '';
+  const consumerDate = document.getElementById('repConsumerDate').value || '';
+  const installerDate = document.getElementById('repInstallerDate').value || '';
+
+  document.getElementById('p_repInstallerCompany').textContent = installerCompany;
+  document.getElementById('p_repProprietorName').textContent = propName;
+  document.getElementById('p_repProprietorDesig').textContent = propDesig;
+  document.getElementById('p_repConsumerDate').textContent = consumerDate;
+  document.getElementById('p_repInstallerDate').textContent = installerDate;
+
+  // Installer Signature Display - Use stampImg (Company Signature & Stamp) by default
+  const sigImg = document.getElementById('p_repInstallerSign');
+  const signatureToUse = solarCustomSignature || stampImg;
+  if (signatureToUse && sigImg) {
+    sigImg.src = signatureToUse;
+    sigImg.style.display = 'block';
+    
+    // Scale and offset exactly like the invoice company stamp
+    const stampWidth = gv('stampImgWidth') || '100';
+    const stampOffset = gv('stampImgOffset') || '0';
+    sigImg.style.width = stampWidth + 'px';
+    sigImg.style.maxHeight = '120px';
+    sigImg.style.marginTop = '-' + stampOffset + 'px';
+    sigImg.style.marginBottom = stampOffset + 'px';
+  } else if (sigImg) {
+    sigImg.style.display = 'none';
+  }
+
+  // Header updates from active editor inputs (same as invoice layout)
+  let pHeaderName = gv('forName') || gv('sellerName') || 'M/S G & L ENTERPRISE';
+  let pHeaderGST = gv('sellerGST') || '18AQZPB8698L3ZI';
+  let pHeaderAddr = gv('sellerAddr') || 'Vill & P.O.- Nagrijuli, Dist. Tamulpur, B.T.C. Assam. PIN-781368';
+  let pHeaderEmail = gv('sellerEmail') || 'basakbiswa87@gmail.com';
+  let pHeaderPhone = gv('sellerPhone') || '9864239941 / 7896737040';
+
+  document.getElementById('p_repCompanyName').textContent = pHeaderName;
+  document.getElementById('p_repCompanyGST').textContent = pHeaderGST;
+  document.getElementById('p_repCompanyAddress').textContent = pHeaderAddr;
+  document.getElementById('p_repCompanyEmail').textContent = pHeaderEmail;
+  document.getElementById('p_repCompanyPhone').textContent = pHeaderPhone;
+  document.getElementById('p_repBottomPhone').textContent = pHeaderPhone;
+  document.getElementById('p_repBottomEmail').textContent = pHeaderEmail;
+
+
+}
+
+function clearSolarReportForm() {
+  currentSolarReportId = null;
+  document.getElementById('repAppNo').value = '';
+  document.getElementById('repConsumerName').value = '';
+  document.getElementById('repConsumerAddr').value = '';
+  document.getElementById('repConsumerMobile').value = '';
+  document.getElementById('repConsumerNo').value = '';
+  document.getElementById('repSysCapacity').value = '3kW';
+  document.getElementById('repSysType').value = 'On grid';
+  document.getElementById('repModulesQty').value = '6';
+  document.getElementById('repModuleWattage').value = '3kW';
+  document.getElementById('repInverterCapacity').value = '3kW';
+  document.getElementById('repInstallationDate').value = getTodayDateStringDDMMYYYY();
+  document.getElementById('repNetMeter').value = 'No';
+  document.getElementById('repCommissionDate').value = 'Not Commissioned';
+  document.getElementById('repSyncDate').value = 'No';
+  
+
+
+  // Installer info from active inputs
+  document.getElementById('repInstallerCompany').value = gv('forName') || gv('sellerName') || 'M/S G & L Enterprise';
+  document.getElementById('repProprietorName').value = gv('propName') || 'B. Basak';
+  document.getElementById('repProprietorDesig').value = gv('propDesig') || 'Proprietor';
+  document.getElementById('repConsumerDate').value = getTodayDateStringDDMMYYYY();
+  document.getElementById('repInstallerDate').value = getTodayDateStringDDMMYYYY();
+
+  solarPhoto1 = null;
+  solarPhoto2 = null;
+  solarCustomSignature = null;
+
+  // Reset previews
+  const img1 = document.getElementById('p_repPhoto1');
+  const pl1 = document.getElementById('p_repPhotoPlaceholder1');
+  if (img1) { img1.src = ''; img1.style.display = 'none'; }
+  if (pl1) pl1.style.display = 'block';
+
+  const img2 = document.getElementById('p_repPhoto2');
+  const pl2 = document.getElementById('p_repPhotoPlaceholder2');
+  if (img2) { img2.src = ''; img2.style.display = 'none'; }
+  if (pl2) pl2.style.display = 'block';
+
+  updateSolarReportPreview();
+}
+
+function saveSolarReport() {
+  const consumerName = document.getElementById('repConsumerName').value.trim();
+  if (!consumerName) {
+    alert('Please enter Consumer Name before saving.');
+    return;
+  }
+
+  const report = {
+    id: currentSolarReportId || 'rep_' + Date.now(),
+    appNo: document.getElementById('repAppNo').value,
+    consumerName: consumerName,
+    consumerAddr: document.getElementById('repConsumerAddr').value,
+    consumerMobile: document.getElementById('repConsumerMobile').value,
+    consumerNo: document.getElementById('repConsumerNo').value,
+    sysCapacity: document.getElementById('repSysCapacity').value,
+    sysType: document.getElementById('repSysType').value,
+    modulesQty: document.getElementById('repModulesQty').value,
+    moduleWattage: document.getElementById('repModuleWattage').value,
+    inverterCapacity: document.getElementById('repInverterCapacity').value,
+    installationDate: document.getElementById('repInstallationDate').value,
+    netMeter: document.getElementById('repNetMeter').value,
+    commissionDate: document.getElementById('repCommissionDate').value,
+    syncDate: document.getElementById('repSyncDate').value,
+
+    installerCompany: document.getElementById('repInstallerCompany').value,
+    proprietorName: document.getElementById('repProprietorName').value,
+    proprietorDesig: document.getElementById('repProprietorDesig').value,
+    consumerDate: document.getElementById('repConsumerDate').value,
+    installerDate: document.getElementById('repInstallerDate').value,
+    photo1: solarPhoto1,
+    photo2: solarPhoto2,
+    customSignature: solarCustomSignature,
+    savedAt: new Date().toISOString()
+  };
+
+  let reports = JSON.parse(localStorage.getItem('solar_completion_reports') || '[]');
+  if (currentSolarReportId) {
+    reports = reports.map(r => r.id === currentSolarReportId ? report : r);
+  } else {
+    reports.push(report);
+    currentSolarReportId = report.id;
+  }
+
+  localStorage.setItem('solar_completion_reports', JSON.stringify(reports));
+  toast('💾 Solar report saved successfully!');
+  renderSolarReportsDashboardList();
+}
+
+function loadSolarReport(id) {
+  const reports = JSON.parse(localStorage.getItem('solar_completion_reports') || '[]');
+  const r = reports.find(item => item.id === id);
+  if (!r) return;
+
+  currentSolarReportId = r.id;
+  document.getElementById('repAppNo').value = r.appNo || '';
+  document.getElementById('repConsumerName').value = r.consumerName || '';
+  document.getElementById('repConsumerAddr').value = r.consumerAddr || '';
+  document.getElementById('repConsumerMobile').value = r.consumerMobile || '';
+  document.getElementById('repConsumerNo').value = r.consumerNo || '';
+  document.getElementById('repSysCapacity').value = r.sysCapacity || '3kW';
+  document.getElementById('repSysType').value = r.sysType || 'On grid';
+  document.getElementById('repModulesQty').value = r.modulesQty || '6';
+  document.getElementById('repModuleWattage').value = r.moduleWattage || '3kW';
+  document.getElementById('repInverterCapacity').value = r.inverterCapacity || '3kW';
+  document.getElementById('repInstallationDate').value = r.installationDate || '';
+  document.getElementById('repNetMeter').value = r.netMeter || 'No';
+  document.getElementById('repCommissionDate').value = r.commissionDate || 'Not Commissioned';
+  document.getElementById('repSyncDate').value = r.syncDate || 'No';
+  
+
+
+  document.getElementById('repInstallerCompany').value = r.installerCompany || '';
+  document.getElementById('repProprietorName').value = r.proprietorName || '';
+  document.getElementById('repProprietorDesig').value = r.proprietorDesig || '';
+  document.getElementById('repConsumerDate').value = r.consumerDate || '';
+  document.getElementById('repInstallerDate').value = r.installerDate || '';
+
+  solarPhoto1 = r.photo1 || null;
+  solarPhoto2 = r.photo2 || null;
+  solarCustomSignature = r.customSignature || null;
+
+  // Update photo previews
+  const img1 = document.getElementById('p_repPhoto1');
+  const pl1 = document.getElementById('p_repPhotoPlaceholder1');
+  if (solarPhoto1 && img1) { img1.src = solarPhoto1; img1.style.display = 'block'; if (pl1) pl1.style.display = 'none'; }
+  else if (img1) { img1.src = ''; img1.style.display = 'none'; if (pl1) pl1.style.display = 'block'; }
+
+  const img2 = document.getElementById('p_repPhoto2');
+  const pl2 = document.getElementById('p_repPhotoPlaceholder2');
+  if (solarPhoto2 && img2) { img2.src = solarPhoto2; img2.style.display = 'block'; if (pl2) pl2.style.display = 'none'; }
+  else if (img2) { img2.src = ''; img2.style.display = 'none'; if (pl2) pl2.style.display = 'block'; }
+
+  updateSolarReportPreview();
+  switchNavTab('solar-report');
+  toast('⚡ Solar report loaded!');
+}
+
+function deleteSolarReport(id, event) {
+  if (event) event.stopPropagation();
+  if (!confirm('Are you sure you want to delete this Completion Report?')) return;
+
+  let reports = JSON.parse(localStorage.getItem('solar_completion_reports') || '[]');
+  reports = reports.filter(r => r.id !== id);
+  localStorage.setItem('solar_completion_reports', JSON.stringify(reports));
+  
+  toast('🗑️ Solar report deleted!');
+  renderSolarReportsDashboardList();
+}
+
+function renderSolarReportsDashboardList() {
+  const tbody = document.getElementById('dashSolarReportsBody');
+  if (!tbody) return;
+
+  const reports = JSON.parse(localStorage.getItem('solar_completion_reports') || '[]');
+  tbody.innerHTML = '';
+
+  if (reports.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="padding: 20px; text-align: center; color: var(--muted);">
+          No Completion Reports saved yet. Click "＋ Create Completion Report" to get started.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  reports.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid var(--border2)';
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => loadSolarReport(r.id);
+
+    const d = r.savedAt ? new Date(r.savedAt).toLocaleDateString('en-IN') : 'N/A';
+
+    tr.innerHTML = `
+      <td style="padding:12px 8px; font-weight:600; color:var(--text);">📋 ${esc(r.consumerName)}</td>
+      <td style="padding:12px 8px;">${esc(r.appNo || 'N/A')}</td>
+      <td style="padding:12px 8px;">${d}</td>
+      <td style="padding:12px 8px; text-align:center; display:flex; gap:6px; justify-content:center; align-items:center;">
+        <button class="action-btn btn btn-blue btn-sm" style="display:inline-flex; align-items:center; gap:4px; padding:4px 8px; font-size:0.7rem; border-radius:5px;" onclick="loadSolarReport('${r.id}')">✏️ Edit</button>
+        <button class="action-btn btn btn-ghost btn-sm" style="display:inline-flex; align-items:center; gap:4px; padding:4px 8px; font-size:0.7rem; border-radius:5px; color:var(--red);" onclick="deleteSolarReport('${r.id}', event)">🗑️ Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function printSolarReport() {
+  window.print();
+}
+
+function exportSolarReportToPDF() {
+  const element = document.getElementById('solarReportDoc');
+  if (!element) return;
+
+  const appNo = document.getElementById('repAppNo').value || 'DRAFT';
+  const consumerName = document.getElementById('repConsumerName').value || 'Client';
+  const filename = `Completion_Report_${consumerName.replace(/\s+/g, '_')}_${appNo.replace(/\s+/g, '_')}.pdf`;
+
+  // Apply print specifications temporarily
+  const originalWidth = element.style.width;
+  const originalBoxShadow = element.style.boxShadow;
+  const originalBorderRadius = element.style.borderRadius;
+  const originalPadding = element.style.padding;
+
+  element.style.width = '794px';
+  element.style.boxShadow = 'none';
+  element.style.borderRadius = '0';
+  element.style.padding = '30px';
+
+  const opt = {
+    margin:       0,
+    filename:     filename,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false, 
+      letterRendering: true,
+      scrollY: 0,
+      scrollX: 0
+    },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['css', 'legacy'] }
+  };
+
+  toast('⏳ Generating Report PDF...');
+
+  html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
+    // Restore styles
+    element.style.width = originalWidth;
+    element.style.boxShadow = originalBoxShadow;
+    element.style.borderRadius = originalBorderRadius;
+    element.style.padding = originalPadding;
+
+    const blob = pdf.output('blob');
+    currentPdfBlobUrl = URL.createObjectURL(blob);
+    currentPdfFilename = filename;
+
+    const iframe = document.getElementById('pdfPreviewIframe');
+    if (iframe) iframe.src = currentPdfBlobUrl;
+
+    const modal = document.getElementById('pdfPreviewModal');
+    if (modal) modal.style.display = 'flex';
+
+    toast('✅ PDF preview ready!');
+  }).catch(err => {
+    console.error(err);
+    toast('❌ PDF generation failed.');
+    
+    // Restore styles on error
+    element.style.width = originalWidth;
+    element.style.boxShadow = originalBoxShadow;
+    element.style.borderRadius = originalBorderRadius;
+    element.style.padding = originalPadding;
+  });
+}
+
+function getTodayDateStringDDMMYYYY() {
+  const d = new Date();
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+function getGpsDateString() {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const d = new Date();
+  const dayName = days[d.getDay()];
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const strTime = String(hours).padStart(2, '0') + ':' + minutes + ' ' + ampm;
+
+  return `${dayName}, ${day}/${month}/${year} ${strTime} GMT +05:30`;
 }
 
 // ════ SIDEBAR RESIZE ════

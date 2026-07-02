@@ -6,6 +6,15 @@ const ExcelJS = require('exceljs');
 const app = express();
 app.use(express.json());
 
+// Log client errors directly to server stdout
+app.post('/api/log-error', (req, res) => {
+  console.error("\n❌ CLIENT ERROR:");
+  console.error(req.body.error);
+  if (req.body.stack) console.error(req.body.stack);
+  console.error("----------------------------------------------------\n");
+  res.json({ success: true });
+});
+
 // Serve static index.html
 app.use(express.static(__dirname));
 
