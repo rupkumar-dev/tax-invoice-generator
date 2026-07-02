@@ -722,6 +722,87 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
 .layout-tech .d-table th { background: #1e293b !important; color: #fff !important; border: 1.5px solid #1e293b !important; font-family: monospace !important; }
 .layout-tech .d-table td { border: 1.5px solid #475569 !important; }
 
+/* ════ SOLAR QUOTATION LAYOUT ════ */
+#invoiceDoc.layout-solar_quotation { border: 1px solid #ccc; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+#invoiceDoc.layout-solar_quotation .d-topstrip { display: none; }
+
+/* Solar Quotation Doc Shell */
+.sq-doc { font-family: Arial, sans-serif; font-size: 11px; color: #222; background: #fff; }
+
+/* Header — unified green card containing company info + meta row */
+.sq-header { background: var(--inv-theme, #2d6a4f); color: #fff; border-radius: 0; overflow: hidden; }
+.sq-header-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 20px 14px; }
+.sq-header-left .sq-company-name { font-size: 18px; font-weight: 900; letter-spacing: 0.01em; font-family: Arial, sans-serif; }
+.sq-header-left .sq-company-sub { font-size: 10.5px; margin-top: 4px; opacity: 0.88; font-family: Arial, sans-serif; }
+.sq-header-left .sq-company-sub2 { font-size: 10px; margin-top: 2px; opacity: 0.82; font-family: Arial, sans-serif; }
+.sq-badge { background: #f59e0b; color: #7c2d12; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; padding: 7px 14px; border-radius: 5px; align-self: center; white-space: nowrap; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.18); }
+.sq-badge::after { content: ''; display: inline-block; width: 8px; height: 8px; background: #fff; border-radius: 50%; opacity: 0.85; }
+
+/* Meta row — inside the green header, below a divider */
+.sq-meta-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; border-top: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.12); padding: 10px 20px 12px; gap: 0; }
+.sq-meta-cell { padding: 0 16px 0 0; }
+.sq-meta-cell:last-child { padding-right: 0; }
+.sq-meta-label { font-size: 8.5px; font-weight: 600; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 3px; font-family: Arial, sans-serif; }
+.sq-meta-value { font-size: 11px; font-weight: 800; color: #ffffff; font-family: Arial, sans-serif; }
+
+/* Customer Details */
+.sq-cust-section { border: 1px solid #ccc; border-top: none; padding: 10px 14px; background: #fff; }
+.sq-cust-title { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-bottom: 6px; border-bottom: 1px solid #e5e5e5; padding-bottom: 4px; }
+.sq-cust-grid { display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; }
+.sq-cust-label { font-size: 9px; color: #666; font-weight: 700; white-space: nowrap; }
+.sq-cust-value { font-size: 10.5px; font-weight: 700; }
+.sq-cust-addr { font-size: 10px; color: #333; margin-top: 2px; line-height: 1.55; }
+
+/* Subject line */
+.sq-subject { border: 1px solid #ccc; border-top: none; padding: 8px 14px; background: #f8f8f8; font-size: 10.5px; font-weight: 600; color: #222; border-left: 3px solid var(--inv-theme, #2d6a4f); }
+
+/* System Components section */
+.sq-items-section { border: 1px solid #ccc; border-top: none; }
+.sq-items-header { background: var(--inv-theme, #2d6a4f); color: #fff; font-size: 9.5px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; }
+.sq-items-table { width: 100%; border-collapse: collapse; }
+.sq-items-table th { background: #f0f4f0; color: #222; font-size: 9px; font-weight: 900; text-align: center; padding: 6px 4px; border: 1px solid #ccc; text-transform: uppercase; }
+.sq-items-table th.left { text-align: left; padding-left: 8px; }
+.sq-items-table td { font-size: 10px; padding: 5px 4px; border: 1px solid #ddd; text-align: center; }
+.sq-items-table td.left { text-align: left; padding-left: 8px; }
+.sq-items-table td.right { text-align: right; padding-right: 6px; }
+.sq-items-table tr:nth-child(even) td { background: #f9f9f9; }
+
+/* Totals */
+.sq-totals-section { border: 1px solid #ccc; border-top: none; display: flex; flex-direction: column; }
+.sq-totals-row { display: flex; justify-content: space-between; padding: 5px 14px; border-bottom: 1px solid #eee; font-size: 10.5px; }
+.sq-totals-row .sq-tl { color: #444; font-weight: 600; }
+.sq-totals-row .sq-tv { font-weight: 700; min-width: 90px; text-align: right; }
+.sq-total-cost-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 14px; border-bottom: 1px solid #ccc; background: #f5f5f5; font-size: 11px; font-weight: 700; }
+.sq-payable-bar { background: var(--inv-theme, #2d6a4f); color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; font-size: 13px; font-weight: 900; letter-spacing: 0.02em; }
+
+/* Subsidy Structure */
+.sq-subsidy-section { border: 1px solid #ccc; border-top: none; padding: 12px 14px; }
+.sq-subsidy-title { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-bottom: 10px; }
+.sq-subsidy-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.sq-sub-box { border: 1.5px solid #ccc; border-radius: 6px; padding: 10px; text-align: center; background: #f9f9f9; }
+.sq-sub-box.active { border-color: var(--inv-theme, #2d6a4f); background: #f0f7f4; }
+.sq-sub-kw { font-size: 9px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.sq-sub-amount { font-size: 15px; font-weight: 900; color: var(--inv-theme, #2d6a4f); }
+.sq-sub-breakdown { font-size: 8.5px; color: #666; margin-top: 4px; line-height: 1.5; }
+
+/* Terms & Conditions */
+.sq-terms-section { border: 1px solid #ccc; border-top: none; padding: 10px 14px; }
+.sq-terms-title { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-bottom: 6px; }
+.sq-terms-list { padding-left: 0; list-style: none; }
+.sq-terms-list li { font-size: 9.5px; color: #333; margin-bottom: 3px; line-height: 1.55; padding-left: 12px; position: relative; }
+.sq-terms-list li::before { content: '•'; position: absolute; left: 0; color: var(--inv-theme, #2d6a4f); font-weight: 700; }
+
+/* Bank Details */
+.sq-bank-section { border: 1px solid #ccc; border-top: none; padding: 10px 14px; background: #fafafa; }
+.sq-bank-title { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #444; margin-bottom: 5px; }
+.sq-bank-row { font-size: 10px; margin-bottom: 2px; }
+
+/* Footer / Signature */
+.sq-footer { border: 1px solid #ccc; border-top: none; display: grid; grid-template-columns: 1fr 1fr; }
+.sq-regards { padding: 12px 14px; border-right: 1px solid #ccc; font-size: 10px; color: #333; }
+.sq-sign-area { padding: 12px 14px; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
+.sq-auth-bar { background: var(--inv-theme, #2d6a4f); color: #fff; display: flex; justify-content: flex-end; align-items: center; padding: 5px 14px; font-size: 10px; font-weight: 700; border: 1px solid #ccc; border-top: none; }
+
 /* ════ TOAST ════ */
 .toast {
   position: fixed; bottom: 20px; right: 20px; z-index: 10000;
@@ -1078,13 +1159,19 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
   color: #0369a1 !important;
 }
 
+/* Page breaks for PDF rendering */
+.d-items tr, .d-bottom, .d-row3, .d-row4, .d-auth-bar {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
 /* ════ PRINT ════ */
 @media print {
   body { background: #fff !important; color: #111 !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .topbar, .sidebar, .nav-sidebar, .sidebar-right, .preview-topbar, .resize-handle, .resize-handle-right, .window-titlebar { display: none !important; }
   .layout { display: block !important; }
   .preview-area { padding: 0 !important; margin: 0 !important; background: #fff !important; overflow: visible !important; display: block !important; }
-  #invoiceDoc { width: 210mm !important; max-width: 100% !important; box-shadow: none !important; border-radius: 0 !important; margin: 0 auto !important; border: none !important; page-break-inside: avoid !important; }
+  #invoiceDoc { width: 210mm !important; max-width: 100% !important; box-shadow: none !important; border-radius: 0 !important; margin: 0 auto !important; border: none !important; }
 }
 </style>
 </head>
@@ -1104,6 +1191,26 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
     </div>
   </div>
 </div>
+  <!-- CUSTOM TEMPLATE SAVE MODAL -->
+  <div id="saveTemplateModal" class="modal-backdrop" style="display:none; z-index:9999;">
+    <div class="modal-card" style="max-width:400px;">
+      <div class="modal-header">
+        <div class="modal-title">💾 Save As Template</div>
+        <button class="modal-close" onclick="closeSaveTemplateModal()">✕</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="fg">
+          <label>Template Name *</label>
+          <input type="text" id="customTplSaveName" placeholder="Enter template name e.g. Solar 3KW April" />
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+          <button class="btn btn-ghost" onclick="closeSaveTemplateModal()">Cancel</button>
+          <button class="btn btn-accent" onclick="confirmSaveTemplateFromModal()">Save Template</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="quickClientModal" class="modal-backdrop" style="display:none; z-index:9999;">
     <div class="modal-card" style="max-width:420px;">
       <div class="modal-header">
@@ -1263,9 +1370,10 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
       </div>
     </div>
     <button class="btn btn-ghost btn-sm" id="btnDesignSettings" onclick="openDesignPanel()">&#x1F3A8; Design</button>
-    <button class="btn btn-ghost btn-sm" onclick="window.print()">&#x1F5A8;&#xFE0F; Print</button>
-    <button class="btn btn-blue btn-sm" id="btnTopbarUpdateTpl" onclick="saveAsTemplate(true)" style="display:none;">&#x1F4BE; Update Template</button>
-    <button class="btn btn-green btn-sm" onclick="printPDF()">&#x2B07;&#xFE0F; Save PDF</button>
+    <!-- Auth Status / Profile details -->
+    <div class="dropdown" id="topbarAuthContainer" style="position:relative;">
+      <!-- Dynamically populated button and dropdown menu -->
+    </div>
   </div>
 </header>
 
@@ -1306,6 +1414,9 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
           </button>
           <button class="nav-item" id="navBank" onclick="switchNavTab('bank')">
             <span class="nav-icon">🏦</span> Bank &amp; Decl.
+          </button>
+          <button class="nav-item" id="navSettings" onclick="switchNavTab('settings')">
+            <span class="nav-icon">⚙️</span> Settings
           </button>
         </div>
       </div>
@@ -1352,15 +1463,6 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
           <div class="sec-body">
             <div class="fg-row col2">
               <div class="fg">
-              <label>Layout Style</label>
-              <select id="invLayoutPreset" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem;width:100%">
-                <option value="modern" selected>Modern (Default)</option>
-                <option value="classic">Classic Ledger</option>
-                <option value="elegant">Elegant Minimal</option>
-                <option value="tech">Industrial Tech</option>
-              </select>
-            </div>
-            <div class="fg">
                 <label>Document Type</label>
                 <select id="docType" onchange="updatePreview()">
                   <option value="" disabled selected>-- Select --</option>
@@ -1373,16 +1475,26 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
               </div>
               <div class="fg">
                 <label>Invoice / Quote No.</label>
-                <input id="invNo" type="text" placeholder="INV-2024-001" oninput="updatePreview()"/>
+                <input id="invNo" type="text" placeholder="G&L/PMSGI/2026-27/068" oninput="updatePreview()"/>
               </div>
             </div>
+            <div class="fg-row col2">
+              <div class="fg"><label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showValidUntil" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Valid Until (Date)</label><input id="invValid" type="date" onclick="this.showPicker()" oninput="updatePreview()"/></div>
+              <div class="fg"><label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showSystemCapacity" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> System Capacity (e.g. 3 kW)</label><input id="systemCapacity" type="text" placeholder="3 kW" oninput="updatePreview()"/></div>
+            </div>
+            <!-- Subject Line (for Solar Quotation layout) -->
             <div class="fg">
+              <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showSubjectLine" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Subject Line <span style="font-size:0.68rem;color:var(--muted);font-weight:normal">(Solar Quotation layout)</span></label>
+              <input id="subjectLine" type="text" placeholder="Quotation For On-Grid Solar Plant of 3 KW Capacity" oninput="updatePreview()"/>
+            </div>
+            <div class="fg" style="display:none">
               <label>Layout Style</label>
               <select id="invLayoutPreset" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem;width:100%">
                 <option value="modern" selected>Modern (Default)</option>
                 <option value="classic">Classic Ledger</option>
                 <option value="elegant">Elegant Minimal</option>
                 <option value="tech">Industrial Tech</option>
+                <option value="solar_quotation">☀️ Solar Quotation</option>
               </select>
             </div>
             <div class="fg">
@@ -1391,26 +1503,46 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             </div>
             <div class="fg-row col2">
               <div class="fg">
-                <label>Supplier Ref. No.</label>
+                <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showSupplierRef" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Supplier Ref. No.</label>
                 <input id="supplierRef" type="text" oninput="updatePreview()"/>
               </div>
               <div class="fg">
-                <label>Mode of Payment</label>
-                <input id="payMode" type="text" list="payModeOptions" placeholder="e.g. NEFT/RTGS or Cash" oninput="updatePreview()"/>
-                <datalist id="payModeOptions">
-                  <option value="None">
-                  <option value="NEFT/RTGS">
-                  <option value="Cash">
-                  <option value="Cheque">
-                  <option value="UPI">
-                  <option value="Bank Transfer">
-                  <option value="Credit">
-                </datalist>
+                <label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showPayMode" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Mode of Payment</label>
+                <input id="payMode" type="text" placeholder="e.g. NEFT/RTGS or Cash" oninput="updatePreview()"/>
               </div>
             </div>
             <div class="fg-row col2">
-              <div class="fg"><label>Buyer's Order No.</label><input id="buyerOrderNo" type="text" oninput="updatePreview()"/></div>
-              <div class="fg"><label>Other Reference</label><input id="otherRef" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showBuyerOrderNo" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Buyer's Order No.</label><input id="buyerOrderNo" type="text" oninput="updatePreview()"/></div>
+              <div class="fg"><label style="display:flex; align-items:center; gap:6px;"><input type="checkbox" id="showOtherRef" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" /> Other Reference</label><input id="otherRef" type="text" oninput="updatePreview()"/></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subsidy Structure (Solar Quotation) -->
+        <div class="sec" id="subsidySec">
+          <div class="sec-head" onclick="toggleSec(this)">
+            <div class="sec-head-left"><span class="sec-icon">☀️</span><span class="sec-title">Subsidy Structure <span style="font-size:0.68rem;color:var(--muted2)">(Solar Quotation)</span></span></div>
+            <span class="sec-toggle">▼</span>
+          </div>
+          <div class="sec-body hidden" style="padding:10px 12px">
+            <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+              <input type="checkbox" id="showSubsidyBlock" checked onchange="updatePreview()" style="margin:0; width:12px; height:12px;" />
+              <strong>Enable Subsidy Structure box on document</strong>
+            </div>
+            <div class="fg-row col3">
+              <div class="fg"><label>1 KW – Total Subsidy (₹)</label><input type="number" id="sub1kwTotal" placeholder="48000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>2 KW – Total Subsidy (₹)</label><input type="number" id="sub2kwTotal" placeholder="96000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>3 KW – Total Subsidy (₹)</label><input type="number" id="sub3kwTotal" placeholder="130000" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col3">
+              <div class="fg"><label>1 KW Central (₹)</label><input type="number" id="sub1kwCentral" placeholder="30000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>2 KW Central (₹)</label><input type="number" id="sub2kwCentral" placeholder="60000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>3 KW Central (₹)</label><input type="number" id="sub3kwCentral" placeholder="78000" oninput="updatePreview()"/></div>
+            </div>
+            <div class="fg-row col3">
+              <div class="fg"><label>1 KW State (₹)</label><input type="number" id="sub1kwState" placeholder="18000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>2 KW State (₹)</label><input type="number" id="sub2kwState" placeholder="36000" oninput="updatePreview()"/></div>
+              <div class="fg"><label>3 KW State (₹)</label><input type="number" id="sub3kwState" placeholder="52000" oninput="updatePreview()"/></div>
             </div>
           </div>
         </div>
@@ -1696,6 +1828,44 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
         </div>
       </div><!-- /panelBank -->
 
+      <!-- ═══ PANEL: SETTINGS ═══ -->
+      <div id="panelSettings" style="display:none">
+        <div class="sec">
+          <div class="sec-head">
+            <div class="sec-head-left"><span class="sec-icon">⚙️</span><span class="sec-title">Settings &amp; Login Security</span></div>
+          </div>
+          <div class="sec-body" style="display:flex; flex-direction:column; gap:12px;">
+            <p style="font-size:0.75rem; color:var(--muted); line-height:1.5; margin:0">
+              Set up credentials to secure your data. Once set, your templates, clients, items, and company profile will be bound to your account.
+            </p>
+            
+            <div id="authStatusText" style="font-size:0.78rem; font-weight:700; color:var(--accent); background:rgba(14,165,233,0.1); padding:8px 12px; border-radius:6px; border:1px solid rgba(14,165,233,0.2);">
+              Status: Not logged in (Guest)
+            </div>
+
+            <div class="fg">
+              <label>Username</label>
+              <input type="text" id="settingUsername" placeholder="Enter username" />
+            </div>
+            
+            <div class="fg">
+              <label>Password</label>
+              <input type="password" id="settingPassword" placeholder="Enter password" />
+            </div>
+
+            <div class="fg">
+              <label>Phone Number</label>
+              <input type="text" id="settingPhone" placeholder="Enter phone number" />
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button class="btn btn-accent btn-sm" onclick="saveAuthSettings()" style="flex:1; justify-content:center;">Save Credentials</button>
+              <button class="btn btn-red btn-sm" id="btnLogout" onclick="logoutActiveUser()" style="display:none; justify-content:center;">Log Out</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /panelSettings -->
+
       <!-- ═══ PANEL: CLIENTS ═══ -->
       <div id="panelClients" style="display:none">
         <div class="sec">
@@ -1941,6 +2111,8 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 14px;">
               <h3 style="color:#38bdf8; font-size:0.85rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin:0">Templates &amp; Files Directory</h3>
               <div style="display:flex; gap:8px;">
+                 <button class="btn btn-blue btn-sm" style="padding:3px 8px; font-size:0.7rem; border-radius:5px" onclick="bulkPrintAll()">🖨️ Bulk Print All</button>
+                 <button class="btn btn-accent btn-sm" style="padding:3px 8px; font-size:0.7rem; border-radius:5px" onclick="bulkExportAllPDF()">📄 Bulk PDF All</button>
                  <button class="btn btn-ghost btn-sm" style="padding:3px 8px; font-size:0.7rem; border-radius:5px" onclick="clearInvoice(); createNewInvoiceBtn();">＋ New Draft</button>
               </div>
             </div>
@@ -2012,6 +2184,7 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <option value="classic">Classic Ledger</option>
             <option value="elegant">Elegant Minimal</option>
             <option value="tech">Industrial Tech</option>
+            <option value="solar_quotation">☀️ Solar Quotation</option>
           </select>
         </div>
         
@@ -2024,6 +2197,7 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <option value="#16a34a" selected>Emerald Green</option>
             <option value="#d97706">Amber Orange</option>
             <option value="#000000">Classic Black</option>
+            <option value="#2d6a4f">Forest Green (Solar)</option>
           </select>
         </div>
       </div>
@@ -2031,6 +2205,8 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
       <div style="display:flex; gap:8px">
         <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨️ Print</button>
         <button class="btn btn-green btn-sm" onclick="printPDF()">⬇️ PDF</button>
+        <button class="btn btn-accent btn-sm" onclick="saveNewTemplateFromTopbar()" style="display:inline-flex; align-items:center; gap:4px; padding:3px 8px; font-size:0.72rem; border-radius:5px;">💾 Save New</button>
+        <button class="btn btn-green btn-sm" id="btnTopbarUpdateTemplate" onclick="updateTemplateFromTopbar()" style="display:none; align-items:center; gap:4px; padding:3px 8px; font-size:0.72rem; border-radius:5px;">🔄 Update</button>
       </div>
     </div>
 
@@ -2041,12 +2217,12 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
         <button class="btn btn-sm" id="warningBarApplyBtn" style="padding:3px 9px; font-size:0.68rem; border-radius:4px; background:#fff; color:#ea580c; border:none; font-weight:bold; cursor:pointer; display:inline-block;" onclick="applyPreviewedTpl()">⚡ Apply &amp; Edit</button>
       </div>
       <div class="d-body">
-        <div class="d-topstrip" id="p_docType" style="margin-bottom:0px">TAX INVOICE</div>
+        <div class="d-topstrip" id="p_docType" style="margin-bottom:0px; text-align: var(--inv-title-align, center);">TAX INVOICE</div>
 
         <!-- Seller + Meta -->
         <div class="d-row1">
           <div class="d-seller">
-            <div class="cname" id="p_sellerName"></div>
+            <div class="cname" id="p_sellerName" style="text-align: var(--inv-seller-align, left);"></div>
             <div class="cdet" id="p_sellerAddr"></div>
             <div class="cdet">E-mail: <span id="p_sellerEmail"></span></div>
             <div class="cdet">Ph: <span id="p_sellerPhone"></span></div>
@@ -2057,13 +2233,17 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
               <div class="d-meta-c"><div class="ml" id="p_invNoLabel">Invoice No.</div><div class="mv" id="p_invNo"></div></div>
               <div class="d-meta-c"><div class="ml">Date</div><div class="mv" id="p_invDate"></div></div>
             </div>
-            <div class="d-meta-r">
-              <div class="d-meta-c"><div class="ml">Supplier's Ref. No.</div><div class="mv" id="p_supplierRef"></div></div>
-              <div class="d-meta-c"><div class="ml">Mode/Term of Payment</div><div class="mv" id="p_payMode"></div></div>
+            <div class="d-meta-r" id="p_row_supplier_pay">
+              <div class="d-meta-c" id="p_supplierRefCell"><div class="ml">Supplier's Ref. No.</div><div class="mv" id="p_supplierRef"></div></div>
+              <div class="d-meta-c" id="p_payModeCell"><div class="ml">Mode/Term of Payment</div><div class="mv" id="p_payMode"></div></div>
             </div>
-            <div class="d-meta-r">
-              <div class="d-meta-c"><div class="ml">Buyer's Order No.</div><div class="mv" id="p_buyerOrderNo"></div></div>
-              <div class="d-meta-c"><div class="ml">Other References</div><div class="mv" id="p_otherRef"></div></div>
+            <div class="d-meta-r" id="p_row_buyer_other">
+              <div class="d-meta-c" id="p_buyerOrderNoCell"><div class="ml">Buyer's Order No.</div><div class="mv" id="p_buyerOrderNo"></div></div>
+              <div class="d-meta-c" id="p_otherRefCell"><div class="ml">Other References</div><div class="mv" id="p_otherRef"></div></div>
+            </div>
+            <div class="d-meta-r" id="p_systemCapacityRow" style="display:none">
+              <div class="d-meta-c"><div class="ml">System Capacity</div><div class="mv" id="p_systemCapacity"></div></div>
+              <div class="d-meta-c"></div>
             </div>
           </div>
         </div>
@@ -2081,6 +2261,11 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <div class="d-blabel">Terms Of Delivery</div>
             <div class="d-baddr" id="p_termsDelivery"></div>
           </div>
+        </div>
+
+        <!-- Subject Line -->
+        <div id="p_subjectLineRow" style="display:none; font-size:1.05em; font-weight:700; margin:12px 0 8px 0; padding:6px 0; border-bottom:1px dashed var(--inv-theme); text-align: var(--inv-subject-align, left);">
+          Subject: <span id="p_subjectLine"></span>
         </div>
 
         <!-- Items table -->
@@ -2111,7 +2296,10 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
         </div>
 
         <!-- Notes -->
-        <div id="p_notesRow" class="d-notes" style="display:none"><strong>Notes:</strong> <span id="p_notes"></span></div>
+        <div id="p_notesRow" class="d-notes" style="display:none; text-align: var(--inv-notes-align, left);"><strong>Notes:</strong> <span id="p_notes"></span></div>
+
+        <!-- Subsidy Block -->
+        <div id="p_subsidyBlock" style="display:none; margin:15px 0; border:1.5px solid var(--inv-theme); border-radius:8px; overflow:hidden;"></div>
 
         <!-- Bank + Declaration -->
         <div class="d-row3">
@@ -2198,14 +2386,7 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <div class="tpl-section-header" style="margin-top: 12px;">👤 My Saved Templates</div>
             <div class="tpl-list" id="userTplList"></div>
             
-            <div style="border-top:1px solid rgba(14,165,233,.12); padding-top:10px; margin-top:5px; display:flex; flex-direction:column; gap:8px">
-              <label style="font-size:.68rem; font-weight:700; color:var(--muted); text-transform:uppercase">Save Current As Template</label>
-              <div class="tpl-save-row" style="display:flex; gap:6px;">
-                <input class="tpl-name-input" id="tplSaveName" placeholder="Template name e.g. Solar April…"/>
-                <button class="btn btn-accent btn-sm" onclick="saveAsTemplate(false)" style="padding:7px 10px;" id="btnSaveTpl">Save As</button>
-                <button class="btn btn-green btn-sm" onclick="saveAsTemplate(true)" style="padding:7px 10px; display:none;" id="btnUpdateTpl">Update</button>
-              </div>
-            </div>
+            <input type="hidden" id="tplSaveName" value="" />
           </div>
         </div>
       </div>
@@ -2217,7 +2398,7 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
             <div class="sec-head-left"><span class="sec-icon">🎨</span><span class="sec-title">Design &amp; Styling</span></div>
           </div>
           <div class="sec-body" style="padding:15px;display:flex;flex-direction:column;gap:12px">
-            <div class="fg">
+            <div class="fg" style="display:none">
               <label>Theme Color</label>
               <div style="display:flex;gap:6px;align-items:center">
                 <input type="color" id="invThemeColor" value="#16a34a" oninput="updateDesignSettings()" style="width:40px;height:30px;padding:0;border:none;border-radius:4px;cursor:pointer"/>
@@ -2227,6 +2408,7 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
                   <option value="#16a34a" selected>Emerald Green</option>
                   <option value="#d97706">Amber Orange</option>
                   <option value="#000000">Classic Black</option>
+                  <option value="#2d6a4f">Forest Green (Solar)</option>
                 </select>
               </div>
             </div>
@@ -2248,6 +2430,38 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
                 <option value="Georgia, serif">Georgia</option>
                 <option value="'Courier New', Courier, monospace">Courier New</option>
                 <option value="system-ui, sans-serif">System UI</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Document Title Alignment</label>
+              <select id="invTitleAlign" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem">
+                <option value="center" selected>Center</option>
+                <option value="left">Left</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Subject Line Alignment</label>
+              <select id="invSubjectAlign" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem">
+                <option value="left" selected>Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Notes &amp; Terms Alignment</label>
+              <select id="invNotesAlign" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem">
+                <option value="left" selected>Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Seller Name Alignment</label>
+              <select id="invSellerAlign" onchange="updateDesignSettings()" style="background:var(--input);border:1.5px solid var(--border);border-radius:6px;color:var(--text);padding:6px;font-size:.76rem">
+                <option value="left" selected>Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
               </select>
             </div>
           </div>
@@ -2294,7 +2508,294 @@ tr.row-drag-over td { border-top: 3px dashed var(--accent) !important; backgroun
 
 <div class="toast" id="toast">✅ <span id="toastMsg"></span></div>
 
+  <!-- PDF PREVIEW MODAL -->
+  <div id="pdfPreviewModal" class="modal-backdrop" style="display:none; z-index:99999;">
+    <div class="modal-card" style="width:100%; max-width:800px; height:90vh; display:flex; flex-direction:column; gap:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="color:var(--accent); font-size:1.1rem; font-weight:700; display:flex; align-items:center; gap:8px;">📄 PDF Print Preview</h3>
+        <button class="btn btn-ghost btn-sm" onclick="closePdfPreviewModal()" style="border:none; font-size:1.2rem; padding:4px; background:none; color:var(--muted);">✕</button>
+      </div>
+      
+      <div style="flex:1; background:#f1f5f9; border-radius:8px; border:1px solid var(--border); overflow:hidden; position:relative;">
+        <iframe id="pdfPreviewIframe" style="width:100%; height:100%; border:none;" src="about:blank"></iframe>
+      </div>
+      
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn btn-ghost btn-sm" onclick="closePdfPreviewModal()">✕ Close</button>
+        <button class="btn btn-blue btn-sm" id="btnPrintPdfPreview">🖨️ Print</button>
+        <button class="btn btn-accent btn-sm" id="btnDownloadPdfPreview">⬇️ Download PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN OVERLAY MODAL -->
+  <div id="loginOverlayModal" class="modal-backdrop" style="display:none; z-index:99999; background:rgba(15, 23, 42, 0.98); backdrop-filter:blur(12px);">
+    <div class="modal-card" style="width:100%; max-width:400px; padding:32px; border:1px solid var(--border); background:var(--surface);">
+      <div style="text-align:center; margin-bottom:24px;">
+        <div style="font-size:3rem; margin-bottom:12px; animation: floatIcon 3s ease-in-out infinite;">🔐</div>
+        <h2 style="font-family:'Outfit',sans-serif; color:var(--text); font-weight:800; font-size:1.5rem; margin:0 0 6px 0;">Security Login</h2>
+        <p style="font-size:0.78rem; color:var(--muted); line-height:1.5; margin:0">Access your tax invoice data or continue as guest.</p>
+      </div>
+      
+      <div id="loginErrorMsg" style="display:none; font-size:0.75rem; color:#ef4444; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.2); padding:10px 12px; border-radius:6px; margin-bottom:16px; font-weight:600; text-align:center;">
+        ❌ Invalid username or password
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="fg">
+          <label>Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter your username" />
+        </div>
+        <div class="fg">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter your password" />
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+          <button class="btn btn-accent" onclick="submitLogin()" style="justify-content:center; padding:10px 0; font-family:'Outfit',sans-serif; font-weight:700; font-size:0.9rem;">🔓 Login</button>
+          <button class="btn btn-ghost" onclick="skipLogin()" style="justify-content:center; padding:10px 0; font-family:'Outfit',sans-serif; font-weight:600; font-size:0.85rem; border-color:var(--border); color:var(--muted);">➡️ Skip &amp; Continue as Guest</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 <script>
+// ════ LOCALSTORAGE AUTH SYNC OVERRIDE ════
+const originalLocalStorageSetItem = localStorage.setItem;
+localStorage.setItem = function(key, value) {
+  originalLocalStorageSetItem.apply(this, arguments);
+  
+  const dataKeys = ['inv_custom_tpls', 'inv_profile', 'inv_products', 'inv_product_groups', 'inv_clients'];
+  if (dataKeys.includes(key)) {
+    const activeUser = localStorage.getItem('inv_active_user') || 'guest';
+    let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+    if (!users[activeUser]) {
+      users[activeUser] = { username: activeUser, data: {} };
+    }
+    if (!users[activeUser].data) users[activeUser].data = {};
+    users[activeUser].data[key] = value;
+    originalLocalStorageSetItem.call(localStorage, 'inv_users', JSON.stringify(users));
+  }
+};
+
+function loadUserData(username) {
+  let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+  const user = users[username];
+  
+  originalLocalStorageSetItem.call(localStorage, 'inv_active_user', username);
+  
+  const dataKeys = ['inv_custom_tpls', 'inv_profile', 'inv_products', 'inv_product_groups', 'inv_clients'];
+  dataKeys.forEach(key => {
+    let val = '[]';
+    if (key === 'inv_profile') val = '{}';
+    
+    if (user && user.data && user.data[key] !== undefined) {
+      val = user.data[key];
+    }
+    
+    originalLocalStorageSetItem.call(localStorage, key, val);
+  });
+}
+
+function refreshAppDataAndUI() {
+  loadClientsList();
+  loadProductsAndGroups();
+  loadProfile();
+  items = [];
+  renderItemsForm();
+  renderColumnManager();
+  renderTemplateCards();
+  renderDashboardTemplates();
+  const invDateEl = document.getElementById('invDate');
+  if (invDateEl) invDateEl.value = getTodayDateString();
+  updatePreview();
+  updateDesignSettings();
+}
+
+function saveAuthSettings() {
+  const usernameInput = document.getElementById('settingUsername');
+  const passwordInput = document.getElementById('settingPassword');
+  const phoneInput = document.getElementById('settingPhone');
+  
+  const username = usernameInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+  const phone = phoneInput.value.trim();
+  
+  if (!username || !password || !phone) {
+    alert("Please fill in Username, Password, and Phone Number.");
+    return;
+  }
+  
+  let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+  const activeUser = localStorage.getItem('inv_active_user') || 'guest';
+  if (users[username] && activeUser !== username) {
+    alert("This username already exists. Please choose a different username.");
+    return;
+  }
+  
+  users[username] = {
+    username: username,
+    password: password,
+    phone: phone,
+    data: {
+      inv_custom_tpls: localStorage.getItem('inv_custom_tpls') || '[]',
+      inv_profile: localStorage.getItem('inv_profile') || '{}',
+      inv_products: localStorage.getItem('inv_products') || '[]',
+      inv_product_groups: localStorage.getItem('inv_product_groups') || '[]',
+      inv_clients: localStorage.getItem('inv_clients') || '[]'
+    }
+  };
+  
+  originalLocalStorageSetItem.call(localStorage, 'inv_users', JSON.stringify(users));
+  originalLocalStorageSetItem.call(localStorage, 'inv_active_user', username);
+  sessionStorage.setItem('inv_logged_in', 'true');
+  
+  toast("✅ Credentials saved! Current data bound to your account.");
+  updateAuthUI();
+}
+
+function updateAuthUI() {
+  const activeUser = localStorage.getItem('inv_active_user') || 'guest';
+  const statusText = document.getElementById('authStatusText');
+  const logoutBtn = document.getElementById('btnLogout');
+  
+  const usernameInput = document.getElementById('settingUsername');
+  const passwordInput = document.getElementById('settingPassword');
+  const phoneInput = document.getElementById('settingPhone');
+  
+  let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+  
+  if (activeUser && activeUser !== 'guest' && users[activeUser]) {
+    if (statusText) {
+      statusText.textContent = `Status: Logged in as "${activeUser}"`;
+      statusText.style.background = 'rgba(22, 163, 74, 0.1)';
+      statusText.style.borderColor = 'rgba(22, 163, 74, 0.2)';
+      statusText.style.color = '#16a34a';
+    }
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+    
+    if (usernameInput) usernameInput.value = activeUser;
+    if (passwordInput) passwordInput.value = users[activeUser].password || '';
+    if (phoneInput) phoneInput.value = users[activeUser].phone || '';
+  } else {
+    if (statusText) {
+      statusText.textContent = 'Status: Not logged in (Guest)';
+      statusText.style.background = 'rgba(148, 163, 184, 0.1)';
+      statusText.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+      statusText.style.color = 'var(--muted)';
+    }
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    
+    if (usernameInput) usernameInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (phoneInput) phoneInput.value = '';
+  }
+
+  // Update Topbar Auth UI dropdown container
+  const authContainer = document.getElementById('topbarAuthContainer');
+  if (authContainer) {
+    if (activeUser && activeUser !== 'guest' && users[activeUser]) {
+      const user = users[activeUser];
+      authContainer.innerHTML = `
+        <button class="btn btn-accent btn-sm" onclick="toggleAuthDropdown(event)">👤 ${activeUser}</button>
+        <div class="dropdown-menu" id="authMenu" style="display:none; position:absolute; right:0; left:auto; width:220px; padding:12px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-xl); z-index:9999; margin-top:8px;">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px; margin-bottom:8px;">
+            👤 Profile Details
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; font-size:0.75rem; color:var(--muted); line-height:1.4;">
+            <div><strong>Username:</strong> ${activeUser}</div>
+            <div><strong>Phone:</strong> ${user.phone || 'N/A'}</div>
+          </div>
+          <div class="dropdown-divider" style="margin:8px 0; border-top:1px solid var(--border);"></div>
+          <button class="dropdown-item" onclick="switchNavTab('settings')" style="padding:6px 8px; border-radius:4px; font-size:0.72rem; display:block; width:100%; text-align:left; background:none; border:none; color:var(--text); cursor:pointer;">⚙️ Settings Panel</button>
+          <button class="dropdown-item" onclick="logoutActiveUser()" style="padding:6px 8px; border-radius:4px; font-size:0.72rem; display:block; width:100%; text-align:left; background:none; border:none; color:#ef4444; cursor:pointer;">🚪 Log Out</button>
+        </div>
+      `;
+    } else {
+      authContainer.innerHTML = `
+        <button class="btn btn-blue btn-sm" onclick="showLoginOverlayDirect(event)">🔓 Login</button>
+      `;
+    }
+  }
+}
+
+function toggleAuthDropdown(event) {
+  if (event) event.stopPropagation();
+  const authMenu = document.getElementById('authMenu');
+  if (authMenu) {
+    const isHidden = authMenu.style.display === 'none';
+    
+    // Close export dropdown
+    const exportMenu = document.getElementById('exportMenu');
+    if (exportMenu) exportMenu.style.display = 'none';
+    
+    authMenu.style.display = isHidden ? 'block' : 'none';
+  }
+}
+
+function showLoginOverlayDirect(event) {
+  if (event) event.stopPropagation();
+  const modal = document.getElementById('loginOverlayModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+}
+
+function logoutActiveUser() {
+  if (!confirm("Are you sure you want to log out? Your guest profile will load.")) return;
+  
+  originalLocalStorageSetItem.call(localStorage, 'inv_active_user', 'guest');
+  sessionStorage.setItem('inv_logged_in', 'guest');
+  
+  loadUserData('guest');
+  
+  toast("🚪 Logged out! Loaded guest profile.");
+  updateAuthUI();
+  refreshAppDataAndUI();
+}
+
+function submitLogin() {
+  const usernameInput = document.getElementById('loginUsername');
+  const passwordInput = document.getElementById('loginPassword');
+  const errorMsg = document.getElementById('loginErrorMsg');
+  
+  const username = usernameInput.value.trim().toLowerCase();
+  const password = passwordInput.value;
+  
+  let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+  const user = users[username];
+  
+  if (user && user.password === password) {
+    originalLocalStorageSetItem.call(localStorage, 'inv_active_user', username);
+    sessionStorage.setItem('inv_logged_in', 'true');
+    if (errorMsg) errorMsg.style.display = 'none';
+    
+    loadUserData(username);
+    
+    document.getElementById('loginOverlayModal').style.display = 'none';
+    
+    toast(`🔓 Welcome back, ${username}!`);
+    refreshAppDataAndUI();
+    
+    if (usernameInput) usernameInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+  } else {
+    if (errorMsg) errorMsg.style.display = 'block';
+  }
+}
+
+function skipLogin() {
+  originalLocalStorageSetItem.call(localStorage, 'inv_active_user', 'guest');
+  sessionStorage.setItem('inv_logged_in', 'guest');
+  
+  loadUserData('guest');
+  
+  document.getElementById('loginOverlayModal').style.display = 'none';
+  
+  toast("➡️ Continued as Guest.");
+  refreshAppDataAndUI();
+}
+
 // ════ STATE ════
 let items = [];
 let signatureImg   = null;
@@ -2732,6 +3233,66 @@ const BUILTIN_TEMPLATES = [{
     { desc: 'ACDB, DCDB & surge protection setup 3ph', hsn: '85369090', gst: 18, qty: 1, rate: 18000, amount: 18000 },
     { desc: 'Copper Earthing Pit Chemical type', hsn: '85359090', gst: 18, qty: 3, rate: 5000, amount: 15000 }
   ]
+}, {
+  id: 'tpl_quot_gnl_3kw_210000',
+  name: 'Quotation – G&L Solar 3KW ₹2,10,000',
+  amount: 210000,
+  docType: 'QUOTATION',
+  invNo: 'G&L/PMSGI/2026-27/068',
+  invDate: '2026-06-27',
+  invValid: '2026-07-12',
+  supplierRef: '',
+  payMode: 'UPI/NetBanking/Cash',
+  buyerOrderNo: '',
+  otherRef: '3 kW',
+  systemCapacity: '3 kW',
+  subjectLine: 'Quotation For On-Grid Solar Plant of 3 KW Capacity',
+  buyerName: 'Biswajit Basak',
+  buyerPhone: '',
+  buyerGST: '',
+  buyerAddr: 'Nagrijuli, Dist. Tamulpur, B.T.C. Assam. PIN-781368',
+  termsDelivery: 'Included till single location',
+  discount: 0,
+  addCharges: 0,
+  chargesNote: '',
+  invNotes: 'Delivery Time: lead time for delivery is 15–30 days from date of invoicing, depending on the site.\nTransportation: Included till single location.\nWarranty: As per our terms & conditions, against manufacturing defects only and subject to warranty policy.\nPayment of Net Metering and Solar Generation Meter will be extra, to be paid by the consumer.\nPayment terms: (i) 80% as advance on confirmation of the order.\n(ii) 20% after delivery of materials, for installation and commissioning of the RTS System.\nThis quotation is valid for 15 days only.',
+
+  // Subsidy Structure — 1KW / 2KW / 3KW (Central + State)
+  sub1kwTotal: 48000, sub1kwCentral: 30000, sub1kwState: 18000,
+  sub2kwTotal: 96000, sub2kwCentral: 60000, sub2kwState: 36000,
+  sub3kwTotal: 130000, sub3kwCentral: 85800, sub3kwState: 45000,
+
+  // Design settings matching G&L green header style
+  invThemeColor: '#2d6a4f',
+  invThemePreset: '#2d6a4f',
+  invFontSize: '11',
+  invFontFamily: 'Arial, sans-serif',
+  layoutPreset: 'solar_quotation',
+
+  manualTaxes: {
+    subtotal: 190189,
+    grand: 210000,
+    cgst5: 2550,
+    sgst5: 2550,
+    cgst9: 7361,
+    sgst9: 7361
+  },
+  items: [
+    { desc: 'Solar panel DCR Bifacial 540Wp', hsn: '85414300', gst: 5,  qty: 6,      rate: 17000, amount: 107100 },
+    { desc: '3kw, 1 phase inverter: V-sole',  hsn: '85044090', gst: 5,  qty: 1,      rate: 27000, amount: 28350  },
+    { desc: 'ACDB',                           hsn: '853890',   gst: 18, qty: '1 set', rate: 3389,  amount: 3999  },
+    { desc: 'DCDB',                           hsn: '853890',   gst: 18, qty: '1 set', rate: 8240,  amount: 9723  },
+    { desc: 'DC cable 4 sq mm',               hsn: '85441920', gst: 18, qty: '1 set', rate: 7870,  amount: 9287  },
+    { desc: 'DC cable 4 sq mm',               hsn: '85441920', gst: 18, qty: '1 set', rate: 11310, amount: 13344 },
+    { desc: 'Earthing cable 16 sq mm',        hsn: '85441920', gst: 18, qty: '1 set', rate: 8170,  amount: 9641  },
+    { desc: 'Chemical Earthing',              hsn: '85369060', gst: 18, qty: '1 set', rate: 6270,  amount: 9758  },
+    { desc: 'LA',                             hsn: '85369060', gst: 18, qty: '1 set', rate: 3270,  amount: 3859  },
+    { desc: 'Lugs',                           hsn: '85369060', gst: 18, qty: '1 set', rate: 2750,  amount: 3245  },
+    { desc: 'MC4 Connector',                  hsn: '85369060', gst: 18, qty: '1 set', rate: 2680,  amount: 3162  },
+    { desc: 'PVC cable Tray',                 hsn: '39173100', gst: 18, qty: '1 set', rate: 2640,  amount: 3115  },
+    { desc: 'Flexible conduit',               hsn: '39173100', gst: 18, qty: '1 set', rate: 2280,  amount: 2690  },
+    { desc: 'Monorail Structure',             hsn: '39174000', gst: 18, qty: '1 set', rate: 2310,  amount: 2726  }
+  ]
 }];
 
 // ════ TEMPLATE FUNCTIONS ════
@@ -2810,7 +3371,8 @@ function loadTemplate(id){
 
   const fields=['docType','invNo','invDate','invValid','supplierRef','payMode',
     'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
-    'termsDelivery','discount','addCharges','chargesNote','invNotes'];
+    'termsDelivery','discount','addCharges','chargesNote','invNotes',
+    'systemCapacity','subjectLine'];
   fields.forEach(f=>{
     const el=document.getElementById(f);
     if(el&&tpl[f]!==undefined&&tpl[f]!==null) {
@@ -2841,13 +3403,47 @@ function loadTemplate(id){
     overFields.style.display = 'none';
   }
 
-  // Load template-specific design configurations
-  if (tpl.invThemeColor) document.getElementById('invThemeColor').value = tpl.invThemeColor;
-  if (tpl.invThemePreset) document.getElementById('invThemePreset').value = tpl.invThemePreset;
-  if (tpl.invFontSize) document.getElementById('invFontSize').value = tpl.invFontSize;
-  if (tpl.invFontFamily) document.getElementById('invFontFamily').value = tpl.invFontFamily;
-  if (tpl.layoutPreset) document.getElementById('invLayoutPreset').value = tpl.layoutPreset;
+  // Load template-specific design configurations (with clean defaults to prevent styling leaks between templates)
+  document.getElementById('invThemeColor').value = tpl.invThemeColor || '#16a34a';
+  document.getElementById('invThemePreset').value = tpl.invThemePreset || '#16a34a';
+  document.getElementById('invFontSize').value = tpl.invFontSize || '11';
+  document.getElementById('invFontFamily').value = tpl.invFontFamily || "'Times New Roman', Times, serif";
+  document.getElementById('invLayoutPreset').value = tpl.layoutPreset || 'modern';
+  
+  if (tpl.invTitleAlign) document.getElementById('invTitleAlign').value = tpl.invTitleAlign;
+  else document.getElementById('invTitleAlign').value = 'center';
+  
+  if (tpl.invSubjectAlign) document.getElementById('invSubjectAlign').value = tpl.invSubjectAlign;
+  else document.getElementById('invSubjectAlign').value = 'left';
+  
+  if (tpl.invNotesAlign) document.getElementById('invNotesAlign').value = tpl.invNotesAlign;
+  else document.getElementById('invNotesAlign').value = 'left';
+  
+  if (tpl.invSellerAlign) document.getElementById('invSellerAlign').value = tpl.invSellerAlign;
+  else document.getElementById('invSellerAlign').value = 'left';
+  
+  // Load visibility checkboxes
+  const visibilityToggles = [
+    'showSubjectLine', 'showValidUntil', 'showSystemCapacity',
+    'showSupplierRef', 'showPayMode', 'showBuyerOrderNo',
+    'showOtherRef', 'showSubsidyBlock'
+  ];
+  visibilityToggles.forEach(tId => {
+    const el = document.getElementById(tId);
+    if (el) {
+      el.checked = tpl[tId] !== undefined ? tpl[tId] : true;
+    }
+  });
+  
   updateDesignSettings();
+
+  // Load subsidy structure fields if present
+  const subsidyFields = ['sub1kwTotal','sub1kwCentral','sub1kwState','sub2kwTotal','sub2kwCentral','sub2kwState','sub3kwTotal','sub3kwCentral','sub3kwState'];
+  subsidyFields.forEach(f => {
+    const el = document.getElementById(f);
+    if (el && tpl[f] !== undefined) el.value = tpl[f];
+    else if (el) el.value = '';
+  });
 
   items=tpl.items.map(i=>({...i}));
   renderItemsForm();
@@ -2857,7 +3453,7 @@ function loadTemplate(id){
 
 function updateTemplateUpdateButtons() {
   const btnUpdate = document.getElementById('btnUpdateTpl');
-  const btnTopbarUpdate = document.getElementById('btnTopbarUpdateTpl');
+  const btnTopbarUpdate = document.getElementById('btnTopbarUpdateTemplate');
   
   const activeNavItem = document.querySelector('.nav-item.active');
   const onFormTab = activeNavItem && activeNavItem.id === 'navForm';
@@ -2868,6 +3464,56 @@ function updateTemplateUpdateButtons() {
   const displayVal = showUpdate ? 'inline-flex' : 'none';
   if (btnUpdate) btnUpdate.style.display = displayVal;
   if (btnTopbarUpdate) btnTopbarUpdate.style.display = displayVal;
+}
+
+function saveNewTemplateFromTopbar() {
+  const modal = document.getElementById('saveTemplateModal');
+  const input = document.getElementById('customTplSaveName');
+  if (modal && input) {
+    input.value = gv('buyerName') ? (gv('buyerName') + ' Template') : '';
+    modal.style.display = 'flex';
+    input.focus();
+  }
+}
+
+function closeSaveTemplateModal() {
+  const modal = document.getElementById('saveTemplateModal');
+  if (modal) modal.style.display = 'none';
+}
+
+function confirmSaveTemplateFromModal() {
+  const input = document.getElementById('customTplSaveName');
+  if (!input) return;
+  const name = input.value.trim();
+  if (!name) {
+    toast('⚠️ Template name is required!');
+    return;
+  }
+  const saveNameInput = document.getElementById('tplSaveName');
+  if (saveNameInput) saveNameInput.value = name;
+  saveAsTemplate(false);
+  closeSaveTemplateModal();
+}
+
+function updateTemplateFromTopbar() {
+  if (!loadedTemplateId) {
+    toast('⚠️ No template is currently loaded to update. Save as New instead!');
+    return;
+  }
+  const isBuiltin = BUILTIN_TEMPLATES.some(b => b.id === loadedTemplateId);
+  if (isBuiltin) {
+    toast('⚠️ System templates cannot be updated directly. Save as New instead!');
+    return;
+  }
+  
+  const saveNameInput = document.getElementById('tplSaveName');
+  const allTemplates = getAllTemplates();
+  const tpl = allTemplates.find(t => t.id === loadedTemplateId);
+  if (saveNameInput && tpl && !saveNameInput.value.trim()) {
+    saveNameInput.value = tpl.name || 'Updated Template';
+  }
+  
+  saveAsTemplate(true);
 }
 
 function saveTemplateToServer(tpl) {
@@ -2935,6 +3581,12 @@ function saveAsTemplate(isUpdate = false){
     addCharges:+gv('addCharges')||0,
     chargesNote:gv('chargesNote'),
     invNotes:gv('invNotes'),
+    systemCapacity:gv('systemCapacity'),
+    subjectLine:gv('subjectLine'),
+    // Save subsidy structure
+    sub1kwTotal:+gv('sub1kwTotal')||0, sub1kwCentral:+gv('sub1kwCentral')||0, sub1kwState:+gv('sub1kwState')||0,
+    sub2kwTotal:+gv('sub2kwTotal')||0, sub2kwCentral:+gv('sub2kwCentral')||0, sub2kwState:+gv('sub2kwState')||0,
+    sub3kwTotal:+gv('sub3kwTotal')||0, sub3kwCentral:+gv('sub3kwCentral')||0, sub3kwState:+gv('sub3kwState')||0,
     
     // Save seller profile fields in template for Excel generation
     forName:gv('forName'),
@@ -2951,6 +3603,20 @@ function saveAsTemplate(isUpdate = false){
     invFontSize: document.getElementById('invFontSize').value,
     invFontFamily: document.getElementById('invFontFamily').value,
     layoutPreset: document.getElementById('invLayoutPreset').value,
+    invTitleAlign: document.getElementById('invTitleAlign').value,
+    invSubjectAlign: document.getElementById('invSubjectAlign').value,
+    invNotesAlign: document.getElementById('invNotesAlign').value,
+    invSellerAlign: document.getElementById('invSellerAlign').value,
+    
+    // Save visibility checkboxes
+    showSubjectLine: document.getElementById('showSubjectLine').checked,
+    showValidUntil: document.getElementById('showValidUntil').checked,
+    showSystemCapacity: document.getElementById('showSystemCapacity').checked,
+    showSupplierRef: document.getElementById('showSupplierRef').checked,
+    showPayMode: document.getElementById('showPayMode').checked,
+    showBuyerOrderNo: document.getElementById('showBuyerOrderNo').checked,
+    showOtherRef: document.getElementById('showOtherRef').checked,
+    showSubsidyBlock: document.getElementById('showSubsidyBlock').checked,
     
     items:items.map(i=>({...i})),
     manualTaxes
@@ -3274,6 +3940,13 @@ function toggleTaxOverride(checked) {
 // ════ UPDATE PREVIEW ════
 function updatePreview(tempData){
   const isTempPreview = !!tempData;
+  const gc = (id) => {
+    if (isTempPreview && tempData && tempData[id] !== undefined) {
+      return !!tempData[id];
+    }
+    const el = document.getElementById(id);
+    return el ? el.checked : false;
+  };
   if (!isTempPreview) {
     previewedTplId = null; // Revert layout preview state when user edits
   }
@@ -3291,9 +3964,22 @@ function updatePreview(tempData){
   const fontSize = isTempPreview ? (tempData.invFontSize || '11') : (document.getElementById('invFontSize').value || '11');
   const fontFamily = isTempPreview ? (tempData.invFontFamily || 'Arial, sans-serif') : (document.getElementById('invFontFamily').value || 'Arial, sans-serif');
   const layoutPreset = isTempPreview ? (tempData.layoutPreset || 'modern') : (document.getElementById('invLayoutPreset').value || 'modern');
-  
+
   const doc = document.getElementById('invoiceDoc');
   if (doc) {
+    // ═══ SOLAR QUOTATION LAYOUT — special renderer ═══
+    if (layoutPreset === 'solar_quotation') {
+      renderSolarQuotation(isTempPreview, tempData, themeColor, fontFamily, fontSize);
+      currentLayoutPreset = 'solar_quotation';
+      return;
+    }
+    
+    // Switch back to standard layout: restore standard HTML template structure if currently solar
+    if (currentLayoutPreset === 'solar_quotation' || !document.getElementById('p_sellerName')) {
+      doc.innerHTML = ORIGINAL_INVOICE_HTML;
+    }
+    currentLayoutPreset = layoutPreset;
+    
     doc.className = '';
     doc.classList.add('layout-' + layoutPreset);
     doc.style.setProperty('--inv-theme', themeColor);
@@ -3346,11 +4032,78 @@ function updatePreview(tempData){
   // Invoice meta
   sp('p_invNo', isTempPreview ? (tempData.invNo || 'DRAFT') : gv('invNo'));
   sp('p_invDate', formatDate(isTempPreview ? (tempData.invDate || getTodayDateString()) : gv('invDate')));
-  sp('p_supplierRef', isTempPreview ? (tempData.supplierRef || '') : gv('supplierRef'));
+  
+  // Dynamic Supplier Ref
+  const showSupplier = gc('showSupplierRef');
+  const supplierRef = isTempPreview ? (tempData.supplierRef || '') : gv('supplierRef');
+  const supplierCell = document.getElementById('p_supplierRefCell');
+  if (supplierCell) {
+    if (showSupplier) {
+      supplierCell.style.visibility = 'visible';
+      supplierCell.style.display = '';
+      sp('p_supplierRef', supplierRef);
+    } else {
+      supplierCell.style.visibility = 'hidden';
+      supplierCell.style.display = 'none';
+    }
+  }
+  
+  // Dynamic Payment Mode
+  const showPm = gc('showPayMode');
   const pm = isTempPreview ? (tempData.payMode || '') : gv('payMode');
-  sp('p_payMode', (pm === 'None' || !pm) ? '' : pm);
-  sp('p_buyerOrderNo', isTempPreview ? (tempData.buyerOrderNo || '') : gv('buyerOrderNo'));
-  sp('p_otherRef', isTempPreview ? (tempData.otherRef || '') : gv('otherRef'));
+  const payModeCell = document.getElementById('p_payModeCell');
+  if (payModeCell) {
+    if (showPm) {
+      payModeCell.style.visibility = 'visible';
+      payModeCell.style.display = '';
+      sp('p_payMode', (pm === 'None' || !pm) ? '' : pm);
+    } else {
+      payModeCell.style.visibility = 'hidden';
+      payModeCell.style.display = 'none';
+    }
+  }
+  
+  // Toggle row 2 based on children visibility
+  const rowSupplierPay = document.getElementById('p_row_supplier_pay');
+  if (rowSupplierPay) {
+    rowSupplierPay.style.display = (showSupplier || showPm) ? 'grid' : 'none';
+  }
+  
+  // Dynamic Buyer Order No
+  const showBuyerOrder = gc('showBuyerOrderNo');
+  const buyerOrderNo = isTempPreview ? (tempData.buyerOrderNo || '') : gv('buyerOrderNo');
+  const buyerOrderCell = document.getElementById('p_buyerOrderNoCell');
+  if (buyerOrderCell) {
+    if (showBuyerOrder) {
+      buyerOrderCell.style.visibility = 'visible';
+      buyerOrderCell.style.display = '';
+      sp('p_buyerOrderNo', buyerOrderNo);
+    } else {
+      buyerOrderCell.style.visibility = 'hidden';
+      buyerOrderCell.style.display = 'none';
+    }
+  }
+  
+  // Dynamic Other References
+  const showOtherRef = gc('showOtherRef');
+  const otherRef = isTempPreview ? (tempData.otherRef || '') : gv('otherRef');
+  const otherRefCell = document.getElementById('p_otherRefCell');
+  if (otherRefCell) {
+    if (showOtherRef) {
+      otherRefCell.style.visibility = 'visible';
+      otherRefCell.style.display = '';
+      sp('p_otherRef', otherRef);
+    } else {
+      otherRefCell.style.visibility = 'hidden';
+      otherRefCell.style.display = 'none';
+    }
+  }
+  
+  // Toggle row 3 based on children visibility
+  const rowBuyerOther = document.getElementById('p_row_buyer_other');
+  if (rowBuyerOther) {
+    rowBuyerOther.style.display = (showBuyerOrder || showOtherRef) ? 'grid' : 'none';
+  }
 
   // Buyer
   sp('p_buyerName', isTempPreview ? (tempData.buyerName || '') : gv('buyerName'));
@@ -3450,6 +4203,92 @@ function updatePreview(tempData){
   const nr=document.getElementById('p_notesRow');
   if(notes){ nr.style.display='block'; sp('p_notes',notes); } else { nr.style.display='none'; }
 
+  // Dynamic Subject Line for standard layouts
+  const showSubject = gc('showSubjectLine');
+  const subject = isTempPreview ? (tempData.subjectLine || '') : gv('subjectLine');
+  const subRow = document.getElementById('p_subjectLineRow');
+  if (subRow) {
+    if (showSubject) {
+      subRow.style.display = 'block';
+      sp('p_subjectLine', subject);
+    } else {
+      subRow.style.display = 'none';
+    }
+  }
+
+  // Dynamic System Capacity for standard layouts
+  const showSysCap = gc('showSystemCapacity');
+  const sysCap = isTempPreview 
+    ? (tempData.systemCapacity || tempData.otherRef || '') 
+    : (gv('systemCapacity') || gv('otherRef') || '');
+  const sysRow = document.getElementById('p_systemCapacityRow');
+  const lastMetaRow = document.querySelector('.d-meta .d-meta-r:nth-child(3)');
+  if (sysRow) {
+    if (showSysCap) {
+      sysRow.style.display = 'grid';
+      sp('p_systemCapacity', sysCap);
+      if (lastMetaRow) lastMetaRow.style.borderBottom = '1px solid #999';
+    } else {
+      sysRow.style.display = 'none';
+      if (lastMetaRow) lastMetaRow.style.borderBottom = 'none';
+    }
+  }
+
+  // Dynamic Subsidy Structure for standard layouts
+  const showSubsidy = gc('showSubsidyBlock');
+  const subBlock = document.getElementById('p_subsidyBlock');
+  if (subBlock) {
+    const hasSubsidyData = isTempPreview 
+      ? (tempData.sub1kwTotal !== undefined || tempData.sub2kwTotal !== undefined || tempData.sub3kwTotal !== undefined)
+      : (gv('sub1kwTotal') || gv('sub2kwTotal') || gv('sub3kwTotal'));
+      
+    if (showSubsidy && hasSubsidyData) {
+      subBlock.style.display = 'block';
+      const gN = (id, def) => isTempPreview ? (tempData[id] || def || 0) : (+gv(id) || def || 0);
+      const sub1Total   = gN('sub1kwTotal', 48000);
+      const sub1Central = gN('sub1kwCentral', 30000);
+      const sub1State   = gN('sub1kwState', 18000);
+      const sub2Total   = gN('sub2kwTotal', 96000);
+      const sub2Central = gN('sub2kwCentral', 60000);
+      const sub2State   = gN('sub2kwState', 36000);
+      const sub3Total   = gN('sub3kwTotal', 130000);
+      const sub3Central = gN('sub3kwCentral', 78000);
+      const sub3State   = gN('sub3kwState', 52000);
+
+      const sysCapText = (sysCap || '').toLowerCase();
+      const is1kwActive = sysCapText.includes('1 kw') || sysCapText.includes('1kw') || sysCapText === '1';
+      const is2kwActive = sysCapText.includes('2 kw') || sysCapText.includes('2kw') || sysCapText === '2';
+      const is3kwActive = sysCapText.includes('3 kw') || sysCapText.includes('3kw') || sysCapText === '3';
+      
+      const fmtSub = (v) => '₹' + fmt(v);
+      
+      subBlock.innerHTML = `
+        <div style="background:var(--inv-theme); color:#fff; font-weight:700; padding:6px 12px; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px;">
+          Subsidy Structure
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); background:#fff;">
+          <div style="padding:10px; border-right:1px solid #e2e8f0; text-align:center; ${is1kwActive ? 'background:var(--inv-header-bg); font-weight:bold;' : ''}">
+            <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase;">1 KW</div>
+            <div style="font-size:0.95rem; color:var(--inv-theme); font-weight:700; margin:3px 0;">${fmtSub(sub1Total)}</div>
+            <div style="font-size:0.6rem; color:#64748b; line-height:1.2;">${fmtSub(sub1Central)} Central +<br/>${fmtSub(sub1State)} State</div>
+          </div>
+          <div style="padding:10px; border-right:1px solid #e2e8f0; text-align:center; ${is2kwActive ? 'background:var(--inv-header-bg); font-weight:bold;' : ''}">
+            <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase;">2 KW</div>
+            <div style="font-size:0.95rem; color:var(--inv-theme); font-weight:700; margin:3px 0;">${fmtSub(sub2Total)}</div>
+            <div style="font-size:0.6rem; color:#64748b; line-height:1.2;">${fmtSub(sub2Central)} Central +<br/>${fmtSub(sub2State)} State</div>
+          </div>
+          <div style="padding:10px; text-align:center; ${is3kwActive ? 'background:var(--inv-header-bg); font-weight:bold;' : ''}">
+            <div style="font-size:0.65rem; color:#64748b; text-transform:uppercase;">3 KW ${is3kwActive ? '(THIS PLAN)' : ''}</div>
+            <div style="font-size:0.95rem; color:var(--inv-theme); font-weight:700; margin:3px 0;">${fmtSub(sub3Total)}</div>
+            <div style="font-size:0.6rem; color:#64748b; line-height:1.2;">${fmtSub(sub3Central)} Central +<br/>${fmtSub(sub3State)} State</div>
+          </div>
+        </div>
+      `;
+    } else {
+      subBlock.style.display = 'none';
+    }
+  }
+
   // Bank
   sp('p_bankName',gv('bankName'));
   sp('p_bankHolder',gv('bankHolder'));
@@ -3512,6 +4351,293 @@ function updatePreview(tempData){
     pCS.style.display='none';
     pCSB.style.display='none';
   }
+}
+
+// ════ SOLAR QUOTATION RENDERER ════
+function renderSolarQuotation(isTempPreview, tempData, themeColor, fontFamily, fontSize) {
+  const doc = document.getElementById('invoiceDoc');
+  if (!doc) return;
+  doc.className = 'layout-solar_quotation';
+  doc.style.setProperty('--inv-theme', themeColor);
+  doc.style.setProperty('--inv-font-size', fontSize + 'px');
+  doc.style.setProperty('--inv-font-family', fontFamily);
+
+  const g = (id) => isTempPreview ? (tempData[id] || '') : gv(id);
+  const gN = (id, def) => isTempPreview ? (tempData[id] || def || 0) : (+gv(id) || def || 0);
+
+  // Gather data
+  const sellerName   = gv('sellerName');
+  const sellerAddr   = gv('sellerAddr');
+  const sellerEmail  = gv('sellerEmail');
+  const sellerPhone  = gv('sellerPhone');
+  const sellerGST    = gv('sellerGST');
+  const refNo        = g('invNo');
+  const date         = formatDate(g('invDate') || getTodayDateString());
+  const validRaw     = isTempPreview ? (tempData.invValid || '') : gv('invValid');
+  const validStr     = validRaw ? formatDate(validRaw) : '15 Days';
+  const systemCap    = isTempPreview ? (tempData.systemCapacity || tempData.otherRef || '') : (gv('systemCapacity') || gv('otherRef') || '');
+  const sysCapText   = (systemCap || '').toLowerCase();
+  const is1kwActive  = sysCapText.includes('1 kw') || sysCapText.includes('1kw') || sysCapText === '1';
+  const is2kwActive  = sysCapText.includes('2 kw') || sysCapText.includes('2kw') || sysCapText === '2';
+  const is3kwActive  = sysCapText.includes('3 kw') || sysCapText.includes('3kw') || sysCapText === '3';
+  const buyerName    = g('buyerName');
+  const buyerPhone   = g('buyerPhone');
+  const buyerAddr    = g('buyerAddr');
+  const subjectLine  = isTempPreview ? (tempData.subjectLine || '') : gv('subjectLine');
+  const invNotes     = g('invNotes');
+  const bankName     = gv('bankName');
+  const bankHolder   = gv('bankHolder');
+  const bankBranch   = gv('bankBranch');
+  const bankAcc      = gv('bankAcc');
+  const bankIFSC     = gv('bankIFSC');
+  const forName      = gv('forName');
+  const propName     = gv('propName');
+  const propDesig    = gv('propDesig');
+  const gc = (id) => {
+    if (isTempPreview && tempData && tempData[id] !== undefined) {
+      return !!tempData[id];
+    }
+    const el = document.getElementById(id);
+    return el ? el.checked : false;
+  };
+  
+
+
+
+  // Subsidy data
+  const sub1Total   = gN('sub1kwTotal', 48000);
+  const sub1Central = gN('sub1kwCentral', 30000);
+  const sub1State   = gN('sub1kwState', 18000);
+  const sub2Total   = gN('sub2kwTotal', 96000);
+  const sub2Central = gN('sub2kwCentral', 60000);
+  const sub2State   = gN('sub2kwState', 36000);
+  const sub3Total   = gN('sub3kwTotal', 130000);
+  const sub3Central = gN('sub3kwCentral', 78000);
+  const sub3State   = gN('sub3kwState', 52000);
+
+  // Items
+  const activeItems = isTempPreview ? (tempData.items || []) : items;
+
+  // Totals
+  const tplTaxes = isTempPreview ? tempData.manualTaxes : undefined;
+  const {byGST, subtotal, grand} = calcTotals(
+    isTempPreview ? activeItems : undefined,
+    isTempPreview ? tempData.discount : undefined,
+    isTempPreview ? tempData.addCharges : undefined,
+    tplTaxes
+  );
+
+  // Compute total GST
+  let totalGST = 0;
+  if (tplTaxes) {
+    totalGST = (tplTaxes.cgst5||0)+(tplTaxes.sgst5||0)+(tplTaxes.cgst9||0)+(tplTaxes.sgst9||0);
+  } else {
+    Object.values(byGST).forEach(v => totalGST += (v.cgst||0) + (v.sgst||0));
+  }
+
+  // Build items rows
+  let itemRowsHtml = '';
+  activeItems.forEach((item, idx) => {
+    const rate = +item.rate || 0;
+    const qty  = +item.qty  || 1;
+    const gstP = +item.gst  || 0;
+    const taxable = (item.amount !== undefined ? +item.amount : rate * qty) / (1 + gstP/100);
+    const taxAmt  = (item.amount !== undefined ? +item.amount : rate * qty) - taxable;
+    const amount  = item.amount !== undefined ? +item.amount : rate * qty;
+    
+    let extra = '';
+    if (item.customFields && Object.keys(item.customFields).length > 0) {
+      extra = `<div style="font-size:0.65rem; color:var(--muted); margin-top:2px; display:flex; flex-wrap:wrap; gap:5px; line-height:1.2;">` +
+        Object.entries(item.customFields).map(([k, v]) => `<span style="font-style:italic;"><strong>${esc(k)}:</strong> ${esc(v)}</span>`).join(' | ') +
+        `</div>`;
+    }
+
+    itemRowsHtml += `<tr>
+      <td class="left">${esc(item.desc||'')}${extra}</td>
+      <td>${esc(item.hsn||'')}</td>
+      <td class="right">${rate ? '₹'+fmt(rate) : ''}</td>
+      <td>${gstP ? gstP+'%' : '0%'}</td>
+      <td>${item.qty !== undefined && item.qty !== '' ? item.qty : ''}</td>
+      <td class="right">${taxable ? '₹'+fmt(taxable) : ''}</td>
+      <td class="right">${taxAmt ? '₹'+fmt(taxAmt) : ''}</td>
+      <td class="right">₹${fmt(amount)}</td>
+    </tr>`;
+  });
+
+  // Parse notes into bullet list
+  const noteLines = invNotes ? invNotes.split('\n').filter(l => l.trim()) : [];
+  const termsHtml = noteLines.length > 0
+    ? '<ul class="sq-terms-list">' + noteLines.map(l => `<li>${esc(l.replace(/^[-•*]\s*/,''))}</li>`).join('') + '</ul>'
+    : '<p style="font-size:9.5px;color:#555;">No terms specified.</p>';
+
+  // Format subsidy amounts
+  const fmtSub = (v) => '₹' + fmt(v);
+
+  const html = `<div class="sq-doc">
+
+    <!-- Header — unified green card with meta row inside -->
+    <div class="sq-header">
+      <!-- Company info row -->
+      <div class="sq-header-top">
+        <div class="sq-header-left" style="text-align: ${gv('invSellerAlign') || 'left'};">
+          <div class="sq-company-name">${esc(sellerName || '')}</div>
+          <div class="sq-company-sub">${esc(sellerAddr || '').replace(/\n/g, ' &mdash; ')}</div>
+          <div class="sq-company-sub2">${sellerGST ? 'GST: '+esc(sellerGST) : ''}${sellerEmail ? (sellerGST ? '&nbsp;&nbsp;|&nbsp;&nbsp;' : '') + esc(sellerEmail) : ''}</div>
+        </div>
+        <div class="sq-badge">QUOTATION</div>
+      </div>
+      <!-- Meta row: Ref No, Date, Valid Upto, System Capacity — inside the green card -->
+      <div class="sq-meta-row">
+        <div class="sq-meta-cell">
+          <div class="sq-meta-label">Ref No.</div>
+          <div class="sq-meta-value">${esc(refNo) || '&mdash;'}</div>
+        </div>
+        <div class="sq-meta-cell">
+          <div class="sq-meta-label">Date</div>
+          <div class="sq-meta-value">${date}</div>
+        </div>
+        <div class="sq-meta-cell" style="${gc('showValidUntil') ? '' : 'visibility: hidden;'}">
+          <div class="sq-meta-label">Valid Upto</div>
+          <div class="sq-meta-value">${esc(validStr)}</div>
+        </div>
+        <div class="sq-meta-cell" style="${gc('showSystemCapacity') ? '' : 'visibility: hidden;'}">
+          <div class="sq-meta-label">System Capacity</div>
+          <div class="sq-meta-value">${esc(systemCap) || '3 kW'}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Details -->
+    <div class="sq-cust-section">
+      <div class="sq-cust-title">Customer Details</div>
+      <div class="sq-cust-grid">
+        <span class="sq-cust-label">CUSTOMER NAME</span>
+        <span class="sq-cust-value">${esc(buyerName) || '—'}</span>
+        ${buyerPhone ? `
+          <span class="sq-cust-label">MOBILE</span>
+          <span class="sq-cust-value">${esc(buyerPhone)}</span>
+        ` : ''}
+      </div>
+      ${buyerAddr ? `
+        <div style="margin-top:5px;">
+          <span class="sq-cust-label" style="font-size:8.5px;display:block;margin-bottom:2px;">ADDRESS</span>
+          <div class="sq-cust-addr">${esc(buyerAddr).replace(/\n/g,'<br/>')}</div>
+        </div>
+      ` : ''}
+    </div>
+
+    <!-- Subject -->
+    ${gc('showSubjectLine') ? `<div class="sq-subject" style="text-align: ${gv('invSubjectAlign') || 'left'};"><strong>Subject:</strong> ${esc(subjectLine)}</div>` : ''}
+
+    <!-- System Components & Pricing -->
+    <div class="sq-items-section">
+      <div class="sq-items-header">System Components &amp; Pricing</div>
+      <table class="sq-items-table">
+        <thead>
+          <tr>
+            <th class="left" style="width:28%">Item</th>
+            <th style="width:10%">HSN/SAC</th>
+            <th style="width:10%">Rate</th>
+            <th style="width:7%">GST%</th>
+            <th style="width:7%">Qty</th>
+            <th style="width:12%">Taxable</th>
+            <th style="width:10%">Tax</th>
+            <th style="width:12%">Amount</th>
+          </tr>
+        </thead>
+        <tbody>${itemRowsHtml}</tbody>
+      </table>
+    </div>
+
+    <!-- Totals -->
+    <div class="sq-totals-section">
+      <div class="sq-totals-row">
+        <span class="sq-tl">Total Taxable Value</span>
+        <span class="sq-tv">₹${fmt(subtotal)}</span>
+      </div>
+      <div class="sq-totals-row">
+        <span class="sq-tl">Total GST</span>
+        <span class="sq-tv">₹${fmt(totalGST)}</span>
+      </div>
+      <div class="sq-total-cost-row">
+        <span>Total Project Cost (Incl. GST &amp; Installation)</span>
+        <span>₹${fmt(grand)}</span>
+      </div>
+      <div class="sq-payable-bar">
+        <span>Total Value Payable</span>
+        <span>₹${fmt(grand)}</span>
+      </div>
+    </div>
+
+    <!-- Subsidy Structure -->
+    <div class="sq-subsidy-section" style="${gc('showSubsidyBlock') ? '' : 'display: none;'}">
+      <div class="sq-subsidy-title">Subsidy Structure</div>
+      <div class="sq-subsidy-grid">
+        <div class="sq-sub-box ${is1kwActive ? 'active' : ''}">
+          <div class="sq-sub-kw">1 KW${is1kwActive ? ' (THIS PLAN)' : ''}</div>
+          <div class="sq-sub-amount">${fmtSub(sub1Total)}</div>
+          <div class="sq-sub-breakdown">${fmtSub(sub1Central)} Central +<br/>${fmtSub(sub1State)} Assam State</div>
+        </div>
+        <div class="sq-sub-box ${is2kwActive ? 'active' : ''}">
+          <div class="sq-sub-kw">2 KW${is2kwActive ? ' (THIS PLAN)' : ''}</div>
+          <div class="sq-sub-amount">${fmtSub(sub2Total)}</div>
+          <div class="sq-sub-breakdown">${fmtSub(sub2Central)} Central +<br/>${fmtSub(sub2State)} Assam State</div>
+        </div>
+        <div class="sq-sub-box ${is3kwActive ? 'active' : ''}">
+          <div class="sq-sub-kw">3 KW${is3kwActive ? ' (THIS PLAN)' : ''}</div>
+          <div class="sq-sub-amount">${fmtSub(sub3Total)}</div>
+          <div class="sq-sub-breakdown">${fmtSub(sub3Central)} Central +<br/>${fmtSub(sub3State)} Assam State</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terms & Conditions -->
+    <div class="sq-terms-section" style="text-align: ${gv('invNotesAlign') || 'left'};">
+      <div class="sq-terms-title">Terms &amp; Conditions</div>
+      ${termsHtml}
+    </div>
+
+    <!-- Bank Account Details -->
+    ${(bankHolder || bankAcc) ? `
+    <div class="sq-bank-section">
+      <div class="sq-bank-title">Bank Account Details</div>
+      ${bankHolder ? `<div class="sq-bank-row"><strong>A/C Holder:</strong> ${esc(bankHolder)}</div>` : ''}
+      ${bankAcc    ? `<div class="sq-bank-row"><strong>A/c No:</strong> ${esc(bankAcc)}</div>` : ''}
+      ${bankIFSC   ? `<div class="sq-bank-row"><strong>IFSC Code:</strong> ${esc(bankIFSC)}</div>` : ''}
+      ${bankName   ? `<div class="sq-bank-row"><strong>Bank &amp; Branch:</strong> ${esc(bankName)}${bankBranch ? ', ' + esc(bankBranch) : ''}</div>` : ''}
+    </div>` : ''}
+
+    <!-- Footer / Signature -->
+    <div class="sq-footer">
+      <div class="sq-regards">
+        <div style="font-size:10px;color:#555;margin-bottom:4px;">Regards,</div>
+        <div style="font-weight:700;font-size:11px;">${esc(forName || sellerName || '')}</div>
+        <div style="font-size:9.5px;color:#666;margin-top:2px;">${esc(sellerAddr || '').replace(/\n/g,' ')}</div>
+      </div>
+      <div class="sq-sign-area">
+        <div style="font-size:9px;color:#555;">Authorised Signatory</div>
+        <div style="position:relative; display:flex; flex-direction:column; align-items:flex-end;">
+          ${signatureImg ? `<img src="${signatureImg}" style="width:${gv('signImgWidth') || '140'}px; max-height:120px; margin-top:${-(gv('signImgOffset') || 0)}px; margin-bottom:${gv('signImgOffset') || 0}px; object-fit:contain; display:block;"/>` : ''}
+          ${stampImg ? `<img src="${stampImg}" style="width:${gv('stampImgWidth') || '100'}px; max-height:120px; margin-top:${-(gv('stampImgOffset') || 0)}px; margin-bottom:${gv('stampImgOffset') || 0}px; object-fit:contain; display:block;"/>` : ''}
+        </div>
+        <div style="font-size:10px;font-weight:700;color:var(--inv-theme);">${esc(propName || '')}</div>
+        <div style="font-size:9.5px;color:#555;">${esc(propDesig || '')}</div>
+      </div>
+    </div>
+    <div class="sq-auth-bar">Authorised Signatory</div>
+
+  </div>`;
+
+  // Replace the inner d-body content
+  const previewWarnBar = document.getElementById('previewWarningBar');
+  const warnBarHtml = previewWarnBar ? previewWarnBar.outerHTML : '';
+  doc.innerHTML = warnBarHtml + html;
+
+  // Re-attach warning bar events
+  const wb = doc.querySelector('#previewWarningBar');
+  if (wb) wb.style.display = isTempPreview ? 'flex' : 'none';
+  const sidebarOverlay = document.getElementById('sidebarPreviewOverlay');
+  if (sidebarOverlay) sidebarOverlay.style.display = isTempPreview ? 'flex' : 'none';
 }
 
 // ════ PROFILE SAVE/LOAD ════
@@ -3649,6 +4775,8 @@ function createNewInvoiceBtn() {
 
 let selectedTplId = null;
 let previewedTplId = null;
+let ORIGINAL_INVOICE_HTML = '';
+let currentLayoutPreset = 'modern';
 
 function getInitials(name) {
   const cleanName = (name || 'Draft Client').trim().toUpperCase();
@@ -3815,13 +4943,7 @@ function renderGstBreakdown(templates) {
 }
 
 function showPreviewDirectly(id) {
-  const tpl = getAllTemplates().find(t => t.id === id);
-  if (!tpl) return;
-  
-  previewedTplId = id;
-  switchNavTab('form');
-  updatePreview(tpl);
-  toast('👁️ Template Preview Active!');
+  loadTemplate(id);
 }
 
 function clearPreviewState() {
@@ -3868,8 +4990,9 @@ function renderDashboardTemplates(){
         </div>
       </td>
       <td style="padding:12px 8px; text-align:right; font-weight:700; color:#06d6a0;">₹${fmt(tpl.amount||0)}</td>
-      <td style="padding:12px 8px; text-align:center;">
-        <button class="action-btn btn btn-accent btn-sm" style="display:inline-block; padding:3px 8px; font-size:0.7rem; border-radius:5px;" onclick="showPreviewDirectly('${tpl.id}')">👁️ Preview</button>
+      <td style="padding:12px 8px; text-align:center; display:flex; gap:6px; justify-content:center; align-items:center;">
+        <button class="action-btn btn btn-blue btn-sm" style="display:inline-flex; align-items:center; gap:4px; padding:4px 8px; font-size:0.7rem; border-radius:5px;" onclick="printSingleTemplateDirectly('${tpl.id}', event)">🖨️ Print</button>
+        <button class="action-btn btn btn-green btn-sm" style="display:inline-flex; align-items:center; gap:4px; padding:4px 8px; font-size:0.7rem; border-radius:5px;" onclick="pdfSingleTemplateDirectly('${tpl.id}', event)">📄 PDF</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -3893,13 +5016,15 @@ function renderDashboardTemplates(){
 
 function switchNavTab(tab) {
   // Update left nav items active classes
-  const navItems = ['Dash', 'Form', 'Clients', 'Items', 'Company', 'Bank'];
+  const navItems = ['Dash', 'Form', 'Clients', 'Items', 'Company', 'Bank', 'Settings'];
   navItems.forEach(item => {
     const el = document.getElementById('nav' + item);
     if (el) el.classList.remove('active');
   });
   
-  const activeNavItem = document.getElementById('nav' + tab.charAt(0).toUpperCase() + tab.slice(1));
+  let activeId = 'nav' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  if (tab === 'dashboard') activeId = 'navDash';
+  const activeNavItem = document.getElementById(activeId);
   if (activeNavItem) activeNavItem.classList.add('active');
   
   // Get components
@@ -3918,12 +5043,11 @@ function switchNavTab(tab) {
     if (sidebar) sidebar.style.display = 'none';
     if (handleLeft) handleLeft.style.display = 'none';
     
-    // Keep right sidebar visible (never blank!)
+    // Hide right templates/styling sidebar on dashboard as it is redundant there and ruins layout
     if (rSidebar) {
-      rSidebar.classList.remove('hidden-sidebar');
-      if (handleRight) handleRight.style.display = 'block';
+      rSidebar.classList.add('hidden-sidebar');
+      if (handleRight) handleRight.style.display = 'none';
     }
-    switchRightTab('tpl');
     
     // Show dashboard inside preview area
     if (invoiceDoc) invoiceDoc.style.display = 'none';
@@ -3948,7 +5072,8 @@ function switchNavTab(tab) {
       'company': 'Company',
       'bank': 'Bank',
       'clients': 'Clients',
-      'items': 'Items'
+      'items': 'Items',
+      'settings': 'Settings'
     };
     Object.entries(panels).forEach(([key, val]) => {
       const el = document.getElementById('panel' + val);
@@ -3964,6 +5089,7 @@ function switchNavTab(tab) {
       else if (tab === 'bank') pageTitle.textContent = 'Bank & Terms';
       else if (tab === 'clients') pageTitle.textContent = 'Clients Database';
       else if (tab === 'items') pageTitle.textContent = 'Items & Groups';
+      else if (tab === 'settings') pageTitle.textContent = 'Settings & Security';
     }
 
     if (tab === 'clients') {
@@ -4008,6 +5134,22 @@ function printPDF(){
   exportToPDFDirect();
 }
 
+let currentPdfBlobUrl = null;
+let currentPdfFilename = "";
+
+function closePdfPreviewModal() {
+  const modal = document.getElementById('pdfPreviewModal');
+  if (modal) modal.style.display = 'none';
+  
+  const iframe = document.getElementById('pdfPreviewIframe');
+  if (iframe) iframe.src = 'about:blank';
+  
+  if (currentPdfBlobUrl) {
+    URL.revokeObjectURL(currentPdfBlobUrl);
+    currentPdfBlobUrl = null;
+  }
+}
+
 function exportToPDFDirect() {
   const element = document.getElementById('invoiceDoc');
   if(!element) return;
@@ -4015,20 +5157,634 @@ function exportToPDFDirect() {
   const docType = gv('docType') || 'INVOICE';
   const invNo = gv('invNo') || 'DRAFT';
   
+  const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.pdf`;
+  currentPdfFilename = filename;
+  
+  // Save original styles to restore later
+  const originalWidth = element.style.width;
+  const originalBoxShadow = element.style.boxShadow;
+  const originalBorderRadius = element.style.borderRadius;
+  
+  // Apply direct high-fidelity print specifications temporarily
+  element.style.width = '794px'; // Exact 210mm print scaling width
+  element.style.boxShadow = 'none';
+  element.style.borderRadius = '0';
+  
   const opt = {
-    margin:       0,
-    filename:     `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.pdf`,
+    margin:       0, // Zero margins for full bleed matching the live preview
+    filename:     filename,
     image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true, logging: false },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false, 
+      letterRendering: true,
+      scrollY: 0,
+      scrollX: 0
+    },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['css', 'legacy'] }
   };
   
-  toast('⏳ Generating PDF with design...');
-  html2pdf().set(opt).from(element).save().then(() => {
-    toast('✅ PDF downloaded successfully!');
+  toast('⏳ Generating PDF preview...');
+  
+  // High-fidelity promise chain
+  html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
+    const blob = pdf.output('blob');
+    
+    // Restore layout styles
+    element.style.width = originalWidth;
+    element.style.boxShadow = originalBoxShadow;
+    element.style.borderRadius = originalBorderRadius;
+    
+    currentPdfBlobUrl = URL.createObjectURL(blob);
+    
+    const iframe = document.getElementById('pdfPreviewIframe');
+    if (iframe) iframe.src = currentPdfBlobUrl;
+    
+    const modal = document.getElementById('pdfPreviewModal');
+    if (modal) modal.style.display = 'flex';
+    
+    toast('✅ PDF preview ready!');
+  }).catch(err => {
+    // Restore layout styles on error
+    element.style.width = originalWidth;
+    element.style.boxShadow = originalBoxShadow;
+    element.style.borderRadius = originalBorderRadius;
+    
+    console.error(err);
+    toast('❌ PDF preview generation failed!');
+  });
+}
+
+function getFormState() {
+  const state = {
+    loadedTemplateId: loadedTemplateId,
+    items: JSON.stringify(items),
+    fields: {},
+    checkboxes: {}
+  };
+  
+  const fieldsList = [
+    'docType','invNo','invDate','invValid','supplierRef','payMode',
+    'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
+    'termsDelivery','discount','addCharges','chargesNote','invNotes',
+    'systemCapacity','subjectLine', 'invThemeColor', 'invThemePreset', 'invFontSize', 
+    'invFontFamily', 'invLayoutPreset', 'invTitleAlign', 'invSubjectAlign', 
+    'invNotesAlign', 'invSellerAlign',
+    'sub1kwTotal','sub1kwCentral','sub1kwState',
+    'sub2kwTotal','sub2kwCentral','sub2kwState',
+    'sub3kwTotal','sub3kwCentral','sub3kwState',
+    'mSubtotal', 'mGrand', 'mCgst5', 'mSgst5', 'mCgst9', 'mSgst9', 'mCgst14', 'mSgst14', 'mIgst5', 'mIgst18', 'mIgst28'
+  ];
+  
+  fieldsList.forEach(f => {
+    const el = document.getElementById(f);
+    if (el) state.fields[f] = el.value;
+  });
+  
+  const checkList = [
+    'overrideTaxes', 'showSubjectLine', 'showValidUntil', 'showSystemCapacity',
+    'showSupplierRef', 'showPayMode', 'showBuyerOrderNo', 'showOtherRef', 'showSubsidyBlock'
+  ];
+  
+  checkList.forEach(c => {
+    const el = document.getElementById(c);
+    if (el) state.checkboxes[c] = el.checked;
+  });
+  
+  return state;
+}
+
+function restoreFormState(state) {
+  if (!state) return;
+  
+  loadedTemplateId = state.loadedTemplateId;
+  items = JSON.parse(state.items);
+  
+  Object.keys(state.fields).forEach(f => {
+    const el = document.getElementById(f);
+    if (el) el.value = state.fields[f];
+  });
+  
+  Object.keys(state.checkboxes).forEach(c => {
+    const el = document.getElementById(c);
+    if (el) el.checked = state.checkboxes[c];
+  });
+  
+  const overCb = document.getElementById('overrideTaxes');
+  const overFields = document.getElementById('manualTaxFields');
+  if (overCb && overFields) {
+    overFields.style.display = overCb.checked ? 'flex' : 'none';
+  }
+  
+  renderItemsForm();
+  updateDesignSettings();
+  updatePreview();
+}
+
+function generateBulkInvoicesHTML() {
+  const allTemplates = JSON.parse(localStorage.getItem('inv_custom_tpls') || '[]');
+  if (allTemplates.length === 0) {
+    alert("No saved templates found! Please save some templates first.");
+    return null;
+  }
+
+  const savedState = getFormState();
+
+  const bulkWrapper = document.createElement('div');
+  bulkWrapper.style.display = 'flex';
+  bulkWrapper.style.flexDirection = 'column';
+  bulkWrapper.style.gap = '20px';
+  bulkWrapper.style.background = '#ffffff';
+
+  allTemplates.forEach((tpl, idx) => {
+    const fieldsList = [
+      'docType','invNo','invValid','supplierRef','payMode',
+      'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
+      'termsDelivery','discount','addCharges','chargesNote','invNotes',
+      'systemCapacity','subjectLine', 'invThemeColor', 'invThemePreset', 'invFontSize', 
+      'invFontFamily', 'invLayoutPreset', 'invTitleAlign', 'invSubjectAlign', 
+      'invNotesAlign', 'invSellerAlign',
+      'sub1kwTotal','sub1kwCentral','sub1kwState',
+      'sub2kwTotal','sub2kwCentral','sub2kwState',
+      'sub3kwTotal','sub3kwCentral','sub3kwState'
+    ];
+    
+    fieldsList.forEach(f => {
+      const el = document.getElementById(f);
+      if (el) {
+        const valKey = (f === 'invLayoutPreset') ? 'layoutPreset' : f;
+        if (tpl[valKey] !== undefined && tpl[valKey] !== null) {
+          el.value = tpl[valKey];
+        } else {
+          if (f === 'invThemeColor' || f === 'invThemePreset') {
+            el.value = '#16a34a';
+          } else if (f === 'invFontSize') {
+            el.value = '11';
+          } else if (f === 'invFontFamily') {
+            el.value = "'Times New Roman', Times, serif";
+          } else if (f === 'invLayoutPreset') {
+            el.value = 'modern';
+          } else {
+            el.value = (f === 'invTitleAlign') ? 'center' : ((f === 'invSubjectAlign' || f === 'invNotesAlign' || f === 'invSellerAlign') ? 'left' : '');
+          }
+        }
+      }
+    });
+
+    const dateEl = document.getElementById('invDate');
+    if (dateEl) {
+      dateEl.value = tpl.invDate || getTodayDateString();
+    }
+
+    const checkList = [
+      'showSubjectLine', 'showValidUntil', 'showSystemCapacity',
+      'showSupplierRef', 'showPayMode', 'showBuyerOrderNo', 'showOtherRef', 'showSubsidyBlock'
+    ];
+    checkList.forEach(c => {
+      const el = document.getElementById(c);
+      if (el) el.checked = tpl[c] !== undefined ? !!tpl[c] : true;
+    });
+
+    const overCb = document.getElementById('overrideTaxes');
+    const overFields = document.getElementById('manualTaxFields');
+    if (overCb && overFields) {
+      if (tpl.manualTaxes) {
+        overCb.checked = true;
+        overFields.style.display = 'flex';
+        
+        const taxFields = {
+          'mSubtotal': tpl.manualTaxes.subtotal,
+          'mGrand': tpl.manualTaxes.grand,
+          'mCgst5': tpl.manualTaxes.cgst5,
+          'mSgst5': tpl.manualTaxes.sgst5,
+          'mCgst9': tpl.manualTaxes.cgst9,
+          'mSgst9': tpl.manualTaxes.sgst9,
+          'mCgst14': tpl.manualTaxes.cgst14,
+          'mSgst14': tpl.manualTaxes.sgst14,
+          'mIgst5': tpl.manualTaxes.igst5,
+          'mIgst18': tpl.manualTaxes.igst18,
+          'mIgst28': tpl.manualTaxes.igst28
+        };
+        Object.entries(taxFields).forEach(([id, val]) => {
+          const el = document.getElementById(id);
+          if (el) el.value = val || '';
+        });
+      } else {
+        overCb.checked = false;
+        overFields.style.display = 'none';
+      }
+    }
+
+    items = (tpl.items || []).map(i => ({...i}));
+    renderItemsForm();
+
+    updateDesignSettings();
+    updatePreview();
+
+    const invoiceDoc = document.getElementById('invoiceDoc');
+    const clone = invoiceDoc.cloneNode(true);
+    
+    // Ensure the clone is visible in print output (overriding dashboard's display: none)
+    clone.style.display = 'block';
+    
+    const warningBar = clone.querySelector('#previewWarningBar');
+    if (warningBar) warningBar.remove();
+
+    if (idx > 0) {
+      clone.style.pageBreakBefore = 'always';
+      clone.style.breakBefore = 'page';
+    }
+    
+    clone.style.width = '794px';
+    clone.style.boxShadow = 'none';
+    clone.style.borderRadius = '0';
+    clone.style.border = 'none';
+    
+    bulkWrapper.appendChild(clone);
+  });
+
+  restoreFormState(savedState);
+  return bulkWrapper;
+}
+
+function bulkPrintAll() {
+  const bulkWrapper = generateBulkInvoicesHTML();
+  if (!bulkWrapper) return;
+  
+  let iframe = document.getElementById('bulkPrintIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'bulkPrintIframe';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    document.body.appendChild(iframe);
+  }
+  
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(`
+    <html>
+      <head>
+        <title>Bulk Print Invoices</title>
+        <style>
+          body { margin: 0; background: #fff; }
+          .d-items tr, .d-bottom, .d-row3, .d-row4, .d-auth-bar {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+          ${Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n')}
+        </style>
+      </head>
+      <body>
+        ${bulkWrapper.innerHTML}
+      </body>
+    </html>
+  `);
+  doc.close();
+  
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+  }, 500);
+}
+
+function bulkExportAllPDF() {
+  const bulkWrapper = generateBulkInvoicesHTML();
+  if (!bulkWrapper) return;
+  
+  const opt = {
+    margin:       0,
+    filename:     `Bulk_Invoices_${Date.now()}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false, 
+      letterRendering: true,
+      scrollY: 0,
+      scrollX: 0
+    },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['css', 'legacy'] }
+  };
+  
+  toast('⏳ Generating Bulk PDF (all saved templates)...');
+  
+  html2pdf().set(opt).from(bulkWrapper).toPdf().get('pdf').then((pdf) => {
+    const blob = pdf.output('blob');
+    currentPdfBlobUrl = URL.createObjectURL(blob);
+    currentPdfFilename = opt.filename;
+    
+    const iframe = document.getElementById('pdfPreviewIframe');
+    if (iframe) iframe.src = currentPdfBlobUrl;
+    
+    const modal = document.getElementById('pdfPreviewModal');
+    if (modal) modal.style.display = 'flex';
+    
+    toast('✅ Bulk PDF preview ready!');
+  }).catch(err => {
+    console.error(err);
+    toast('❌ Bulk PDF generation failed!');
+  });
+}
+
+function printSingleTemplateDirectly(id, event) {
+  if (event) event.stopPropagation();
+  
+  const allTemplates = getAllTemplates();
+  const tpl = allTemplates.find(t => t.id === id);
+  if (!tpl) {
+    toast('⚠️ Template not found!');
+    return;
+  }
+
+  const savedState = getFormState();
+  
+  const fieldsList = [
+    'docType','invNo','invValid','supplierRef','payMode',
+    'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
+    'termsDelivery','discount','addCharges','chargesNote','invNotes',
+    'systemCapacity','subjectLine', 'invThemeColor', 'invThemePreset', 'invFontSize', 
+    'invFontFamily', 'invLayoutPreset', 'invTitleAlign', 'invSubjectAlign', 
+    'invNotesAlign', 'invSellerAlign',
+    'sub1kwTotal','sub1kwCentral','sub1kwState',
+    'sub2kwTotal','sub2kwCentral','sub2kwState',
+    'sub3kwTotal','sub3kwCentral','sub3kwState'
+  ];
+  
+  fieldsList.forEach(f => {
+    const el = document.getElementById(f);
+    if (el) {
+      const valKey = (f === 'invLayoutPreset') ? 'layoutPreset' : f;
+      if (tpl[valKey] !== undefined && tpl[valKey] !== null) {
+        el.value = tpl[valKey];
+      } else {
+        if (f === 'invThemeColor' || f === 'invThemePreset') {
+          el.value = '#16a34a';
+        } else if (f === 'invFontSize') {
+          el.value = '11';
+        } else if (f === 'invFontFamily') {
+          el.value = "'Times New Roman', Times, serif";
+        } else if (f === 'invLayoutPreset') {
+          el.value = 'modern';
+        } else {
+          el.value = (f === 'invTitleAlign') ? 'center' : ((f === 'invSubjectAlign' || f === 'invNotesAlign' || f === 'invSellerAlign') ? 'left' : '');
+        }
+      }
+    }
+  });
+
+  const dateEl = document.getElementById('invDate');
+  if (dateEl) {
+    dateEl.value = tpl.invDate || getTodayDateString();
+  }
+
+  const checkList = [
+    'showSubjectLine', 'showValidUntil', 'showSystemCapacity',
+    'showSupplierRef', 'showPayMode', 'showBuyerOrderNo', 'showOtherRef', 'showSubsidyBlock'
+  ];
+  checkList.forEach(c => {
+    const el = document.getElementById(c);
+    if (el) el.checked = tpl[c] !== undefined ? !!tpl[c] : true;
+  });
+
+  const overCb = document.getElementById('overrideTaxes');
+  const overFields = document.getElementById('manualTaxFields');
+  if (overCb && overFields) {
+    if (tpl.manualTaxes) {
+      overCb.checked = true;
+      overFields.style.display = 'flex';
+      const taxFields = {
+        'mSubtotal': tpl.manualTaxes.subtotal,
+        'mGrand': tpl.manualTaxes.grand,
+        'mCgst5': tpl.manualTaxes.cgst5,
+        'mSgst5': tpl.manualTaxes.sgst5,
+        'mCgst9': tpl.manualTaxes.cgst9,
+        'mSgst9': tpl.manualTaxes.sgst9,
+        'mCgst14': tpl.manualTaxes.cgst14,
+        'mSgst14': tpl.manualTaxes.sgst14,
+        'mIgst5': tpl.manualTaxes.igst5,
+        'mIgst18': tpl.manualTaxes.igst18,
+        'mIgst28': tpl.manualTaxes.igst28
+      };
+      Object.entries(taxFields).forEach(([fid, val]) => {
+        const el = document.getElementById(fid);
+        if (el) el.value = val || '';
+      });
+    } else {
+      overCb.checked = false;
+      overFields.style.display = 'none';
+    }
+  }
+
+  items = (tpl.items || []).map(i => ({...i}));
+  renderItemsForm();
+  updateDesignSettings();
+  updatePreview();
+
+  const invoiceDoc = document.getElementById('invoiceDoc');
+  const clone = invoiceDoc.cloneNode(true);
+  clone.style.display = 'block';
+  clone.style.width = '794px';
+  clone.style.boxShadow = 'none';
+  clone.style.borderRadius = '0';
+  clone.style.border = 'none';
+  
+  const warningBar = clone.querySelector('#previewWarningBar');
+  if (warningBar) warningBar.remove();
+
+  let iframe = document.getElementById('bulkPrintIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'bulkPrintIframe';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    document.body.appendChild(iframe);
+  }
+  
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(`
+    <html>
+      <head>
+        <title>Print Template</title>
+        <style>
+          body { margin: 0; background: #fff; }
+          .d-items tr, .d-bottom, .d-row3, .d-row4, .d-auth-bar {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+          ${Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n')}
+        </style>
+      </head>
+      <body>
+        ${clone.outerHTML}
+      </body>
+    </html>
+  `);
+  doc.close();
+  
+  setTimeout(() => {
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+    restoreFormState(savedState);
+  }, 500);
+}
+
+function pdfSingleTemplateDirectly(id, event) {
+  if (event) event.stopPropagation();
+  
+  const allTemplates = getAllTemplates();
+  const tpl = allTemplates.find(t => t.id === id);
+  if (!tpl) {
+    toast('⚠️ Template not found!');
+    return;
+  }
+
+  const savedState = getFormState();
+  
+  const fieldsList = [
+    'docType','invNo','invValid','supplierRef','payMode',
+    'buyerOrderNo','otherRef','buyerName','buyerPhone','buyerGST','buyerAddr',
+    'termsDelivery','discount','addCharges','chargesNote','invNotes',
+    'systemCapacity','subjectLine', 'invThemeColor', 'invThemePreset', 'invFontSize', 
+    'invFontFamily', 'invLayoutPreset', 'invTitleAlign', 'invSubjectAlign', 
+    'invNotesAlign', 'invSellerAlign',
+    'sub1kwTotal','sub1kwCentral','sub1kwState',
+    'sub2kwTotal','sub2kwCentral','sub2kwState',
+    'sub3kwTotal','sub3kwCentral','sub3kwState'
+  ];
+  
+  fieldsList.forEach(f => {
+    const el = document.getElementById(f);
+    if (el) {
+      const valKey = (f === 'invLayoutPreset') ? 'layoutPreset' : f;
+      if (tpl[valKey] !== undefined && tpl[valKey] !== null) {
+        el.value = tpl[valKey];
+      } else {
+        if (f === 'invThemeColor' || f === 'invThemePreset') {
+          el.value = '#16a34a';
+        } else if (f === 'invFontSize') {
+          el.value = '11';
+        } else if (f === 'invFontFamily') {
+          el.value = "'Times New Roman', Times, serif";
+        } else if (f === 'invLayoutPreset') {
+          el.value = 'modern';
+        } else {
+          el.value = (f === 'invTitleAlign') ? 'center' : ((f === 'invSubjectAlign' || f === 'invNotesAlign' || f === 'invSellerAlign') ? 'left' : '');
+        }
+      }
+    }
+  });
+
+  const dateEl = document.getElementById('invDate');
+  if (dateEl) {
+    dateEl.value = tpl.invDate || getTodayDateString();
+  }
+
+  const checkList = [
+    'showSubjectLine', 'showValidUntil', 'showSystemCapacity',
+    'showSupplierRef', 'showPayMode', 'showBuyerOrderNo', 'showOtherRef', 'showSubsidyBlock'
+  ];
+  checkList.forEach(c => {
+    const el = document.getElementById(c);
+    if (el) el.checked = tpl[c] !== undefined ? !!tpl[c] : true;
+  });
+
+  const overCb = document.getElementById('overrideTaxes');
+  const overFields = document.getElementById('manualTaxFields');
+  if (overCb && overFields) {
+    if (tpl.manualTaxes) {
+      overCb.checked = true;
+      overFields.style.display = 'flex';
+      const taxFields = {
+        'mSubtotal': tpl.manualTaxes.subtotal,
+        'mGrand': tpl.manualTaxes.grand,
+        'mCgst5': tpl.manualTaxes.cgst5,
+        'mSgst5': tpl.manualTaxes.sgst5,
+        'mCgst9': tpl.manualTaxes.cgst9,
+        'mSgst9': tpl.manualTaxes.sgst9,
+        'mCgst14': tpl.manualTaxes.cgst14,
+        'mSgst14': tpl.manualTaxes.sgst14,
+        'mIgst5': tpl.manualTaxes.igst5,
+        'mIgst18': tpl.manualTaxes.igst18,
+        'mIgst28': tpl.manualTaxes.igst28
+      };
+      Object.entries(taxFields).forEach(([fid, val]) => {
+        const el = document.getElementById(fid);
+        if (el) el.value = val || '';
+      });
+    } else {
+      overCb.checked = false;
+      overFields.style.display = 'none';
+    }
+  }
+
+  items = (tpl.items || []).map(i => ({...i}));
+  renderItemsForm();
+  updateDesignSettings();
+  updatePreview();
+
+  const invoiceDoc = document.getElementById('invoiceDoc');
+  const clone = invoiceDoc.cloneNode(true);
+  clone.style.display = 'block';
+  clone.style.width = '794px';
+  clone.style.boxShadow = 'none';
+  clone.style.borderRadius = '0';
+  clone.style.border = 'none';
+  
+  const warningBar = clone.querySelector('#previewWarningBar');
+  if (warningBar) warningBar.remove();
+
+  const docType = gv('docType') || 'INVOICE';
+  const invNo = gv('invNo') || 'DRAFT';
+  const filename = `${docType.replace(/\s+/g, '_')}_${invNo.replace(/\s+/g, '_')}.pdf`;
+  
+  const opt = {
+    margin:       0, // Zero margins for full bleed matching the live preview
+    filename:     filename,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { 
+      scale: 2, 
+      useCORS: true, 
+      logging: false, 
+      letterRendering: true,
+      scrollY: 0,
+      scrollX: 0
+    },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' },
+    pagebreak:    { mode: ['css', 'legacy'] }
+  };
+  
+  toast('⏳ Generating PDF...');
+  
+  html2pdf().set(opt).from(clone).toPdf().get('pdf').then((pdf) => {
+    const blob = pdf.output('blob');
+    currentPdfBlobUrl = URL.createObjectURL(blob);
+    currentPdfFilename = opt.filename;
+    
+    const iframe = document.getElementById('pdfPreviewIframe');
+    if (iframe) iframe.src = currentPdfBlobUrl;
+    
+    const modal = document.getElementById('pdfPreviewModal');
+    if (modal) modal.style.display = 'flex';
+    
+    toast('✅ PDF preview ready!');
+    restoreFormState(savedState);
   }).catch(err => {
     console.error(err);
     toast('❌ PDF generation failed!');
+    restoreFormState(savedState);
   });
 }
 
@@ -4068,10 +5824,16 @@ function toggleExportDropdown(){
 }
 
 document.addEventListener('click', e => {
-  const dropdown = document.querySelector('.dropdown');
-  const menu = document.getElementById('exportMenu');
-  if (dropdown && menu && !dropdown.contains(e.target)) {
-    menu.style.display = 'none';
+  // Close export dropdown if click is outside its parent container
+  const exportMenu = document.getElementById('exportMenu');
+  if (exportMenu && !e.target.closest('.dropdown') && exportMenu.style.display === 'block') {
+    exportMenu.style.display = 'none';
+  }
+  
+  // Close auth dropdown if click is outside its parent container
+  const authMenu = document.getElementById('authMenu');
+  if (authMenu && !e.target.closest('#topbarAuthContainer') && authMenu.style.display === 'block') {
+    authMenu.style.display = 'none';
   }
 });
 
@@ -4597,6 +6359,11 @@ function updateDesignSettings() {
   const fontSize = document.getElementById('invFontSize').value + 'px';
   const fontFamily = document.getElementById('invFontFamily').value;
   
+  const titleAlign = document.getElementById('invTitleAlign')?.value || 'center';
+  const subjectAlign = document.getElementById('invSubjectAlign')?.value || 'left';
+  const notesAlign = document.getElementById('invNotesAlign')?.value || 'left';
+  const sellerAlign = document.getElementById('invSellerAlign')?.value || 'left';
+  
   // Sync values to topbar controls
   const topLayout = document.getElementById('topbarLayoutPreset');
   const topColor = document.getElementById('topbarThemeColor');
@@ -4630,6 +6397,24 @@ function updateDesignSettings() {
   doc.style.setProperty('--inv-header-text', headerText);
   doc.style.setProperty('--inv-font-size', fontSize);
   doc.style.setProperty('--inv-font-family', fontFamily);
+  
+  doc.style.setProperty('--inv-title-align', titleAlign);
+  doc.style.setProperty('--inv-subject-align', subjectAlign);
+  doc.style.setProperty('--inv-notes-align', notesAlign);
+  doc.style.setProperty('--inv-seller-align', sellerAlign);
+  
+  // Set direct style properties for standard elements (assures compatibility with pdf prints/html2canvas)
+  const elDocType = document.getElementById('p_docType');
+  if (elDocType) elDocType.style.textAlign = titleAlign;
+  const elSubjectRow = document.getElementById('p_subjectLineRow');
+  if (elSubjectRow) elSubjectRow.style.textAlign = subjectAlign;
+  const elNotesRow = document.getElementById('p_notesRow');
+  if (elNotesRow) elNotesRow.style.textAlign = notesAlign;
+  const elSeller = document.querySelector('.d-seller');
+  if (elSeller) elSeller.style.textAlign = sellerAlign;
+
+  // Trigger preview update to re-render dynamic template layout
+  updatePreview();
 }
 
 function syncDesignFromTopbar(type) {
@@ -5845,6 +7630,65 @@ document.addEventListener('click', function(e) {
 
 // ════ INIT ════
 function init(){
+  ORIGINAL_INVOICE_HTML = document.getElementById('invoiceDoc')?.innerHTML || '';
+  
+  // Set up login password enter key handlers
+  document.getElementById('loginPassword')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitLogin();
+  });
+  document.getElementById('loginUsername')?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitLogin();
+  });
+
+  // Set up PDF preview actions
+  document.getElementById('btnDownloadPdfPreview')?.addEventListener('click', () => {
+    if (currentPdfBlobUrl) {
+      const link = document.createElement('a');
+      link.href = currentPdfBlobUrl;
+      link.download = currentPdfFilename || 'document.pdf';
+      link.click();
+      toast('✅ PDF downloaded!');
+    }
+  });
+
+  document.getElementById('btnPrintPdfPreview')?.addEventListener('click', () => {
+    const iframe = document.getElementById('pdfPreviewIframe');
+    if (iframe) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
+  });
+
+  // Normalize existing user keys to lowercase for case-insensitivity support
+  let users = JSON.parse(localStorage.getItem('inv_users') || '{}');
+  let usersChanged = false;
+  let normalizedUsers = {};
+  Object.keys(users).forEach(k => {
+    const lowerKey = k.toLowerCase();
+    if (lowerKey !== k) {
+      usersChanged = true;
+    }
+    normalizedUsers[lowerKey] = users[k];
+    if (normalizedUsers[lowerKey] && normalizedUsers[lowerKey].username) {
+      normalizedUsers[lowerKey].username = normalizedUsers[lowerKey].username.toLowerCase();
+    }
+  });
+  if (usersChanged) {
+    originalLocalStorageSetItem.call(localStorage, 'inv_users', JSON.stringify(normalizedUsers));
+  }
+
+  const registeredUsers = Object.keys(normalizedUsers).filter(u => u !== 'guest');
+  const activeUser = (localStorage.getItem('inv_active_user') || 'guest').toLowerCase();
+  const loggedIn = sessionStorage.getItem('inv_logged_in');
+  
+  if (registeredUsers.length > 0 && loggedIn !== 'true' && loggedIn !== 'guest') {
+    document.getElementById('loginOverlayModal').style.display = 'flex';
+  } else {
+    document.getElementById('loginOverlayModal').style.display = 'none';
+  }
+  
+  updateAuthUI();
+
   // Clean up seeded default items/clients from localStorage so they are removed for the user
   if (localStorage.getItem('has_cleaned_defaults_v2') !== 'true') {
     localStorage.removeItem('inv_clients');
